@@ -1,0 +1,14 @@
+.card-body{
+    background-color: #6FB722;
+      
+}
+.form-signin{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin: auto;
+}
+img {
+    width: 80%;
+    height: auto;
+    }
