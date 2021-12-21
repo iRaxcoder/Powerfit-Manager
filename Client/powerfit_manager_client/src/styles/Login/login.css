@@ -1,6 +1,5 @@
 .card-body{
     background-color: #6FB722;
-      
 }
 .form-signin{
     display: flex;
@@ -11,4 +10,4 @@
 .login__img {
     width: 80%;
     height: auto;
-    }
+}

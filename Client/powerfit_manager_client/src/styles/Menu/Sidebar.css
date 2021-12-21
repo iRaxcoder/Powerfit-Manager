@@ -42,6 +42,7 @@ a{
 
 .l-navbar{
     position: fixed;
+    display: none;
     top: 0;
     left: 0;
     width: 56px;
@@ -50,6 +51,10 @@ a{
     padding: 1.25rem .5rem 2rem;
     transition: .5s;
     z-index: var(--z-fixed);
+}
+
+.display-navbar{
+  display: block;
 }
 
 .nav{

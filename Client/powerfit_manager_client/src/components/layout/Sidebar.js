@@ -26,7 +26,10 @@ export default function Sidebar (){
              linkColor.forEach(L=>L.classList.remove('active'))  
              if(actual_link!=null){
                  actual_link.classList.add('active');
-             }
+                }
+    }
+    const changeDisplayMenu =() =>{
+        document.getElementById('navbar').style.display="none"
     }
     return (
         <div className='l-navbar' id='navbar'>
@@ -74,7 +77,7 @@ export default function Sidebar (){
                         </Link>
                     </ul>
                 </div>
-                <Link to="" className='nav__link'>
+                <Link onClick={changeDisplayMenu} to="/" className='nav__link'>
                     <i class='bx bx-log-out nav__icon'></i>
                     <span className='nav__text'>Salir</span>    
                 </Link>
