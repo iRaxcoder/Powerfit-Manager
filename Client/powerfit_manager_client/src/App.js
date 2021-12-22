@@ -7,7 +7,6 @@ function App() {
   return (
     <div className="App">
       <Router>
-            <Sidebar/>
             <Routes>
                 {routes.map(route=>(
                     <Route
