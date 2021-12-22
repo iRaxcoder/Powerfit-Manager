@@ -1,5 +1,6 @@
 import Login from '../views/Login.js'
 import Home from '../views/Home.js'
+import GrupoMuscular from '../views/GrupoMuscular.js'
 
 const homeView = {
     element: <Home/>,
@@ -10,4 +11,9 @@ const LoginView = {
     path: '/'
 }
 
-export default [homeView,LoginView];
+const grupoMuscularView = {
+    element: <GrupoMuscular/>,
+    path: '//grupos-musculares'
+}
+
+export default [homeView,LoginView,grupoMuscularView];
