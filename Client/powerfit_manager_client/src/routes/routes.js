@@ -9,5 +9,9 @@ const LoginView = {
     element: <Login/>,
     path: '/'
 }
+const grupoMuscularView = {
+    element: <GrupoMuscular/>,
+    path: '/grupos-musculares'
+}
 
-export default [homeView,LoginView];
+export default [homeView,LoginView,grupoMuscularView];
