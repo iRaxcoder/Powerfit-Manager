@@ -2,9 +2,10 @@ import Login from '../views/Login.js'
 import Home from '../views/Home.js'
 import Exercise from '../views/Exercise.js'
 import GroupMuscle from '../views/GroupMuscle'
+import Sidebar from '../components/layout/Sidebar.js'
 
 const homeView = {
-    element: <Home/>,
+    element: <Sidebar><Home/></Sidebar>,
     path: '/inicio'
 }
 const LoginView = {
@@ -12,11 +13,11 @@ const LoginView = {
     path: '/'
 }
 const groupMuscleView = {
-    element: <GroupMuscle/>,
+    element: <Sidebar><GroupMuscle/></Sidebar>,
     path: '/grupos-musculares'
 }
 const ExerciseView = {
-    element: <Exercise/>,
+    element: <Sidebar><Exercise/></Sidebar>,
     path: '/ejercicios'
 }
 

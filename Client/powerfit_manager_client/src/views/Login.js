@@ -18,9 +18,6 @@ export default function Login() {
             [event.target.name] : event.target.value
         })
     }
-    const showMenu = () =>{
-        document.getElementById('navbar').style.display="block";
-     }
     const handleSubmit = (event)=>{
         event.preventDefault();
         //
@@ -30,7 +27,6 @@ export default function Login() {
           })
           .then((response) => {
             if(response.data===1){
-                showMenu();
                 history("/inicio")
             }else{
                 alert("datos de inicio de sesión incorrectos")

@@ -42,7 +42,6 @@ a{
 
 .l-navbar{
     position: fixed;
-    display: none;
     top: 0;
     left: 0;
     width: 56px;
@@ -88,7 +87,6 @@ a{
 	  animation-iteration-count: infinite;
 	  animation-timing-function: linear;
     margin-right: 1.2rem;
-    
 }
 
 .show_max_size{
