@@ -4,6 +4,7 @@
 ### react ###
 .DS_*
 *.log
+*.env
 logs
 **/*.backup.*
 **/*.back.*
