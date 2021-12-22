@@ -13,11 +13,13 @@ export default function Sidebar (){
             const toggle= document.getElementById('nav-toggle')
             const navbar=document.getElementById('navbar')
             const image= document.getElementById('power_logo');
+            const body = document.getElementById('body__')
             if(toggle && navbar){
                 toggle.addEventListener('click', ()=>{
                     navbar.classList.toggle('show')
                     toggle.classList.toggle('rotate')
                     image.classList.toggle('show_max_size');
+                    body.classList.toggle('expander');
                 })
             }
         }

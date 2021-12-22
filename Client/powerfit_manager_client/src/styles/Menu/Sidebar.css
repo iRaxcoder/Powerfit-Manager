@@ -177,7 +177,7 @@ a{
   
   /*esto es para el padding body*/
   .expander {
-    padding: 1rem 0 0 12rem;
+    padding: 3rem 0 0 12rem;
     -webkit-transition: .5s;
     transition: .5s;
   }
