@@ -2,6 +2,8 @@ import React, { useEffect, useState, useReducer } from 'react'
 import Logo from '../../assets/img/logo.png'
 import '../../styles/Menu/Sidebar.css'
 import {Link} from 'react-router-dom'
+import axios from 'axios'
+import {BASE_URL} from '../../base.js'
 
 export default function Sidebar (){
     const [state, setState]=useState(false);
@@ -28,8 +30,11 @@ export default function Sidebar (){
                  actual_link.classList.add('active');
                 }
     }
-    const changeDisplayMenu =() =>{
+    const exit =() =>{
         document.getElementById('navbar').style.display="none"
+         axios.get(BASE_URL+'/aut/cerrar-sesion').then((response) => {
+        alert(response.data);
+        });
     }
     return (
         <div className='l-navbar' id='navbar'>
@@ -37,7 +42,6 @@ export default function Sidebar (){
                 <div>
                     <a className='nav__logo'>
                         <img src={Logo} width='34px' height='34px' id='power_logo' className='nav__logo-icon icon'></img>
-                        <span className='nav__logo-text'></span>
                     </a>
                     <div onClick={toggle} className='nav__toggle' id='nav-toggle'>
                         <i class='bx bxs-chevron-right'></i>
@@ -77,7 +81,7 @@ export default function Sidebar (){
                         </Link>
                     </ul>
                 </div>
-                <Link onClick={changeDisplayMenu} to="/" className='nav__link'>
+                <Link onClick={exit} to="/" className='nav__link'>
                     <i class='bx bx-log-out nav__icon'></i>
                     <span className='nav__text'>Salir</span>    
                 </Link>
