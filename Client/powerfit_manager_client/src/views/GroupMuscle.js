@@ -4,8 +4,8 @@ import Modal from 'react-modal'
 
 
 const data = [
-  { musculo: "Abdomen" },
-  { musculo: "Pierna" },
+  { id: 1, musculo: "Abdomen" },
+  { id: 2, musculo: "Pierna" },
 
 ];
 
@@ -32,76 +32,79 @@ export default function GrupoMuscular() {
 
     <div>
       <h3 className="mt-4 text-left pl-6">Control Grupo Muscular</h3>
+      <hr />
       <div className="GrupoMuscular">
-              <div className='col col-md-4 table-responsive table__'>
-            <button className="btn button__" onClick={toggleModalInsert}>Insertar</button>
-            <table className="table table-hover mt-2 ">
-              <thead>
-                <tr>
-                  <th>Musculo</th>
-                  <th>Acción</th>
+        <div className='col col-md-4 table-responsive table__'>
+          <button className="btn button__" onClick={toggleModalInsert}>Insertar</button>
+          <table className="table table-striped table-dark mt-2 ">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Musculo</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {data.map((dato) => (
+                <tr key={dato.id}>
+                   <td>{dato.id}</td>
+                  <td>{dato.musculo}</td>
+                  <td>
+                    <btn className="btn btn-edit"><i class="fas fa-edit"></i></btn>
+                    <btn className="btn btn-delete ml-2"><i class="fas fa-trash-alt"></i></btn>
+
+                  </td>
                 </tr>
-              </thead>
+              ))}
+            </tbody>
+          </table>
 
-              <tbody>
-                {data.map((dato) => (
-                  <tr key={dato.id}>
-                    <td>{dato.musculo}</td>
-                    <td>
-                      <button className="btn btn-success" onClick={toggleModalEdit}>Editar</button>
-                      <button className="btn btn-danger ml-2" onClick={toggleModalDelete}>Eliminar</button>
-
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-          </div>
-          <Modal
-            isOpen={isOpenInsert}
-            onRequestClose={toggleModalInsert}
-            className="modal_"
-            overlayClassName="overlay_"
-            closeTimeoutMS={500}
-          >
-            <div className="text-center">Insertar Grupo Muscular</div>
-
-            <input className='form-control mt-2' name='groupMuscle' placeholder='Nombre grupo muscular'></input>
-
-            <button className='mt-2 ml-3 button__' onClick={toggleModalInsert}>Insertar</button>
-            <button className='mt-2 ml-3 button__' onClick={toggleModalInsert}>Cancelar</button>
-          </Modal>
-
-          <Modal
-            isOpen={isOpenEdit}
-            onRequestClose={toggleModalEdit}
-            className="modal_"
-            overlayClassName="overlay_"
-            closeTimeoutMS={500}
-          >
-            <div className="text-center">Actualizar Grupo Muscular</div>
-
-            <input className='form-control mt-2' name='groupMuscle' placeholder='Nombre grupo muscular'></input>
-
-            <button className='mt-2 ml-3 button__' onClick={toggleModalInsert}>Actualizar</button>
-            <button className='mt-2 ml-3 button__' onClick={toggleModalEdit}>Cancelar</button>
-          </Modal>
-
-          <Modal
-            isOpen={isOpenDelete}
-            onRequestClose={toggleModalDelete}
-            className="modal_"
-            overlayClassName="overlay_"
-            closeTimeoutMS={500}
-          >
-            <div className="text-center">¿Desea eliminar?</div>
-
-            <button className='mt-2 ml-3 button__' onClick={toggleModalDelete}>Aceptar</button>
-            <button className='mt-2 ml-3 button__' onClick={toggleModalDelete}>Cancelar</button>
-          </Modal>
         </div>
+        <Modal
+          isOpen={isOpenInsert}
+          onRequestClose={toggleModalInsert}
+          className="modal_"
+          overlayClassName="overlay_"
+          closeTimeoutMS={500}
+        >
+          <div className="text-center">Insertar Grupo Muscular</div>
+
+          <input className='form-control mt-2' name='groupMuscle' placeholder='Nombre grupo muscular'></input>
+
+          <button className='mt-2 ml-3 button__' onClick={toggleModalInsert}>Insertar</button>
+          <button className='mt-2 ml-3 button__' onClick={toggleModalInsert}>Cancelar</button>
+        </Modal>
+
+        <Modal
+          isOpen={isOpenEdit}
+          onRequestClose={toggleModalEdit}
+          className="modal_"
+          overlayClassName="overlay_"
+          closeTimeoutMS={500}
+        >
+          <div className="text-center">Actualizar Grupo Muscular</div>
+
+          <input className='form-control mt-2' name='groupMuscle' placeholder='Nombre grupo muscular'></input>
+
+          <button className='mt-2 ml-3 button__' onClick={toggleModalInsert}>Actualizar</button>
+          <button className='mt-2 ml-3 button__' onClick={toggleModalEdit}>Cancelar</button>
+        </Modal>
+
+        <Modal
+          isOpen={isOpenDelete}
+          onRequestClose={toggleModalDelete}
+          className="modal_"
+          overlayClassName="overlay_"
+          closeTimeoutMS={500}
+        >
+          <div className="text-center">¿Desea eliminar?</div>
+
+          <button className='mt-2 ml-3 button__' onClick={toggleModalDelete}>Aceptar</button>
+          <button className='mt-2 ml-3 button__' onClick={toggleModalDelete}>Cancelar</button>
+        </Modal>
       </div>
-   
+    </div>
+
   );
 }
