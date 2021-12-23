@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import Modal from 'react-modal'
 import '../styles/common.css'
-
+import AddButton from "../components/AddButton";
+import DeleteButton from "../components/DeleteButton";
+import EditButton from "../components/EditButton";
 
 export default function Ejercicio(){
     return (
@@ -9,7 +11,7 @@ export default function Ejercicio(){
             <h1 className="text-left">Control de ejercicios</h1>
             <hr/>
             <div className="container text-left">   
-                <button className="btn btn-insert mb-2">Insertar</button>
+                <AddButton/>
                 <table className="table table-striped table-dark">
                     <thead>
                         <tr>
@@ -25,8 +27,8 @@ export default function Ejercicio(){
                         <td>Mark</td>
                         <td>Otto</td>
                         <td>
-                        <btn className="btn btn-edit"><i class="fas fa-edit"></i></btn>
-                        <btn className="btn btn-delete ml-2"><i class="fas fa-trash-alt"></i></btn>
+                        <EditButton/>
+                        <DeleteButton/>
                         </td>
                         </tr>
                         <tr>
@@ -34,8 +36,8 @@ export default function Ejercicio(){
                         <td>Jacob</td>
                         <td>Thornton</td>
                         <td>
-                        <btn className="btn btn-edit"><i class="fas fa-edit"></i></btn>
-                        <btn className="btn btn-delete ml-2"><i class="fas fa-trash-alt"></i></btn>
+                        <EditButton/>
+                        <DeleteButton/>
                         </td>
                         </tr>
                         <tr>
@@ -43,8 +45,8 @@ export default function Ejercicio(){
                         <td>Larry</td>
                         <td>the Bird</td>
                         <td>
-                        <btn className="btn btn-edit"><i class="fas fa-edit"></i></btn>
-                        <btn className="btn btn-delete ml-2"><i class="fas fa-trash-alt"></i></btn>
+                        <EditButton/>
+                        <DeleteButton/>
                         </td>
                         </tr>
                     </tbody>

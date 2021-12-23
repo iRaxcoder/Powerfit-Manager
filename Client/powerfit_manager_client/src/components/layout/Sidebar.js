@@ -2,8 +2,6 @@ import React, { useEffect, useState, useReducer } from 'react'
 import Logo from '../../assets/img/logo.png'
 import '../../styles/Menu/Sidebar.css'
 import {Link} from 'react-router-dom'
-import axios from 'axios'
-import {BASE_URL} from '../../base.js'
 import auth from '../../service/Authentication.js'
 
 export default function Sidebar ({children}){
@@ -31,10 +29,10 @@ export default function Sidebar ({children}){
              linkColor.forEach(L=>L.classList.remove('active'))  
              if(actual_link!=null){
                  actual_link.classList.add('active');
-                }
+            }   
     }
     const exit = async () =>{
-        const ApiResponse= await auth.logOut();
+        const ApiResponse = await auth.logOut();
     }
     return (
         <>
