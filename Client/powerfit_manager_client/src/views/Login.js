@@ -2,8 +2,10 @@ import { useState } from 'react';
 import logo from '../assets/img/logo.png'
 import '../styles/Login/login.css'
 import { useNavigate} from 'react-router-dom'
-import axios from 'axios';
-import {BASE_URL} from '../base.js'
+import auth from '../service/Authentication.js'
+
+const SUCCESSFUL = 1;
+
 
 export default function Login() {
 
@@ -18,22 +20,15 @@ export default function Login() {
             [event.target.name] : event.target.value
         })
     }
-    const handleSubmit = (event)=>{
+    const handleSubmit = async (event)=>{
         event.preventDefault();
         //
-        axios.post(BASE_URL+'/aut/iniciar-sesion', {
-            username: user.userName,
-            password: user.secret
-          })
-          .then((response) => {
-            if(response.data===1){
-                history("/inicio")
-            }else{
-                alert("datos de inicio de sesión incorrectos")
-            }
-          }, (error) => {
-            console.log(error);
-        });
+        const ApiResponse= await auth.logIn(user);
+        if (ApiResponse===SUCCESSFUL){
+            history('/inicio');
+        }else{
+            alert(ApiResponse);
+        }
     }
     return (
         <div className='form-body'>
