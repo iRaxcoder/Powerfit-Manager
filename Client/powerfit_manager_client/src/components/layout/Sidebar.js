@@ -4,6 +4,7 @@ import '../../styles/Menu/Sidebar.css'
 import {Link} from 'react-router-dom'
 import axios from 'axios'
 import {BASE_URL} from '../../base.js'
+import auth from '../../service/Authentication.js'
 
 export default function Sidebar ({children}){
     const [state, setState]=useState(false);
@@ -32,11 +33,8 @@ export default function Sidebar ({children}){
                  actual_link.classList.add('active');
                 }
     }
-    const exit =() =>{
-        document.getElementById('navbar').style.display="none"
-         axios.get(BASE_URL+'/aut/cerrar-sesion').then((response) => {
-        alert(response.data);
-        });
+    const exit = async () =>{
+        const ApiResponse= await auth.logOut();
     }
     return (
         <>
