@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Modal from 'react-modal'
 import '../styles/common.css'
 import AddButton from "../components/AddButton";
 import Table from "../components/Table";
+import CustomModal from "../components/Modal";
 
 export default function Ejercicio(){
     
