@@ -5,6 +5,9 @@ import muscle from '../service/MuscleGroup.js'
 import '../styles/common.css'
 import AddButton from "../components/AddButton";
 import Table from "../components/Table";
+import CustomModal from "../components/CustomModal";
+import CustomForm from "../components/CustomForm";
+import { CustomInput } from "../components/CustomInput";
 
 Modal.setAppElement("#root");
 
@@ -31,87 +34,121 @@ export default function GrupoMuscular() {
 
   useEffect(() => {
     muscle.getAll().then((response) => {
-          setData(response);
+      setData(response);
     });
   }, []);
   if (!data) return null;
 
   function toggleModalInsert() {
     setIsOpenInsert(!isOpenInsert);
+
   }
 
   function toggleModalEdit() {
     setIsOpenEdit(!isOpenEdit);
+
   }
 
   function toggleModalDelete() {
     setIsOpenDelete(!isOpenDelete);
   }
 
-  const HandleEdit = () => {
-        
+  const handleSubmit = (e) => {
+    muscle.insert(e.muscule_group);
+    window.location.reload();
+  }
+
+  const HandleEdit = (e) => {
+    e.preventDefault();
+   
   }
 
   const HandleDelete = () => {
-     
+
   }
 
   return (
 
     <div>
-      <h3 className="mt-4 text-left pl-6">Control Grupo Muscular</h3>
+      <h1 className="text-left">Control Grupo Muscular</h1>
       <hr />
       <div className="container text-left">
-        <AddButton />
-         <Table
+        <AddButton
+          onClick={() => setIsOpenInsert(!isOpenInsert)}
+        />
+        <Table
           columns={columns}
           data={data}
-          funEdit={HandleEdit}
-          funDelete={HandleDelete}
+          funEdit={toggleModalEdit}
+          funDelete={toggleModalDelete}
         />
       </div>
-       <Modal
-        isOpen={isOpenInsert}
-        onRequestClose={toggleModalInsert}
-        className="modal_"
-        overlayClassName="overlay_"
-        closeTimeoutMS={500}
+
+      <CustomModal
+        props={
+          {
+            title: 'Insertar grupo muscular',
+            isOpen: isOpenInsert
+          }
+        }
+        methods={
+          {
+            toggleOpenModal: () => setIsOpenInsert(!isOpenInsert)
+          }
+        }
       >
-        <div className="text-center">Insertar Grupo Muscular</div>
+        <CustomForm onSubmit={handleSubmit}>
+          <CustomInput className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
+          <button type="submit" className='mt-2 btn button__'>Insertar</button>
+          <button className='mt-2 ml-3 btn button__' onClick={toggleModalInsert}>Cancelar</button>
+        </CustomForm>
 
-        <input className='form-control mt-2' name='groupMuscle' placeholder='Nombre grupo muscular'></input>
+      </CustomModal>
 
-        <button className='mt-2 ml-3 button__' onClick={toggleModalInsert}>Insertar</button>
-        <button className='mt-2 ml-3 button__' onClick={toggleModalInsert}>Cancelar</button>
-      </Modal>
 
-      <Modal
-        isOpen={isOpenEdit}
-        onRequestClose={toggleModalEdit}
-        className="modal_"
-        overlayClassName="overlay_"
-        closeTimeoutMS={500}
+      <CustomModal
+        props={
+          {
+            title: 'Actualizar grupo muscular',
+            isOpen: isOpenEdit
+          }
+        }
+        methods={
+          {
+            toggleOpenModal: () => setIsOpenEdit(!isOpenEdit)
+          }
+        }
       >
-        <div className="text-center">Actualizar Grupo Muscular</div>
+        <CustomForm onSubmit={handleSubmit}>
+        <CustomInput className='form-control mt-2' type="hidden" name='muscule_group_id' placeholder='Nombre grupo muscular'></CustomInput>
+          <CustomInput className='form-control mt-2' name='muscule_group_name' placeholder='Nombre grupo muscular'></CustomInput>
+          <button type="submit" className='mt-2 btn button__'>Actualizar</button>
+          <button className='mt-2 ml-3 btn button__' onClick={toggleModalEdit}>Cancelar</button>
+        </CustomForm>
 
-        <input className='form-control mt-2' name='groupMuscle' placeholder='Nombre grupo muscular'></input>
+      </CustomModal>
 
-        <button className='mt-2 ml-3 button__' onClick={toggleModalInsert}>Actualizar</button>
-        <button className='mt-2 ml-3 button__' onClick={toggleModalEdit}>Cancelar</button>
-      </Modal>
-
-      <Modal
-        isOpen={isOpenDelete}
-        onRequestClose={toggleModalDelete}
-        className="modal_"
-        overlayClassName="overlay_"
-        closeTimeoutMS={500}
+      <CustomModal
+        props={
+          {
+            title: '¿Desea eliminar?',
+            isOpen: isOpenDelete
+          }
+        }
+        methods={
+          {
+            toggleOpenModal: () => setIsOpenEdit(!isOpenDelete)
+          }
+        }
       >
-        <div className="text-center">¿Desea eliminar?</div>
+        <CustomForm onSubmit={handleSubmit}>
+          <CustomInput className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
+          <button type="submit" className='mt-2 btn button__'>Aceptar</button>
+          <button className='mt-2 ml-3 btn button__' onClick={toggleModalDelete}>Cancelar</button>
+        </CustomForm>
 
-        <button className='mt-2 ml-3 button__' onClick={toggleModalDelete}>Aceptar</button>
-        <button className='mt-2 ml-3 button__' onClick={toggleModalDelete}>Cancelar</button>
-      </Modal>
+      </CustomModal>
+
     </div>
 
 

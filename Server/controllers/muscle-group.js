@@ -13,7 +13,7 @@ module.exports.set = function (app, connection) {
     app.post("/muscle/insert", function(request, response){
         var name = request.body.name;
         connection.query('CALL sp_insert_grupo_muscular(?)',name, function(error,results,fields){
-            if (err) throw err;
+            if (error) throw error;
             response.send("Registro insertado")
             }
 
