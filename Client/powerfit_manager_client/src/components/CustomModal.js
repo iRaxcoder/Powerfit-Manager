@@ -16,7 +16,6 @@ export default function CustomModal ({props, children, methods}){
          closeTimeoutMS={500}
       >
         <h3 className="modal-header text-left">{title}</h3>
-
         <div className='modal-body'>
         {Children.map(children, child => {
               return child.props.name

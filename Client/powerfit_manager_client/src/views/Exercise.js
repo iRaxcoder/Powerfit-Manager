@@ -3,6 +3,8 @@ import '../styles/common.css'
 import AddButton from "../components/AddButton";
 import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
+import CustomForm from "../components/CustomForm";
+import {CustomInput} from "../components/CustomInput";
 
 export default function Ejercicio(){
 
@@ -47,6 +49,10 @@ export default function Ejercicio(){
         []
     )
 
+    const handleSubmit = (e) => {
+      console.log(e.exercise);
+    }
+
     const HandleEdit = () => {
       setIsOpenInsert(true);
     }
@@ -70,11 +76,14 @@ export default function Ejercicio(){
                }
              }
             >
-            <input className='form-control mt-2' name='groupMuscle' placeholder='Nombre grupo muscular'></input>
-            <button className='mt-2 btn button__'>Insertar</button>
-            <button className='mt-2  btn button__' >Cancelar</button>
+            <CustomForm onSubmit={handleSubmit}>
+              <CustomInput className='form-control mt-2' name='exercise' placeholder='Nombre ejercicio'></CustomInput>
+              <CustomInput className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
+              <button type="submit" className='mt-2 btn button__'>Insertar</button>
+              <button className='mt-2  btn button__' >Cancelar</button>
+            </CustomForm>
             
-            </CustomModal>
+          </CustomModal>
             
             <h1 className="text-left">Control de ejercicios</h1>
             <hr/>
