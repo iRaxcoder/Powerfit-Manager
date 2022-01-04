@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import '../styles/common.css'
 import AddButton from "../components/AddButton";
 import Table from "../components/Table";
-import CustomModal from "../components/Modal";
+import CustomModal from "../components/CustomModal";
 
 export default function Ejercicio(){
+
+  const [isOpenInsert, setIsOpenInsert] = useState(false);
     
     const columns = React.useMemo(
         () => [
@@ -46,7 +48,7 @@ export default function Ejercicio(){
     )
 
     const HandleEdit = () => {
-        
+      setIsOpenInsert(true);
     }
 
     const HandleDelete = () => {
@@ -55,6 +57,25 @@ export default function Ejercicio(){
 
     return (
         <div>
+          <CustomModal
+             props={
+               {
+                 title: 'Insertar ejercicio',
+                 isOpen: isOpenInsert
+               }
+             }
+             methods={
+               {
+                toggleOpenModal: ()=>setIsOpenInsert(!isOpenInsert)
+               }
+             }
+            >
+            <input className='form-control mt-2' name='groupMuscle' placeholder='Nombre grupo muscular'></input>
+            <button className='mt-2 btn button__'>Insertar</button>
+            <button className='mt-2  btn button__' >Cancelar</button>
+            
+            </CustomModal>
+            
             <h1 className="text-left">Control de ejercicios</h1>
             <hr/>
             <div className="container text-left">   

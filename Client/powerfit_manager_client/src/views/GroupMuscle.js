@@ -63,14 +63,14 @@ export default function GrupoMuscular() {
       <hr />
       <div className="container text-left">
         <AddButton />
-        <Table
+         <Table
           columns={columns}
           data={data}
           funEdit={HandleEdit}
           funDelete={HandleDelete}
         />
       </div>
-      <Modal
+       <Modal
         isOpen={isOpenInsert}
         onRequestClose={toggleModalInsert}
         className="modal_"
