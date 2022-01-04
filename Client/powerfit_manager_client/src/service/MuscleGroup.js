@@ -17,6 +17,21 @@ const muscle = {
             });
         return response;
 
+    },
+
+    insert: async function(name){
+         //loading.style.display="block";
+         
+         const response = await axios.post(BASE_URL + '/muscle/insert', {name})
+         .then((response) => {
+            return response.data;
+         }).catch(error => {
+             console.log(error);
+         })
+         .finally(() => {
+             //loading.style.display="none";
+         });
+     return response;
     }
 }
 
