@@ -8,6 +8,7 @@ import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
 import { CustomInput } from "../components/CustomInput";
+import CancelButton from "../components/CancelButton"
 
 Modal.setAppElement("#root");
 
@@ -16,7 +17,6 @@ export default function GrupoMuscular() {
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
   const [data, setData] = useState(null);
-
 
   const columns = React.useMemo(
     () => [
@@ -31,36 +31,43 @@ export default function GrupoMuscular() {
     ],
     []
   )
-
   useEffect(() => {
-    muscle.getAll().then((response) => {
-      setData(response);
-    });
+    const fetchData = () => {
+      muscle.getAll().then(response => {
+        setData(response)
+      })
+    }
+    fetchData();
   }, []);
-  if (!data) return null;
+  if (!data) return "No se encuentran datos";
 
-  function toggleModalInsert() {
+
+  const toggleModalInsert = () => {
     setIsOpenInsert(!isOpenInsert);
 
   }
 
-  function toggleModalEdit() {
+  const toggleModalEdit = () => {
     setIsOpenEdit(!isOpenEdit);
 
   }
 
-  function toggleModalDelete() {
+  const toggleModalDelete = () => {
     setIsOpenDelete(!isOpenDelete);
   }
 
+
   const handleSubmit = (e) => {
     muscle.insert(e.muscule_group);
-    window.location.reload();
+    muscle.getAll().then(response => {
+      setData(response)
+    })
+    toggleModalInsert();
   }
 
   const HandleEdit = (e) => {
-    e.preventDefault();
-   
+
+
   }
 
   const HandleDelete = () => {
@@ -98,9 +105,9 @@ export default function GrupoMuscular() {
         }
       >
         <CustomForm onSubmit={handleSubmit}>
-          <CustomInput className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
-          <button type="submit" className='mt-2 btn button__'>Insertar</button>
-          <button className='mt-2 ml-3 btn button__' onClick={toggleModalInsert}>Cancelar</button>
+          <CustomInput errorMsg="Seleccione grupo muscular" className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
+          <AddButton type="submit" />
+          <CancelButton/>
         </CustomForm>
 
       </CustomModal>
@@ -120,10 +127,10 @@ export default function GrupoMuscular() {
         }
       >
         <CustomForm onSubmit={handleSubmit}>
-        <CustomInput className='form-control mt-2' type="hidden" name='muscule_group_id' placeholder='Nombre grupo muscular'></CustomInput>
+          <CustomInput className='form-control mt-2' type="hidden" name='muscule_group_id' placeholder='Nombre grupo muscular'></CustomInput>
           <CustomInput className='form-control mt-2' name='muscule_group_name' placeholder='Nombre grupo muscular'></CustomInput>
-          <button type="submit" className='mt-2 btn button__'>Actualizar</button>
-          <button className='mt-2 ml-3 btn button__' onClick={toggleModalEdit}>Cancelar</button>
+          <AddButton type="submit" />
+          <CancelButton/>
         </CustomForm>
 
       </CustomModal>
@@ -143,8 +150,8 @@ export default function GrupoMuscular() {
       >
         <CustomForm onSubmit={handleSubmit}>
           <CustomInput className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
-          <button type="submit" className='mt-2 btn button__'>Aceptar</button>
-          <button className='mt-2 ml-3 btn button__' onClick={toggleModalDelete}>Cancelar</button>
+          <AddButton type="submit" />
+          <CancelButton/>
         </CustomForm>
 
       </CustomModal>
