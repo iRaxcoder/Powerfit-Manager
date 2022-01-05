@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import '../styles/common.css'
 import AddButton from "../components/AddButton";
 import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
 import {CustomInput} from "../components/CustomInput";
+import exercise from './../service/Exercise';
 
 export default function Ejercicio(){
 
   const [isOpenInsert, setIsOpenInsert] = useState(false);
+  const [data, setData] = useState(null);
     
     const columns = React.useMemo(
         () => [
@@ -28,27 +30,14 @@ export default function Ejercicio(){
         []
     )
     
-    const data = React.useMemo(
-        () => [
-          {
-            ID_EJERCICIO: 'Hello',
-            NOMBRE_EJERCICIO: 'World',
-            NOMBRE_MUSCULAR: 'you want',
-          },
-          {
-            ID_EJERCICIO: 'Hello',
-            NOMBRE_EJERCICIO: 'World',
-            NOMBRE_MUSCULAR: 'you want',
-          },
-          {
-            ID_EJERCICIO: 'Hello',
-            NOMBRE_EJERCICIO: 'World',
-            NOMBRE_MUSCULAR: 'you want',
-          },
-        ],
-        []
-    )
-
+    useEffect(()=>{
+      exercise.getAll().then((response) => {
+        console.log(response)
+        setData(response);
+      });
+    },[]);
+    if (!data) return null;
+    
     const handleSubmit = (e) => {
       console.log(e.exercise);
     }
