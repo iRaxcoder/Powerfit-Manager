@@ -8,6 +8,7 @@ import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
 import { CustomInput } from "../components/CustomInput";
+import CancelButton from "../components/CancelButton"
 
 Modal.setAppElement("#root");
 
@@ -104,9 +105,9 @@ export default function GrupoMuscular() {
         }
       >
         <CustomForm onSubmit={handleSubmit}>
-          <CustomInput className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
-          <button type="submit" className='mt-2 btn button__'>Insertar</button>
-          <button className='mt-2 ml-3 btn button__' onClick={toggleModalInsert}>Cancelar</button>
+          <CustomInput errorMsg="Seleccione grupo muscular" className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
+          <AddButton type="submit" />
+          <CancelButton/>
         </CustomForm>
 
       </CustomModal>
@@ -128,8 +129,8 @@ export default function GrupoMuscular() {
         <CustomForm onSubmit={handleSubmit}>
           <CustomInput className='form-control mt-2' type="hidden" name='muscule_group_id' placeholder='Nombre grupo muscular'></CustomInput>
           <CustomInput className='form-control mt-2' name='muscule_group_name' placeholder='Nombre grupo muscular'></CustomInput>
-          <button type="submit" className='mt-2 btn button__'>Actualizar</button>
-          <button className='mt-2 ml-3 btn button__' onClick={toggleModalEdit}>Cancelar</button>
+          <AddButton type="submit" />
+          <CancelButton/>
         </CustomForm>
 
       </CustomModal>
@@ -149,8 +150,8 @@ export default function GrupoMuscular() {
       >
         <CustomForm onSubmit={handleSubmit}>
           <CustomInput className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
-          <button type="submit" className='mt-2 btn button__'>Aceptar</button>
-          <button className='mt-2 ml-3 btn button__' onClick={toggleModalDelete}>Cancelar</button>
+          <AddButton type="submit" />
+          <CancelButton/>
         </CustomForm>
 
       </CustomModal>
