@@ -29,14 +29,15 @@ export default function Ejercicio(){
         ],
         []
     )
-    
-    useEffect(()=>{
-      exercise.getAll().then((response) => {
-        console.log(response)
-        setData(response);
-      });
+    useEffect( ()=>{
+      function fetchData (){
+        exercise.getAll().then(response=>{
+          setData(response.data[0])
+        });
+      }
+      fetchData();
     },[]);
-    if (!data) return null;
+    if(!data) return "No se encuentran ejercicios";
     
     const handleSubmit = (e) => {
       console.log(e.exercise);
