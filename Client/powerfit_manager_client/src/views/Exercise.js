@@ -66,8 +66,8 @@ export default function Ejercicio(){
              }
             >
             <CustomForm onSubmit={handleSubmit}>
-              <CustomInput className='form-control mt-2' name='exercise' placeholder='Nombre ejercicio'></CustomInput>
-              <CustomInput className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
+              <CustomInput errorMsg="Inserte nombre del ejercicio" className='form-control mt-2' name='exercise' placeholder='Nombre ejercicio'></CustomInput>
+              <CustomInput errorMsg="Seleccione grupo muscular"  className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
               <button type="submit" className='mt-2 btn button__'>Insertar</button>
               <button className='mt-2  btn button__' >Cancelar</button>
             </CustomForm>
