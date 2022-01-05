@@ -8,6 +8,8 @@ import {CustomInput} from "../components/CustomInput";
 import exercise from './../service/Exercise';
 import CancelButton from "../components/CancelButton"
 
+const SUCCESS= 1;
+
 export default function Ejercicio(){
 
   const [isOpenInsert, setIsOpenInsert] = useState(false);
@@ -31,21 +33,25 @@ export default function Ejercicio(){
         []
     )
     useEffect(()=>{
-      const fetchData = () => {
-        exercise.getAll().then(response=>{
+      const fetchExercise = () => {
+          exercise.getAll().then(response=>{
           setData(response)
         })
       }
-      fetchData();
-    },[]);
+      fetchExercise();
+    },[data]);
     if(!data) return "No se encuentran ejercicios";
     
     const handleInsert = (e) => {
-      console.log(e.exercise);
+      exercise.insert(e).then(response=>{   
+          if(response.msg===SUCCESS){
+            alert("Agregado con éxito")
+          }
+      })
+      setIsOpenInsert(false);
     }
 
     const HandleEdit = () => {
-      setIsOpenInsert(true);
     }
 
     const HandleDelete = () => {
@@ -54,7 +60,18 @@ export default function Ejercicio(){
 
     return (
         <div>
-          <CustomModal
+            <h1 className="text-left">Control de ejercicios</h1>
+            <hr/>
+            <div className="container text-left">   
+                <AddButton onClick={()=>setIsOpenInsert(!isOpenInsert)} />
+                <Table
+                columns={columns}
+                data={data}
+                funEdit={HandleEdit}
+                funDelete={HandleDelete}
+                />
+            </div>
+            <CustomModal
              props={
                {
                  title: 'Insertar ejercicio',
@@ -71,20 +88,9 @@ export default function Ejercicio(){
               <CustomInput errorMsg="Inserte nombre del ejercicio" className='form-control mt-2' name='exercise' placeholder='Nombre ejercicio'></CustomInput>
               <CustomInput errorMsg="Seleccione grupo muscular"  className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
               <AddButton/>
-              <CancelButton/>
+              <CancelButton fun={()=>setIsOpenInsert(false)}/>
             </CustomForm>
           </CustomModal>
-            <h1 className="text-left">Control de ejercicios</h1>
-            <hr/>
-            <div className="container text-left">   
-                <AddButton/>
-                <Table
-                columns={columns}
-                data={data}
-                funEdit={HandleEdit}
-                funDelete={HandleDelete}
-                />
-            </div>
         </div>
     );
 }

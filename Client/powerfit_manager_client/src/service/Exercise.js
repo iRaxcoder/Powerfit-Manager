@@ -17,6 +17,22 @@ const exercise = {
             });
         return response;
     },
+
+    insert: async function(object){
+        //loading.style.display="block";
+        console.log(object);
+        const response = await axios.post(BASE_URL + "/ejercicio/post", {object})
+        .then((response) => {
+            console.log(response.data[0][0]);
+           return response.data[0][0];
+        }).catch(error => {
+            console.log(error);
+        })
+        .finally(() => {
+            //loading.style.display="none";
+        });
+    return response;
+   }
 }
 
 export default exercise;
