@@ -30,10 +30,10 @@ export default function Ejercicio(){
         []
     )
     useEffect( ()=>{
-      function fetchData (){
+      const fetchData = () => {
         exercise.getAll().then(response=>{
-          setData(response.data[0])
-        });
+          setData(response)
+        })
       }
       fetchData();
     },[]);
