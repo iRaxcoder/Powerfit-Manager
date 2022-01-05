@@ -6,6 +6,7 @@ import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
 import {CustomInput} from "../components/CustomInput";
 import exercise from './../service/Exercise';
+import CancelButton from "../components/CancelButton"
 
 export default function Ejercicio(){
 
@@ -29,7 +30,7 @@ export default function Ejercicio(){
         ],
         []
     )
-    useEffect( ()=>{
+    useEffect(()=>{
       const fetchData = () => {
         exercise.getAll().then(response=>{
           setData(response)
@@ -39,7 +40,7 @@ export default function Ejercicio(){
     },[]);
     if(!data) return "No se encuentran ejercicios";
     
-    const handleSubmit = (e) => {
+    const handleInsert = (e) => {
       console.log(e.exercise);
     }
 
@@ -66,15 +67,13 @@ export default function Ejercicio(){
                }
              }
             >
-            <CustomForm onSubmit={handleSubmit}>
+            <CustomForm onSubmit={handleInsert}>
               <CustomInput errorMsg="Inserte nombre del ejercicio" className='form-control mt-2' name='exercise' placeholder='Nombre ejercicio'></CustomInput>
               <CustomInput errorMsg="Seleccione grupo muscular"  className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
-              <button type="submit" className='mt-2 btn button__'>Insertar</button>
-              <button className='mt-2  btn button__' >Cancelar</button>
+              <AddButton/>
+              <CancelButton/>
             </CustomForm>
-            
           </CustomModal>
-            
             <h1 className="text-left">Control de ejercicios</h1>
             <hr/>
             <div className="container text-left">   
