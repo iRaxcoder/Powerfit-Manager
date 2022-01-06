@@ -6,6 +6,7 @@ const DeleteButton= (props) =>{
         className="btn btn-delete ml-2 fas fa-trash-alt"
         onClick={props.fun}
         >
+        {props.text}
         </btn>
     );
 }
