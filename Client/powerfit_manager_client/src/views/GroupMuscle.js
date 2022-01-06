@@ -70,8 +70,11 @@ export default function GrupoMuscular() {
     setIsOpenDelete(!isOpenDelete);
   }
 
+  const handleChange = (e) => {
+    setElement({ NOMBRE_GRUPO_MUSCULAR: e.muscule_group_name })
+  };
 
-  const handleSubmit = (e) => {
+  const handleInsert = (e) => {
     muscle.insert(e.muscule_group).then(response => {
       alert(response);
     });
@@ -79,7 +82,11 @@ export default function GrupoMuscular() {
   }
 
   const HandleEdit = (e) => {
-
+    alert(e.muscule_group_id, e.muscule_group_name);
+    muscle.update(e.muscule_group_id, e.muscule_group_name).then(response => {
+      alert(response);
+    });
+    toggleModalInsert();
 
   }
 
@@ -106,19 +113,10 @@ export default function GrupoMuscular() {
       </div>
 
       <CustomModal
-        props={
-          {
-            title: 'Insertar grupo muscular',
-            isOpen: isOpenInsert
-          }
-        }
-        methods={
-          {
-            toggleOpenModal: () => setIsOpenInsert(!isOpenInsert)
-          }
-        }
+        props={{ title: 'Insertar grupo muscular', isOpen: isOpenInsert }}
+        methods={{ toggleOpenModal: () => setIsOpenInsert(!isOpenInsert) }}
       >
-        <CustomForm onSubmit={handleSubmit}>
+        <CustomForm onSubmit={handleInsert}>
           <CustomInput errorMsg="Seleccione grupo muscular" className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
           <AddButton type="submit" />
           <CancelButton fun={() => setIsOpenInsert(!isOpenInsert)} />
@@ -128,41 +126,23 @@ export default function GrupoMuscular() {
 
 
       <CustomModal
-        props={
-          {
-            title: 'Actualizar grupo muscular',
-            isOpen: isOpenEdit
-          }
-        }
-        methods={
-          {
-            toggleOpenModal: () => setIsOpenEdit(!isOpenEdit)
-          }
-        }
+        props={{ title: 'Actualizar grupo muscular', isOpen: isOpenEdit }}
+        methods={{ toggleOpenModal: () => setIsOpenEdit(!isOpenEdit) }}
       >
-        <CustomForm onSubmit={handleSubmit}>
+        <CustomForm onSubmit={HandleEdit}>
           <CustomInput className='form-control mt-2' type="hidden" name='muscule_group_id' value={element.ID_MUSCULAR} placeholder='Nombre grupo muscular'></CustomInput>
-          <CustomInput className='form-control mt-2' name='muscule_group_name' value={element.NOMBRE_GRUPO_MUSCULAR} placeholder='Nombre grupo muscular'></CustomInput>
+          <CustomInput className='form-control mt-2' name='muscule_group_name' onChange={handleChange} value={element.NOMBRE_GRUPO_MUSCULAR} placeholder='Nombre grupo muscular'></CustomInput>
           <AddButton type="submit" />
-          <CancelButton  fun={() => setIsOpenInsert(!isOpenEdit)}/>
+          <CancelButton fun={() => setIsOpenEdit(!isOpenEdit)} />
         </CustomForm>
 
       </CustomModal>
 
       <CustomModal
-        props={
-          {
-            title: '¿Desea eliminar?',
-            isOpen: isOpenDelete
-          }
-        }
-        methods={
-          {
-            toggleOpenModal: () => setIsOpenEdit(!isOpenDelete)
-          }
-        }
+        props={{ title: '¿Desea eliminar?', isOpen: isOpenDelete }}
+        methods={{ toggleOpenModal: () => setIsOpenEdit(!isOpenDelete) }}
       >
-        <CustomForm onSubmit={handleSubmit}>
+        <CustomForm onSubmit={HandleDelete}>
           <CustomInput className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
           <AddButton type="submit" />
           <CancelButton />
