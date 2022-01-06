@@ -33,12 +33,12 @@ export default function Ejercicio(){
         []
     )
     useEffect(()=>{
-      const fetchExercise = () => {
+      const fetchExercises = () => {
           exercise.getAll().then(response=>{
           setData(response)
         })
       }
-      fetchExercise();
+      fetchExercises();
     },[data]);
     if(!data) return "No se encuentran ejercicios";
     
@@ -52,6 +52,7 @@ export default function Ejercicio(){
     }
 
     const HandleEdit = () => {
+      
     }
 
     const HandleDelete = () => {
