@@ -5,6 +5,7 @@ const DeleteButton= (props) =>{
         <btn 
         className="btn btn-delete ml-2 fas fa-trash-alt"
         onClick={props.fun}
+        data-row={props.rowObject}
         >
         {props.text}
         </btn>

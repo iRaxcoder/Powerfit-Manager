@@ -48,7 +48,7 @@ const Table = (props)=>{
                     })}
                     <td>
                       <EditButton fun={props.funEdit} rowObject={JSON.stringify(aux[index])} />
-                      <DeleteButton fun={props.funDelete}/>
+                      <DeleteButton fun={props.funDelete} rowObject={JSON.stringify(aux[index])} />
                     </td>
                   </tr>
                 )
