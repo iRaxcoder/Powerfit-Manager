@@ -6,7 +6,7 @@ import EditButton from "../components/EditButton";
 const Table = (props)=>{
     const columns= props.columns;
     const data= props.data;
-
+    const aux = props.aux;
     const {
         getTableProps,
         getTableBodyProps,
@@ -33,7 +33,7 @@ const Table = (props)=>{
               ))}
             </thead>
             <tbody {...getTableBodyProps()}>
-              {rows.map(row => {
+              {rows.map((row,index) => {
                 prepareRow(row)
                 return (
                   <tr {...row.getRowProps()}>
@@ -47,7 +47,7 @@ const Table = (props)=>{
                       )
                     })}
                     <td>
-                      <EditButton fun={props.funEdit}/>
+                      <EditButton fun={props.funEdit} data={aux} />
                       <DeleteButton fun={props.funDelete}/>
                     </td>
                   </tr>

@@ -5,6 +5,7 @@ const EditButton= (props) =>{
         <btn
         className="btn btn-edit"
         onClick={props.fun}
+        data-row= {props.data}
         >
         <i class="fas fa-edit"></i>
         </btn>
