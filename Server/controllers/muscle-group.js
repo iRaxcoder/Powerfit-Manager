@@ -5,7 +5,7 @@ module.exports.set = function (app, connection) {
                 res.send(rows);
             }
             else {
-                console.log(err);
+                console.log("Ocurrio un error");
             }
         })
     })
@@ -21,21 +21,35 @@ module.exports.set = function (app, connection) {
 
     });
 
-    app.post("/muscle/update", function(request, response){
+    app.put("/muscle/update", function(request, response){
         var id = request.body.id;
         var name = request.body.name;
-        console.log(id+name);
+        
         connection.query('CALL sp_update_grupo_muscular(?,?)',[id, name], function(error,results,fields){
             if (!error) {
                 response.send("Actualización exitosa");
             }
             else {
-                response.send(error);
+                response.send("Ocurrio un error");
             }
 
         });
 
     });
 
-    // app.post()
+    app.put("/muscle/delete", function(request, response){
+        var id = request.body.id;
+         connection.query('CALL sp_delete_grupo_muscular(?)',[id], function(error,results,fields){
+            if (!error) {
+                response.send("Se borro exitosamente");
+            }
+            else {
+                response.send("Ocurrio un error");
+            }
+
+        });
+
+    });
+
+    
 }

@@ -69,7 +69,12 @@ export default function GrupoMuscular() {
 
   }
 
-  const toggleModalDelete = () => {
+  const toggleModalDelete = (e) => {
+    const groupMuscle = JSON.parse(e.target.dataset.row);
+    setElement({
+      ID_MUSCULAR: groupMuscle.ID_MUSCULAR,
+      NOMBRE_GRUPO_MUSCULAR: groupMuscle.NOMBRE_GRUPO_MUSCULAR
+    });
     setIsOpenDelete(!isOpenDelete);
   }
 
@@ -102,7 +107,16 @@ export default function GrupoMuscular() {
 
   }
 
-  const HandleDelete = () => {
+  const HandleDelete = (e) => {
+    muscle.delete(e.muscule_group_id).then(response => {
+      setModalMsg(prevState =>({
+        ...prevState,
+        msg: response,
+        isMsgOpen: true
+      }));
+      fetchData();
+    });
+    setIsOpenDelete(!isOpenDelete);
 
   }
 
@@ -121,7 +135,7 @@ export default function GrupoMuscular() {
           data={data}
           aux={dataRef.current}
           funEdit={(e) => toggleModalEdit(e)}
-          funDelete={toggleModalDelete}
+          funDelete={(e) => toggleModalDelete(e)}
         />
       </div>
 
@@ -143,7 +157,7 @@ export default function GrupoMuscular() {
         methods={{ toggleOpenModal: () => setIsOpenEdit(!isOpenEdit) }}
       >
         <CustomForm onSubmit={HandleEdit}>
-          <CustomInput className='form-control mt-2' type="hidden" name='muscule_group_id' value={element.ID_MUSCULAR} placeholder='Nombre grupo muscular'></CustomInput>
+          <CustomInput className='form-control mt-2' type="hidden" name='muscule_group_id' value={element.ID_MUSCULAR} placeholder='Id grupo muscular'></CustomInput>
           <CustomInput className='form-control mt-2' name='muscule_group_name' onChange={handleChange} value={element.NOMBRE_GRUPO_MUSCULAR} placeholder='Nombre grupo muscular'></CustomInput>
           <AddButton text="Guardar cambios" type="submit" />
           <CancelButton fun={() => setIsOpenEdit(!isOpenEdit)} />
@@ -153,12 +167,13 @@ export default function GrupoMuscular() {
 
       <CustomModal
         props={{ title: '¿Desea eliminar?', isOpen: isOpenDelete }}
-        methods={{ toggleOpenModal: () => setIsOpenEdit(!isOpenDelete) }}
+        methods={{ toggleOpenModal: () => setIsOpenDelete(!isOpenDelete) }}
       >
         <CustomForm onSubmit={HandleDelete}>
-          <CustomInput className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
+        <CustomInput className='form-control mt-2' type="hidden" name='muscule_group_id' value={element.ID_MUSCULAR} placeholder='ID grupo muscular'></CustomInput>
+          <CustomInput className='form-control mt-2' name='muscule_group' value={element.NOMBRE_GRUPO_MUSCULAR} placeholder='Nombre grupo muscular'></CustomInput>
           <AddButton text="Si" type="submit" />
-          <CancelButton />
+          <CancelButton fun={() => setIsOpenDelete(!isOpenDelete)} />
         </CustomForm>
 
       </CustomModal>
