@@ -22,8 +22,7 @@ const exercise = {
         //loading.style.display="block";
         const response = await axios.post(BASE_URL + "/ejercicio/post", {object})
         .then((response) => {
-            console.log(response.data[0][0]);
-           return response.data[0][0];
+           return response.data;
         }).catch(error => {
             console.log(error);
         })

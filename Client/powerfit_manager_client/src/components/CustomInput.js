@@ -11,14 +11,16 @@ export function CustomInput ({register, errors, errorMsg, name, ...rest}){
   );
 }
 
-export function CustomSelect ({register, options, name, ...rest}) {
+export function CustomSelect ({register, options, focus, name, ...rest}) {
    return (
-    <select {...register(name)} {...rest}>
-      {options.map(value => (
-        <option key={value} value={value}>
-            {value}
-        </option>
-      ))}
-    </select>
+    <>
+      <select {...register(name)} {...rest}>
+        {options.map(value => (
+          <option key={value[focus]} value={value[focus]}>
+              {value[focus]}
+          </option>
+        ))}
+      </select>
+    </>
    );
 }
