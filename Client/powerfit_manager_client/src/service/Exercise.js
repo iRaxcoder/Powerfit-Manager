@@ -20,7 +20,6 @@ const exercise = {
 
     insert: async function(object){
         //loading.style.display="block";
-        console.log(object);
         const response = await axios.post(BASE_URL + "/ejercicio/post", {object})
         .then((response) => {
             console.log(response.data[0][0]);

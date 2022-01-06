@@ -6,24 +6,28 @@ import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
 import {CustomInput} from "../components/CustomInput";
 import exercise from './../service/Exercise';
-import CancelButton from "../components/CancelButton"
+import muscle from './../service/MuscleGroup';
+import CancelButton from "../components/CancelButton";
 
 const SUCCESS= 1;
+const TIP = 0;
+const ERROR = -1;
 
 export default function Ejercicio(){
 
   const [isOpenInsert, setIsOpenInsert] = useState(false);
-  const [data, setData] = useState(null);
+  const [ExercisesList, setExercisesList] = useState(null);
+  const [MuscleGroupList, setMuscleGroupList] = useState(null);
   const dataRef= useRef();
   const [modalMsg, setModalMsg]= useState({isMsgOpen: false, msg: ""});
 
-  dataRef.current=data;
+  dataRef.current=ExercisesList;
     
-    const columns = React.useMemo(
-        () => [
-          {
-            Header: '#',
-            accessor: 'ID_EJERCICIO', // accessor is the "key" in the data
+  const columns = React.useMemo(
+      () => [
+        {
+          Header: '#',
+          accessor: 'ID_EJERCICIO', // accessor is the "key" in the data
           },
           {
             Header: 'Ejercicio',
@@ -34,32 +38,45 @@ export default function Ejercicio(){
             accessor: 'NOMBRE_MUSCULAR',
           },
         ],
-        []
+      []
     )
-    useEffect(()=>{
-      const fetchExercises = () => {
-          exercise.getAll().then(response=>{
-          setData(response)
-        })
-      }
-      fetchExercises();
-    },[data]);
-    if(!data) return "No se encuentran ejercicios";
+
+  const fetchExercises = () => {
+      exercise.getAll().then(response=>{
+      setExercisesList(response)
+    })
+  }
+
+  const fetchMuscleGroups = () => {
+    muscle.getAll().then(response=>{
+      setMuscleGroupList(response)
+    })
+  }
+  
+  useEffect(()=>{
+    fetchExercises();
+    fetchMuscleGroups();
+  },[setExercisesList]);
+
+  if(!ExercisesList) return "No se encuentran ejercicios";
     
     const handleInsert = (e) => {
       exercise.insert(e).then(response=>{   
           if(response.msg===SUCCESS){
             setModalMsg(prevState =>({
               ...prevState,
-              isMsgOpen:true
+              msg: "agregado con éxito",
+              isMsgOpen: true
             }));
+            fetchExercises();
           }
       })
       setIsOpenInsert(false);
+      
     }
 
     const HandleEdit = (e) => {
-      const exercise=JSON.parse(e.target.dataset.row);
+      const exercise = JSON.parse(e.target.dataset.row);
     }
 
     const HandleDelete = () => {
@@ -74,7 +91,7 @@ export default function Ejercicio(){
                 <AddButton onClick={()=>setIsOpenInsert(!isOpenInsert)} />
                 <Table
                 columns={columns}
-                data={data}
+                data={ExercisesList}
                 aux={dataRef.current}
                 funEdit={HandleEdit}
                 funDelete={HandleDelete}
@@ -113,7 +130,7 @@ export default function Ejercicio(){
                }
              }
             >
-            <p>hola este es un mensaje</p>
+            <p>{modalMsg.msg}</p>
           </CustomModal>
         </div>
     );
