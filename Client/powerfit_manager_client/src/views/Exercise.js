@@ -9,18 +9,12 @@ import exercise from './../service/Exercise';
 import muscle from './../service/MuscleGroup';
 import CancelButton from "../components/CancelButton";
 
-const SUCCESS= 1;
-const TIP = 0;
-const ERROR = -1;
-
 export default function Ejercicio(){
-
   const [isOpenInsert, setIsOpenInsert] = useState(false);
   const [ExercisesList, setExercisesList] = useState(null);
   const [MuscleGroupList, setMuscleGroupList] = useState(null);
   const ExercisesListRef= useRef();
   const [modalMsg, setModalMsg]= useState({isMsgOpen: false, msg: ""});
-
   ExercisesListRef.current=ExercisesList;
     
   const columns = React.useMemo(
@@ -35,7 +29,7 @@ export default function Ejercicio(){
           },
           {
             Header: 'Grupo muscular',
-            accessor: 'NOMBRE_MUSCULAR',
+            accessor: 'NOMBRE_GRUPO_MUSCULAR',
           },
         ],
       []
@@ -62,14 +56,12 @@ export default function Ejercicio(){
     
     const handleInsert = (e) => {
       exercise.insert(e).then(response=>{   
-          if(response.msg===SUCCESS){
             setModalMsg(prevState =>({
               ...prevState,
-              msg: "agregado con éxito",
+              msg: response,
               isMsgOpen: true
             }));
             fetchExercises();
-          }
       })
       setIsOpenInsert(false);
     }
@@ -102,7 +94,7 @@ export default function Ejercicio(){
                 >
               <CustomForm onSubmit={handleInsert}>
                 <CustomInput errorMsg="Inserte nombre del ejercicio" className='form-control mt-2' name='exercise' placeholder='Nombre ejercicio'></CustomInput>
-                <CustomInput errorMsg="Seleccione grupo muscular"  className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
+                <CustomSelect focus="NOMBRE_GRUPO_MUSCULAR" errorMsg="Seleccione grupo muscular"  className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular' options={MuscleGroupList}></CustomSelect>
                 <AddButton/>
                 <CancelButton fun={()=>setIsOpenInsert(false)}/>
               </CustomForm>
