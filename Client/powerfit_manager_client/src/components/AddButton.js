@@ -6,7 +6,7 @@ const AddButton= (props) =>{
         className="btn btn-insert mb-2 mt-2"
         onClick={props.onClick}
         >
-        Insertar</button>
+        {props.text}</button>
     );
 }
 

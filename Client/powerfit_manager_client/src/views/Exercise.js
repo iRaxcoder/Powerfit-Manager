@@ -68,6 +68,7 @@ export default function Ejercicio(){
 
     const HandleEdit = (e) => {
       const exercise = JSON.parse(e.target.dataset.row);
+
     }
 
     const HandleDelete = () => {
@@ -79,7 +80,7 @@ export default function Ejercicio(){
             <h1 className="text-left">Control de ejercicios</h1>
             <hr/>
             <div className="container text-left">   
-                <AddButton onClick={()=>setIsOpenInsert(!isOpenInsert)} />
+                <AddButton text="Insertar" onClick={()=>setIsOpenInsert(!isOpenInsert)} />
                 <Table
                   columns={columns}
                   data={ExercisesList}
@@ -95,7 +96,18 @@ export default function Ejercicio(){
               <CustomForm onSubmit={handleInsert}>
                 <CustomInput errorMsg="Inserte nombre del ejercicio" className='form-control mt-2' name='exercise' placeholder='Nombre ejercicio'></CustomInput>
                 <CustomSelect focus="NOMBRE_GRUPO_MUSCULAR" errorMsg="Seleccione grupo muscular"  className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular' options={MuscleGroupList}></CustomSelect>
-                <AddButton/>
+                <AddButton text="Insertar"/>
+                <CancelButton fun={()=>setIsOpenInsert(false)}/>
+              </CustomForm>
+            </CustomModal>
+            <CustomModal
+              props={{title: 'Modificar ejercicio', isOpen: isOpenInsert}}
+              methods={{toggleOpenModal: ()=>setIsOpenInsert(!isOpenInsert)}}
+                >
+              <CustomForm onSubmit={handleInsert}>
+                <CustomInput errorMsg="Inserte nombre del ejercicio" className='form-control mt-2' name='exercise' placeholder='Nombre ejercicio'></CustomInput>
+                <CustomSelect focus="NOMBRE_GRUPO_MUSCULAR" errorMsg="Seleccione grupo muscular"  className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular' options={MuscleGroupList}></CustomSelect>
+                <AddButton text="Guardar cambios"/>
                 <CancelButton fun={()=>setIsOpenInsert(false)}/>
               </CustomForm>
             </CustomModal>
