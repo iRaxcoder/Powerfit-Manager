@@ -11,17 +11,20 @@ import CancelButton from "../components/CancelButton";
 
 export default function Ejercicio(){
   const [isOpenInsert, setIsOpenInsert] = useState(false);
-  const [ExercisesList, setExercisesList] = useState(null);
-  const [MuscleGroupList, setMuscleGroupList] = useState(null);
-  const ExercisesListRef= useRef();
+  const [isOpenEdit, setIsOpenEdit] = useState(false);
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
+  const [exerciseEdited, setExerciseEdited] = useState({id:0, exercise:"default", muscleGroup:"dafault"});
+  const [exercisesList, setExercisesList] = useState(null);
+  const [muscleGroupList, setMuscleGroupList] = useState(null);
+  const exercisesListRef= useRef();
   const [modalMsg, setModalMsg]= useState({isMsgOpen: false, msg: ""});
-  ExercisesListRef.current=ExercisesList;
+  exercisesListRef.current=exercisesList;
     
   const columns = React.useMemo(
       () => [
         {
           Header: '#',
-          accessor: 'ID_EJERCICIO', // accessor is the "key" in the data
+          accessor: 'ID_EJERCICIO',
           },
           {
             Header: 'Ejercicio',
@@ -52,27 +55,55 @@ export default function Ejercicio(){
     fetchMuscleGroups();
   },[setExercisesList]);
 
-  if(!ExercisesList) return "No se encuentran ejercicios";
+  if(!exercisesList) return "No se encuentran ejercicios";
     
     const handleInsert = (e) => {
       exercise.insert(e).then(response=>{   
-            setModalMsg(prevState =>({
-              ...prevState,
-              msg: response,
-              isMsgOpen: true
-            }));
-            fetchExercises();
+          setModalMsg(prevState =>({
+            ...prevState,
+            msg: response,
+            isMsgOpen: true
+          }));
+        fetchExercises();
       })
       setIsOpenInsert(false);
     }
 
-    const HandleEdit = (e) => {
+    const HandleOpenEdit = (e) => {
       const exercise = JSON.parse(e.target.dataset.row);
+      setExerciseEdited({id:exercise.ID_EJERCICIO,exercise:exercise.NOMBRE_EJERCICIO, muscleGroup: exercise.NOMBRE_GRUPO_MUSCULAR})
+      setIsOpenEdit(true);
+    }
 
+    const HandleEdit = () => {
+        console.log(exerciseEdited);
+        exercise.update(exerciseEdited).then(response=>{   
+          setModalMsg(prevState =>({
+            ...prevState,
+            msg: response,
+            isMsgOpen: true
+          }));
+          fetchExercises();
+        })
+      setIsOpenEdit(false);
+    }
+
+    const HandleOpenDelete = (e) => {
+      const exercise = JSON.parse(e.target.dataset.row);
+      setExerciseEdited({id:exercise.ID_EJERCICIO,exercise:exercise.NOMBRE_EJERCICIO})
+      setIsOpenDelete(true);
     }
 
     const HandleDelete = () => {
-       
+      exercise.delete(exerciseEdited.id).then(response=>{   
+        setModalMsg(prevState =>({
+          ...prevState,
+          msg: response,
+          isMsgOpen: true
+        }));
+        fetchExercises();
+      })
+    setIsOpenDelete(false);
     }
 
     return (
@@ -80,13 +111,13 @@ export default function Ejercicio(){
             <h1 className="text-left">Control de ejercicios</h1>
             <hr/>
             <div className="container text-left">   
-                <AddButton text="Insertar" onClick={()=>setIsOpenInsert(!isOpenInsert)} />
+                <AddButton text="Insertar" onClick={()=>setIsOpenInsert(true)} />
                 <Table
                   columns={columns}
-                  data={ExercisesList}
-                  aux={ExercisesListRef.current}
-                  funEdit={HandleEdit}
-                  funDelete={HandleDelete}
+                  data={exercisesList}
+                  aux={exercisesListRef.current}
+                  funEdit={HandleOpenEdit}
+                  funDelete={HandleOpenDelete}
                 />
             </div>
             <CustomModal
@@ -94,21 +125,32 @@ export default function Ejercicio(){
               methods={{toggleOpenModal: ()=>setIsOpenInsert(!isOpenInsert)}}
                 >
               <CustomForm onSubmit={handleInsert}>
-                <CustomInput errorMsg="Inserte nombre del ejercicio" className='form-control mt-2' name='exercise' placeholder='Nombre ejercicio'></CustomInput>
-                <CustomSelect focus="NOMBRE_GRUPO_MUSCULAR" errorMsg="Seleccione grupo muscular"  className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular' options={MuscleGroupList}></CustomSelect>
+                <CustomInput errorMsg="Inserte nombre del ejercicio" className='form-control mt-2' name='exercise_insert' placeholder='Nombre ejercicio'></CustomInput>
+                <CustomSelect focus="NOMBRE_GRUPO_MUSCULAR" errorMsg="Seleccione un grupo muscular"  className='form-control mt-2' name='muscule_group_insert' placeholder='Nombre grupo muscular' options={muscleGroupList}></CustomSelect>
                 <AddButton text="Insertar"/>
                 <CancelButton fun={()=>setIsOpenInsert(false)}/>
               </CustomForm>
             </CustomModal>
             <CustomModal
-              props={{title: 'Modificar ejercicio', isOpen: isOpenInsert}}
-              methods={{toggleOpenModal: ()=>setIsOpenInsert(!isOpenInsert)}}
+              props={{title: 'Modificar ejercicio', isOpen: isOpenEdit}}
+              methods={{toggleOpenModal: ()=>setIsOpenEdit(!isOpenEdit)}}
                 >
-              <CustomForm onSubmit={handleInsert}>
-                <CustomInput errorMsg="Inserte nombre del ejercicio" className='form-control mt-2' name='exercise' placeholder='Nombre ejercicio'></CustomInput>
-                <CustomSelect focus="NOMBRE_GRUPO_MUSCULAR" errorMsg="Seleccione grupo muscular"  className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular' options={MuscleGroupList}></CustomSelect>
-                <AddButton text="Guardar cambios"/>
-                <CancelButton fun={()=>setIsOpenInsert(false)}/>
+              <CustomForm onSubmit={HandleEdit}>
+                <CustomInput type="hidden" value={exerciseEdited.id} className='form-control mt-2' name='exerciseId'/>
+                <CustomInput name='exerciseEdit' onChange={(e)=>setExerciseEdited(prevState =>({...prevState,exercise:e.target.value}))} value={exerciseEdited.exercise} errorMsg="Escriba el nombre del ejercicio" className='form-control mt-2' placeholder='Nombre ejercicio'/>
+                <CustomSelect value={exerciseEdited.muscleGroup} onChange={(e)=>setExerciseEdited(prevState =>({...prevState,muscleGroup:e.target.value}))} focus="NOMBRE_GRUPO_MUSCULAR" errorMsg="Seleccione un grupo muscular"  className='form-control mt-2' name='muscleGroupSelect' placeholder='Nombre grupo muscular' options={muscleGroupList}/>
+                <AddButton type="submit" text="Guardar cambios"/>
+                <CancelButton fun={()=>setIsOpenEdit(false)}/>
+              </CustomForm>
+            </CustomModal>
+            <CustomModal
+              props={{title: "¿Está seguro que desea eliminar '"+ exerciseEdited.exercise+"'?", isOpen: isOpenDelete}}
+              methods={{toggleOpenModal: ()=>setIsOpenDelete(!isOpenDelete)}}
+                >
+              <CustomForm onSubmit={HandleDelete}>
+                <CustomInput type="hidden" value={exerciseEdited.id} className='form-control mt-2' name='exerciseId'/>
+                <AddButton text="Sí, estoy seguro"/>
+                <CancelButton fun={()=>setIsOpenDelete(false)}/>
               </CustomForm>
             </CustomModal>
             <CustomModal 
