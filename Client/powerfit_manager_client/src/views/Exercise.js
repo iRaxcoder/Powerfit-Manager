@@ -15,6 +15,7 @@ export default function Ejercicio(){
   const [isOpenInsert, setIsOpenInsert] = useState(false);
   const [data, setData] = useState(null);
   const dataRef= useRef();
+  const [modalMsg, setModalMsg]= useState({isMsgOpen: false, msg: ""});
 
   dataRef.current=data;
     
@@ -48,7 +49,10 @@ export default function Ejercicio(){
     const handleInsert = (e) => {
       exercise.insert(e).then(response=>{   
           if(response.msg===SUCCESS){
-            alert("Agregado con éxito")
+            setModalMsg(prevState =>({
+              ...prevState,
+              isMsgOpen:true
+            }));
           }
       })
       setIsOpenInsert(false);
@@ -95,6 +99,21 @@ export default function Ejercicio(){
               <AddButton/>
               <CancelButton fun={()=>setIsOpenInsert(false)}/>
             </CustomForm>
+          </CustomModal>
+          <CustomModal
+             props={
+               {
+                 title: 'Mensaje del sistema',
+                 isOpen: modalMsg.isMsgOpen
+               }
+             }
+             methods={
+               {
+                toggleOpenModal: ()=>setModalMsg(!modalMsg.isMsgOpen)
+               }
+             }
+            >
+            <p>hola este es un mensaje</p>
           </CustomModal>
         </div>
     );
