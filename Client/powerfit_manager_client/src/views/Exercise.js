@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import '../styles/common.css'
 import AddButton from "../components/AddButton";
 import Table from "../components/Table";
@@ -14,6 +14,9 @@ export default function Ejercicio(){
 
   const [isOpenInsert, setIsOpenInsert] = useState(false);
   const [data, setData] = useState(null);
+  const dataRef= useRef();
+
+  dataRef.current=data;
     
     const columns = React.useMemo(
         () => [
@@ -51,8 +54,8 @@ export default function Ejercicio(){
       setIsOpenInsert(false);
     }
 
-    const HandleEdit = () => {
-      
+    const HandleEdit = (e) => {
+      const exercise=JSON.parse(e.target.dataset.row);
     }
 
     const HandleDelete = () => {
@@ -68,6 +71,7 @@ export default function Ejercicio(){
                 <Table
                 columns={columns}
                 data={data}
+                aux={dataRef.current}
                 funEdit={HandleEdit}
                 funDelete={HandleDelete}
                 />

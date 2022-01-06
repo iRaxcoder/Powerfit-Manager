@@ -3,11 +3,10 @@ import React from 'react'
 const EditButton= (props) =>{
     return (
         <btn
-        className="btn btn-edit"
+        className="btn btn-edit fas fa-edit"
         onClick={props.fun}
-        data-row= {props.data}
+        data-row={props.rowObject}
         >
-        <i class="fas fa-edit"></i>
         </btn>
     );
 }
