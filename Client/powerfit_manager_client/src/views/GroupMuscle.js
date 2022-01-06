@@ -17,6 +17,7 @@ export default function GrupoMuscular() {
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
   const [data, setData] = useState(null);
+  const [modalMsg, setModalMsg] = useState({ isMsgOpen: false, msg: "" });
   const dataRef = useRef();
   dataRef.current = data;
   const [element, setElement] = useState([
@@ -39,14 +40,16 @@ export default function GrupoMuscular() {
     ],
     []
   )
+
+  const fetchData = () => {
+    muscle.getAll().then(response => {
+      setData(response)
+    })
+  }
+
   useEffect(() => {
-    const fetchData = () => {
-      muscle.getAll().then(response => {
-        setData(response)
-      })
-    }
     fetchData();
-  }, [data]);
+  }, [setData]);
   if (!data) return "No se encuentran datos";
 
 
@@ -76,17 +79,26 @@ export default function GrupoMuscular() {
 
   const handleInsert = (e) => {
     muscle.insert(e.muscule_group).then(response => {
-      alert(response);
+      setModalMsg(prevState =>({
+        ...prevState,
+        msg: response,
+        isMsgOpen: true
+      }));
+      fetchData();
     });
     toggleModalInsert();
   }
 
   const HandleEdit = (e) => {
-    alert(e.muscule_group_id, e.muscule_group_name);
     muscle.update(e.muscule_group_id, e.muscule_group_name).then(response => {
-      alert(response);
+      setModalMsg(prevState =>({
+        ...prevState,
+        msg: response,
+        isMsgOpen: true
+      }));
+      fetchData();
     });
-    toggleModalInsert();
+    setIsOpenEdit(!isOpenEdit);
 
   }
 
@@ -102,6 +114,7 @@ export default function GrupoMuscular() {
       <div className="container text-left">
         <AddButton
           onClick={() => setIsOpenInsert(!isOpenInsert)}
+          text="Insertar"
         />
         <Table
           columns={columns}
@@ -118,7 +131,7 @@ export default function GrupoMuscular() {
       >
         <CustomForm onSubmit={handleInsert}>
           <CustomInput errorMsg="Seleccione grupo muscular" className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
-          <AddButton type="submit" />
+          <AddButton text="Insertar" type="submit" />
           <CancelButton fun={() => setIsOpenInsert(!isOpenInsert)} />
         </CustomForm>
 
@@ -132,7 +145,7 @@ export default function GrupoMuscular() {
         <CustomForm onSubmit={HandleEdit}>
           <CustomInput className='form-control mt-2' type="hidden" name='muscule_group_id' value={element.ID_MUSCULAR} placeholder='Nombre grupo muscular'></CustomInput>
           <CustomInput className='form-control mt-2' name='muscule_group_name' onChange={handleChange} value={element.NOMBRE_GRUPO_MUSCULAR} placeholder='Nombre grupo muscular'></CustomInput>
-          <AddButton type="submit" />
+          <AddButton text="Guardar cambios" type="submit" />
           <CancelButton fun={() => setIsOpenEdit(!isOpenEdit)} />
         </CustomForm>
 
@@ -144,10 +157,17 @@ export default function GrupoMuscular() {
       >
         <CustomForm onSubmit={HandleDelete}>
           <CustomInput className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
-          <AddButton type="submit" />
+          <AddButton text="Si" type="submit" />
           <CancelButton />
         </CustomForm>
 
+      </CustomModal>
+
+      <CustomModal
+        props={{ title: 'Mensaje del sistema', isOpen: modalMsg.isMsgOpen }}
+        methods={{ toggleOpenModal: () => setModalMsg(!modalMsg.isMsgOpen) }}
+      >
+        <p>{modalMsg.msg}</p>
       </CustomModal>
 
     </div>
