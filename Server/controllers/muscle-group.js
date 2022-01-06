@@ -21,5 +21,21 @@ module.exports.set = function (app, connection) {
 
     });
 
+    app.post("/muscle/update", function(request, response){
+        var id = request.body.id;
+        var name = request.body.name;
+        console.log(id+name);
+        connection.query('CALL sp_update_grupo_muscular(?,?)',[id, name], function(error,results,fields){
+            if (!error) {
+                response.send("Actualización exitosa");
+            }
+            else {
+                response.send(error);
+            }
+
+        });
+
+    });
+
     // app.post()
 }

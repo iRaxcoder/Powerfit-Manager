@@ -34,10 +34,10 @@ const muscle = {
      return response;
     },
 
-    update: async function(name){
+    update: async function(id,name){
         //loading.style.display="block";
-        
-        const response = await axios.post(BASE_URL + '/muscle/insert', {name})
+         console.log(id+name);
+         const response = await axios.post(BASE_URL + '/muscle/update', {id,name})
         .then((response) => {
            return response.data;
         }).catch(error => {
