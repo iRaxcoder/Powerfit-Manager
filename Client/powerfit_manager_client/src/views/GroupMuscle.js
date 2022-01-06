@@ -38,7 +38,7 @@ export default function GrupoMuscular() {
       })
     }
     fetchData();
-  }, []);
+  }, [data]);
   if (!data) return "No se encuentran datos";
 
 
@@ -47,8 +47,11 @@ export default function GrupoMuscular() {
 
   }
 
-  const toggleModalEdit = () => {
+  const toggleModalEdit = (e) => {
+    console.log(e.target.dataset.row);
+  
     setIsOpenEdit(!isOpenEdit);
+    
 
   }
 
@@ -58,10 +61,9 @@ export default function GrupoMuscular() {
 
 
   const handleSubmit = (e) => {
-    muscle.insert(e.muscule_group);
-    muscle.getAll().then(response => {
-      setData(response)
-    })
+    muscle.insert(e.muscule_group).then(response => {
+      alert(response);
+    });
     toggleModalInsert();
   }
 
@@ -86,7 +88,8 @@ export default function GrupoMuscular() {
         <Table
           columns={columns}
           data={data}
-          funEdit={toggleModalEdit}
+          aux={data[0]}
+          funEdit={(e) => toggleModalEdit (e)}
           funDelete={toggleModalDelete}
         />
       </div>
@@ -107,7 +110,7 @@ export default function GrupoMuscular() {
         <CustomForm onSubmit={handleSubmit}>
           <CustomInput errorMsg="Seleccione grupo muscular" className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
           <AddButton type="submit" />
-          <CancelButton/>
+          <CancelButton fun={() => setIsOpenInsert(!isOpenInsert)} />
         </CustomForm>
 
       </CustomModal>
@@ -130,7 +133,7 @@ export default function GrupoMuscular() {
           <CustomInput className='form-control mt-2' type="hidden" name='muscule_group_id' placeholder='Nombre grupo muscular'></CustomInput>
           <CustomInput className='form-control mt-2' name='muscule_group_name' placeholder='Nombre grupo muscular'></CustomInput>
           <AddButton type="submit" />
-          <CancelButton/>
+          <CancelButton />
         </CustomForm>
 
       </CustomModal>
@@ -151,7 +154,7 @@ export default function GrupoMuscular() {
         <CustomForm onSubmit={handleSubmit}>
           <CustomInput className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
           <AddButton type="submit" />
-          <CancelButton/>
+          <CancelButton />
         </CustomForm>
 
       </CustomModal>
