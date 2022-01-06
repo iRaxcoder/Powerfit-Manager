@@ -4,7 +4,7 @@ import AddButton from "../components/AddButton";
 import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
-import {CustomInput} from "../components/CustomInput";
+import {CustomInput, CustomSelect} from "../components/CustomInput";
 import exercise from './../service/Exercise';
 import muscle from './../service/MuscleGroup';
 import CancelButton from "../components/CancelButton";
@@ -18,10 +18,10 @@ export default function Ejercicio(){
   const [isOpenInsert, setIsOpenInsert] = useState(false);
   const [ExercisesList, setExercisesList] = useState(null);
   const [MuscleGroupList, setMuscleGroupList] = useState(null);
-  const dataRef= useRef();
+  const ExercisesListRef= useRef();
   const [modalMsg, setModalMsg]= useState({isMsgOpen: false, msg: ""});
 
-  dataRef.current=ExercisesList;
+  ExercisesListRef.current=ExercisesList;
     
   const columns = React.useMemo(
       () => [
@@ -72,7 +72,6 @@ export default function Ejercicio(){
           }
       })
       setIsOpenInsert(false);
-      
     }
 
     const HandleEdit = (e) => {
@@ -90,48 +89,30 @@ export default function Ejercicio(){
             <div className="container text-left">   
                 <AddButton onClick={()=>setIsOpenInsert(!isOpenInsert)} />
                 <Table
-                columns={columns}
-                data={ExercisesList}
-                aux={dataRef.current}
-                funEdit={HandleEdit}
-                funDelete={HandleDelete}
+                  columns={columns}
+                  data={ExercisesList}
+                  aux={ExercisesListRef.current}
+                  funEdit={HandleEdit}
+                  funDelete={HandleDelete}
                 />
             </div>
             <CustomModal
-             props={
-               {
-                 title: 'Insertar ejercicio',
-                 isOpen: isOpenInsert
-               }
-             }
-             methods={
-               {
-                toggleOpenModal: ()=>setIsOpenInsert(!isOpenInsert)
-               }
-             }
-            >
-            <CustomForm onSubmit={handleInsert}>
-              <CustomInput errorMsg="Inserte nombre del ejercicio" className='form-control mt-2' name='exercise' placeholder='Nombre ejercicio'></CustomInput>
-              <CustomInput errorMsg="Seleccione grupo muscular"  className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
-              <AddButton/>
-              <CancelButton fun={()=>setIsOpenInsert(false)}/>
-            </CustomForm>
-          </CustomModal>
-          <CustomModal
-             props={
-               {
-                 title: 'Mensaje del sistema',
-                 isOpen: modalMsg.isMsgOpen
-               }
-             }
-             methods={
-               {
-                toggleOpenModal: ()=>setModalMsg(!modalMsg.isMsgOpen)
-               }
-             }
-            >
-            <p>{modalMsg.msg}</p>
-          </CustomModal>
+              props={{title: 'Insertar ejercicio', isOpen: isOpenInsert}}
+              methods={{toggleOpenModal: ()=>setIsOpenInsert(!isOpenInsert)}}
+                >
+              <CustomForm onSubmit={handleInsert}>
+                <CustomInput errorMsg="Inserte nombre del ejercicio" className='form-control mt-2' name='exercise' placeholder='Nombre ejercicio'></CustomInput>
+                <CustomInput errorMsg="Seleccione grupo muscular"  className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
+                <AddButton/>
+                <CancelButton fun={()=>setIsOpenInsert(false)}/>
+              </CustomForm>
+            </CustomModal>
+            <CustomModal 
+              props={{title: 'Mensaje del sistema', isOpen: modalMsg.isMsgOpen}}
+              methods={{toggleOpenModal: ()=>setModalMsg(!modalMsg.isMsgOpen)}}
+              >
+              <p>{modalMsg.msg}</p>
+            </CustomModal>
         </div>
     );
 }

@@ -11,7 +11,7 @@ export function CustomInput ({register, errors, errorMsg, name, ...rest}){
   );
 }
 
-export function Select ({register, options, name, ...rest}) {
+export function CustomSelect ({register, options, name, ...rest}) {
    return (
     <select {...register(name)} {...rest}>
       {options.map(value => (
