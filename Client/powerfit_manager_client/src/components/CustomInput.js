@@ -1,12 +1,18 @@
 import React from "react";
 
-
-
 export function CustomInput ({register, errors, errorMsg, name, ...rest}){
   return (
     <>
     <input {...register(name, {required: true })} {...rest} />
     {errors[name] && <p className="text-danger">{errorMsg}</p>}
+    </>
+  );
+}
+
+export function SingleCustomInput ({...rest}){
+  return (
+    <>
+    <input {...rest} />
     </>
   );
 }

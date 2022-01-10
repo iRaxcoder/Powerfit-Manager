@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import '../styles/common.css'
+import '../styles/Exercise/Exercise.css'
 import AddButton from "../components/AddButton";
 import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
-import {CustomInput, CustomSelect} from "../components/CustomInput";
+import {CustomInput, CustomSelect, SingleCustomInput} from "../components/CustomInput";
 import commonDB from "../service/CommonDB";
 import CancelButton from "../components/CancelButton";
 
@@ -108,8 +109,11 @@ export default function Ejercicio(){
         <div>
             <h1 className="text-left">Control de ejercicios</h1>
             <hr/>
-            <div className="container text-left">   
-                <AddButton text="Insertar" onClick={()=>setIsOpenInsert(true)} />
+            <div className="container">
+                <div className="container__">
+                  <AddButton text="Insertar" onClick={()=>setIsOpenInsert(true)} />
+                  <SingleCustomInput errorMsg="hahaha nombre del ejercicio" placeholder="Buscar" name="input" className="form-control"/>
+                </div>    
                 <Table
                   columns={columns}
                   data={exercisesList}
