@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import '../styles/common.css'
-import '../styles/Exercise/Exercise.css'
 import AddButton from "../components/AddButton";
 import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
@@ -110,7 +109,7 @@ export default function Ejercicio(){
             <h1 className="text-left">Control de ejercicios</h1>
             <hr/>
             <div className="container">
-                <div className="container__">
+                <div className="container-insert-search__">
                   <AddButton text="Insertar" onClick={()=>setIsOpenInsert(true)} />
                   <SingleCustomInput errorMsg="hahaha nombre del ejercicio" placeholder="Buscar" name="input" className="form-control"/>
                 </div>    

@@ -13,3 +13,14 @@ thead{
 .btn-insert{
     background-color:  #73be22 ;
 }
+
+.container-insert-search__{
+    display: flex;
+    justify-content: space-between;
+}
+
+.container-insert-search__>input{
+    width: 20%;
+    height: 43px;
+    border: 2px solid black;
+}
