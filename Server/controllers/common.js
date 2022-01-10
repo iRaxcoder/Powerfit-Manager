@@ -29,9 +29,19 @@ module.exports.set = function(app,connection){
             }
         })
     })
+    app.post("/module/get-search", (req, res) => {
+        data=req.body.data;
+        connection.query('CALL sp_select_search_' + data["find"]+getSpParamSize["1"], (err, rows, fields) => {
+            if (!err) {
+                res.send(rows);
+            }
+            else {
+                console.log(err);
+            }
+        })
+    })
     app.post("/module/insert", (req, res) => {
         data=req.body.data;
-        console.log(data);
         query='CALL sp_insert_'+data["header"]+getSpParamSize[data["size"]];
         connection.query(query, Object.values(data["object"]), (err, rows, fields) => {
             if (!err) {
@@ -66,7 +76,7 @@ module.exports.set = function(app,connection){
     })
     app.put("/module/delete", (req, res) => {
         data=req.body.data;
-        query='CALL sp_delete_'+data["header"]+getSpParamSize[data["size"]];
+        query='CALL sp_delete_'+data["header"]+getSpParamSize["1"];
         console.log(Object.values(data["object"]));
         connection.query(query, Object.values(data["object"]), (err, rows, fields) => {
             if (!err) {

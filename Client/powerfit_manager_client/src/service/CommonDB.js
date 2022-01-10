@@ -18,6 +18,20 @@ const commonDB = {
         return response;
     },
 
+    getSearch: async (data) => {
+        //loading.style.display="block";
+        const response = await axios.post(BASE_URL + '/module/get-search',{data})
+            .then((response) => {
+                return response.data[0];
+            }).catch(error => {
+                console.log(error);
+            })
+            .finally(() => {
+                //loading.style.display="none";
+            });
+        return response;
+    },
+
     insert: async function(data){
         console.log(data);
         //loading.style.display="block";

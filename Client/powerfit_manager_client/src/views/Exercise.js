@@ -93,7 +93,7 @@ export default function Ejercicio(){
     }
 
     const HandleDelete = () => {
-      commonDB.delete({header:"ejercicio",size:"1", object: {id:exerciseEdited.id}}).then(response=>{   
+      commonDB.delete({header:"ejercicio", object: {id:exerciseEdited.id}}).then(response=>{   
         setModalMsg(prevState =>({
           ...prevState,
           msg: response,
