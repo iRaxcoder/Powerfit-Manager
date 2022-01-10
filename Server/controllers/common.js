@@ -31,7 +31,7 @@ module.exports.set = function (app, connection) {
     })
     app.post("/module/get-search", (req, res) => {
         data = req.body.data;
-        connection.query('CALL sp_select_search_' + data["find"] + getSpParamSize["1"], (err, rows, fields) => {
+        connection.query('CALL sp_select_search_' + data["header"]+getSpParamSize["1"], data["find"], (err, rows, fields) => {
             if (!err) {
                 res.send(rows);
             }

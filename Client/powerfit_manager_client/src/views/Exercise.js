@@ -35,7 +35,7 @@ export default function Ejercicio(){
           },
         ],
       []
-    )
+  )
 
   const fetchExercises = () => {
       commonDB.getAll({header:"ejercicio"}).then(response=>{
@@ -52,7 +52,7 @@ export default function Ejercicio(){
   useEffect(()=>{
     fetchExercises();
     fetchMuscleGroups();
-  },[setExercisesList]);
+  },[]);
 
   if(!exercisesList) return "No se encuentran ejercicios";
     
@@ -104,6 +104,17 @@ export default function Ejercicio(){
     setIsOpenDelete(false);
     }
 
+    const handleSearch = (e) => {
+      console.log(e.target.value);
+      if(e.target.value===undefined || e.target.value ===""){
+        fetchExercises();
+      }else{
+        commonDB.getSearch({header: "ejercicio",find:e.target.value}).then(response=>{
+          setExercisesList(response);
+        })
+      }
+    }
+
     return (
         <div>
             <h1 className="text-left">Control de ejercicios</h1>
@@ -111,7 +122,7 @@ export default function Ejercicio(){
             <div className="container">
                 <div className="container-insert-search__">
                   <AddButton text="Insertar" onClick={()=>setIsOpenInsert(true)} />
-                  <SingleCustomInput errorMsg="hahaha nombre del ejercicio" placeholder="Buscar" name="input" className="form-control"/>
+                  <SingleCustomInput onChange={handleSearch} errorMsg="hahaha nombre del ejercicio" placeholder="Buscar" name="input-search" className="form-control"/>
                 </div>    
                 <Table
                   columns={columns}
