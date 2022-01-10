@@ -5,8 +5,7 @@ import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
 import {CustomInput, CustomSelect} from "../components/CustomInput";
-import exercise from './../service/Exercise';
-import muscle from './../service/MuscleGroup';
+import commonDB from "../service/CommonDB";
 import CancelButton from "../components/CancelButton";
 
 export default function Ejercicio(){
@@ -39,13 +38,13 @@ export default function Ejercicio(){
     )
 
   const fetchExercises = () => {
-      exercise.getAll().then(response=>{
+      commonDB.getAll({header:"ejercicio"}).then(response=>{
       setExercisesList(response)
     })
   }
 
   const fetchMuscleGroups = () => {
-    muscle.getAll().then(response=>{
+    commonDB.getAll({header:"grupo_muscular"}).then(response=>{
       setMuscleGroupList(response)
     })
   }
@@ -58,7 +57,7 @@ export default function Ejercicio(){
   if(!exercisesList) return "No se encuentran ejercicios";
     
     const handleInsert = (e) => {
-      exercise.insert(e).then(response=>{   
+      commonDB.insert({header:"ejercicio",size:"2", object: e}).then(response=>{   
           setModalMsg(prevState =>({
             ...prevState,
             msg: response,
@@ -76,8 +75,7 @@ export default function Ejercicio(){
     }
 
     const HandleEdit = () => {
-        console.log(exerciseEdited);
-        exercise.update(exerciseEdited).then(response=>{   
+        commonDB.update({header:"ejercicio",size:"3", object: exerciseEdited}).then(response=>{   
           setModalMsg(prevState =>({
             ...prevState,
             msg: response,
@@ -95,7 +93,7 @@ export default function Ejercicio(){
     }
 
     const HandleDelete = () => {
-      exercise.delete(exerciseEdited.id).then(response=>{   
+      commonDB.delete({header:"ejercicio",size:"1", object: {id:exerciseEdited.id}}).then(response=>{   
         setModalMsg(prevState =>({
           ...prevState,
           msg: response,
