@@ -6,7 +6,7 @@ import axios from 'axios';
 const commonDB = {
     getAll: async (data) => {
         //loading.style.display="block";
-        const response = await axios.post(BASE_URL + '/module/get',{data})
+        const response = await axios.post(BASE_URL + '/module/get', { data })
             .then((response) => {
                 return response.data[0];
             }).catch(error => {
@@ -20,7 +20,7 @@ const commonDB = {
 
     getSearch: async (data) => {
         //loading.style.display="block";
-        const response = await axios.post(BASE_URL + '/module/get-search',{data})
+        const response = await axios.post(BASE_URL + '/module/get-search', { data })
             .then((response) => {
                 return response.data[0];
             }).catch(error => {
@@ -32,25 +32,11 @@ const commonDB = {
         return response;
     },
 
-    insert: async function(data){
-        console.log(data);
+    insert: async function (data) {
         //loading.style.display="block";
-        const response = await axios.post(BASE_URL + "/module/insert", {data})
-        .then((response) => {
-           return response.data;
-        }).catch(error => {
-            console.log(error);
-        })
-        .finally(() => {
-            //loading.style.display="none";
-        });
-        return response;
-   },
-   update: async function(data){
-        //loading.style.display="block";
-        const response = await axios.put(BASE_URL + "/module/put", {data})
+        const response = await axios.post(BASE_URL + "/module/insert", { data })
             .then((response) => {
-            return response.data;
+                return response.data;
             }).catch(error => {
                 console.log(error);
             })
@@ -59,11 +45,11 @@ const commonDB = {
             });
         return response;
     },
-    delete: async function(data){
+    update: async function (data) {
         //loading.style.display="block";
-        const response = await axios.put(BASE_URL + "/module/delete", {data})
+        const response = await axios.put(BASE_URL + "/module/put", { data })
             .then((response) => {
-            return response.data;
+                return response.data;
             }).catch(error => {
                 console.log(error);
             })
@@ -72,7 +58,20 @@ const commonDB = {
             });
         return response;
     },
-   
+    delete: async function (data) {
+        //loading.style.display="block";
+        const response = await axios.put(BASE_URL + "/module/delete", { data })
+            .then((response) => {
+                return response.data;
+            }).catch(error => {
+                console.log(error);
+            })
+            .finally(() => {
+                //loading.style.display="none";
+            });
+        return response;
+    },
+
 }
 
 export default commonDB;

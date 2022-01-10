@@ -9,7 +9,7 @@ import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
 import { CustomInput } from "../components/CustomInput";
 import CancelButton from "../components/CancelButton"
-
+import commonDB from "../service/CommonDB";
 Modal.setAppElement("#root");
 
 export default function GrupoMuscular() {
@@ -42,7 +42,7 @@ export default function GrupoMuscular() {
   )
 
   const fetchData = () => {
-    muscle.getAll().then(response => {
+    commonDB.getAll({header:"grupo_muscular"}).then(response => {
       setData(response)
     })
   }
@@ -83,7 +83,8 @@ export default function GrupoMuscular() {
   };
 
   const handleInsert = (e) => {
-    muscle.insert(e.muscule_group).then(response => {
+    console.log(e);
+    commonDB.insert({header:"grupo_muscular",size:"1", object: e}).then(response => {
       setModalMsg(prevState =>({
         ...prevState,
         msg: response,
@@ -95,7 +96,7 @@ export default function GrupoMuscular() {
   }
 
   const HandleEdit = (e) => {
-    muscle.update(e.muscule_group_id, e.muscule_group_name).then(response => {
+    commonDB.update({header:"grupo_muscular",size:"2", object: e}).then(response => {
       setModalMsg(prevState =>({
         ...prevState,
         msg: response,
@@ -108,7 +109,7 @@ export default function GrupoMuscular() {
   }
 
   const HandleDelete = (e) => {
-    muscle.delete(e.muscule_group_id).then(response => {
+    commonDB.delete({header:"grupo_muscular", object: {id:e.muscule_group_id}}).then(response => {
       setModalMsg(prevState =>({
         ...prevState,
         msg: response,
