@@ -3,6 +3,7 @@ import Home from '../views/Home.js'
 import Exercise from '../views/Exercise.js'
 import GroupMuscle from '../views/GroupMuscle'
 import Sidebar from '../components/layout/Sidebar.js'
+import Client from '../views/Client.js'
 
 const homeView = {
     element: <Sidebar><Home/></Sidebar>,
@@ -20,5 +21,9 @@ const ExerciseView = {
     element: <Sidebar><Exercise/></Sidebar>,
     path: '/ejercicios'
 }
+const ClientView = {
+    element: <Sidebar><Client/></Sidebar>,
+    path: '/clientes'
+}
 
-export default [homeView,LoginView,groupMuscleView, ExerciseView];
+export default [homeView,LoginView,groupMuscleView, ExerciseView, ClientView];
