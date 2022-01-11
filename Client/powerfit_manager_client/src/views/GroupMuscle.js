@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import '../styles/GroupMuscle/groupMuscle.css'
-import Modal from 'react-modal'
 import AddButton from "../components/AddButton";
 import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
@@ -8,7 +7,7 @@ import CustomForm from "../components/CustomForm";
 import { CustomInput, SingleCustomInput} from "../components/CustomInput";
 import CancelButton from "../components/CancelButton"
 import commonDB from "../service/CommonDB";
-Modal.setAppElement("#root");
+
 
 export default function GrupoMuscular() {
   const [isOpenInsert, setIsOpenInsert] = useState(false);
@@ -63,8 +62,6 @@ export default function GrupoMuscular() {
       NOMBRE_GRUPO_MUSCULAR: groupMuscle.NOMBRE_GRUPO_MUSCULAR
     });
     setIsOpenEdit(!isOpenEdit);
-
-
   }
 
   const toggleModalDelete = (e) => {
@@ -81,8 +78,7 @@ export default function GrupoMuscular() {
   };
 
   const handleInsert = (e) => {
-    console.log(e);
-    commonDB.insert({ header: "grupo_muscular", size: "1", object: e }).then(response => {
+     commonDB.insert({ header: "grupo_muscular", size: "1", object: e }).then(response => {
       setModalMsg(prevState => ({
         ...prevState,
         msg: response,
@@ -136,7 +132,7 @@ export default function GrupoMuscular() {
       <div className="container text-left">
         <div className="container-insert-search__">
           <AddButton text="Insertar" onClick={() => setIsOpenInsert(true)} />
-          <SingleCustomInput onChange={handleSearch} errorMsg="Nombre grupoo muscular" placeholder="Buscar" name="input" className="form-control" />
+          <SingleCustomInput onChange={handleSearch} errorMsg="Nombre grupo muscular" placeholder="Buscar" name="input" className="form-control" />
         </div>
         <Table
           columns={columns}
@@ -152,7 +148,7 @@ export default function GrupoMuscular() {
         methods={{ toggleOpenModal: () => setIsOpenInsert(!isOpenInsert) }}
       >
         <CustomForm onSubmit={handleInsert}>
-          <CustomInput errorMsg="Seleccione grupo muscular" className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
+          <CustomInput errorMsg="Inserte grupo muscular" className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
           <AddButton text="Insertar" type="submit" />
           <CancelButton fun={() => setIsOpenInsert(!isOpenInsert)} />
         </CustomForm>
