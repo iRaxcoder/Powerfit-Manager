@@ -75,8 +75,8 @@ export default function Client(){
     }
 
     const HandleOpenDelete = (e) => {
-      const exercise = JSON.parse(e.target.dataset.row);
-      setClientEdited({id:exercise.ID_EJERCICIO,exercise:exercise.NOMBRE_EJERCICIO})
+      const client = JSON.parse(e.target.dataset.row);
+      setClientEdited({id:client.ID_CLIENTE,name:client.NOMBRE_CLIENTE,lastName:client.APELLIDOS})
       setIsOpenDelete(true);
     }
 
@@ -97,7 +97,7 @@ export default function Client(){
       if(e.target.value===undefined || e.target.value ===""){
         fetchClients();
       }else{
-        commonDB.getSearch({header: "ejercicio",find:e.target.value}).then(response=>{
+        commonDB.getSearch({header: "cliente",find:e.target.value}).then(response=>{
           setClientList(response);
         })
       }
@@ -112,7 +112,7 @@ export default function Client(){
                   <div>
                     <AddButton text="Insertar" onClick={()=>setIsOpenInsert(true)} />
                   </div>
-                  <SingleCustomInput onChange={handleSearch} errorMsg="hahaha nombre del ejercicio" placeholder="Buscar" name="input-search" className="form-control"/>
+                  <SingleCustomInput onChange={handleSearch} placeholder="Buscar" name="input-search" className="form-control"/>
                 </div>    
                 <Table
                   columns={columns}
@@ -154,11 +154,11 @@ export default function Client(){
               </CustomForm>
             </CustomModal>
             <CustomModal
-              props={{title: "¿Está seguro que desea eliminar el cliente '"+ clientEdited.name+"'?", isOpen: isOpenDelete}}
+              props={{title: "¿Está seguro que desea eliminar el cliente '"+ clientEdited.name+ " "+clientEdited.lastName+"'?", isOpen: isOpenDelete}}
               methods={{toggleOpenModal: ()=>setIsOpenDelete(!isOpenDelete)}}
                 >
               <CustomForm onSubmit={HandleDelete}>
-                <CustomInput type="hidden" value={clientEdited.id} className='form-control mt-2' name='exerciseId'/>
+                <CustomInput type="hidden" value={clientEdited.id} className='form-control mt-2' name='exerciseIdDelete'/>
                 <AddButton text="Sí, estoy seguro."/>
                 <CancelButton fun={()=>setIsOpenDelete(false)}/>
               </CustomForm>
