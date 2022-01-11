@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import '../styles/common.css'
 import AddButton from "../components/AddButton";
 import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";

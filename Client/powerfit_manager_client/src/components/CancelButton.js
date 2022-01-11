@@ -3,7 +3,7 @@ import React from 'react'
 const CancelButton= (props) =>{
     return (
         <btn 
-        className="btn btn-delete ml-2"
+        className="btn btn-cancel ml-2"
         onClick={props.fun}
         >
         Cancelar

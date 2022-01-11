@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
-import '../styles/common.css'
 import AddButton from "../components/AddButton";
 import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
-import {CustomInput, CustomSelect, SingleCustomInput} from "../components/CustomInput";
+import {CustomInput, SingleCustomInput} from "../components/CustomInput";
 import commonDB from "../service/CommonDB";
 import CancelButton from "../components/CancelButton";
 

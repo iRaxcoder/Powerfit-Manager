@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import '../styles/GroupMuscle/groupMuscle.css'
 import Modal from 'react-modal'
-import muscle from '../service/MuscleGroup.js'
-import '../styles/common.css'
 import AddButton from "../components/AddButton";
 import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
