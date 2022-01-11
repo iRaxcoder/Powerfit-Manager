@@ -4,6 +4,7 @@ import Exercise from '../views/Exercise.js'
 import GroupMuscle from '../views/GroupMuscle'
 import Sidebar from '../components/layout/Sidebar.js'
 import Client from '../views/Client.js'
+import Payments from '../views/Payments.js'
 
 const homeView = {
     element: <Sidebar><Home/></Sidebar>,
@@ -26,4 +27,8 @@ const ClientView = {
     path: '/clientes'
 }
 
-export default [homeView,LoginView,groupMuscleView, ExerciseView, ClientView];
+const PaymentsView = {
+    element: <Sidebar><Payments/></Sidebar>,
+    path: '/pagos'
+}
+export default [homeView,LoginView,groupMuscleView, ExerciseView, ClientView,PaymentsView];
