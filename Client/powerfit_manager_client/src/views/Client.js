@@ -111,7 +111,7 @@ export default function Client(){
                   <div>
                     <AddButton text="Insertar" onClick={()=>setIsOpenInsert(true)} />
                   </div>
-                  <SingleCustomInput onChange={handleSearch} placeholder="Buscar" name="input-search" className="form-control"/>
+                  <SingleCustomInput onChange={handleSearch} placeholder="Buscar" name="input-search" className="search__"/>
                 </div>    
                 <Table
                   columns={columns}
