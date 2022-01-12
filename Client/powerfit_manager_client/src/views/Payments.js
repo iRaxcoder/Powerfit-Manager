@@ -4,7 +4,7 @@ import AddButton from "../components/AddButton";
 import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
-import { CustomInput, SingleCustomInput } from "../components/CustomInput";
+import { CustomInput, SingleCustomInput, LiveCustomSelect } from "../components/CustomInput";
 import CancelButton from "../components/CancelButton"
 import commonDB from "../service/CommonDB";
 
@@ -15,6 +15,7 @@ export default function Payments() {
     const [modalMsg, setModalMsg] = useState({ isMsgOpen: false, msg: "" });
     const [data, setData] = useState(null);
     const [clientList, setClientList] = useState(null);
+    const [selectedClients, setSelectedClients] = useState(null);
     const dataRef = useRef();
     dataRef.current = data;
     const [element, setElement] = useState([
@@ -34,7 +35,7 @@ export default function Payments() {
         () => [
             {
                 Header: '#',
-                accessor: 'ID_PAGO', // accessor is the "key" in the data
+                accessor: 'ID_PAGO',
             },
             {
                 Header: 'Nombre',
@@ -66,6 +67,19 @@ export default function Payments() {
         []
     )
 
+    const searchClient = (find, callback) => {
+        commonDB.getSearch({ header: "cliente", find: find }).then(response => {
+            setSelectedClients(response);
+        })
+
+        callback(selectedClients.map(client => ({
+            label: client.NOMBRE_CLIENTE + " " + client.APELLIDOS,
+            value: client.ID_CLIENTE
+        })))
+    }
+    const onChangeSearchClient = (selected) => {
+        setSelectedClients(selected);
+    }
     const fetchData = () => {
         commonDB.getAll({ header: "pago" }).then(response => {
             setData(response)
@@ -84,21 +98,28 @@ export default function Payments() {
     }
 
     const toggleModalEdit = (e) => {
-        // const groupMuscle = JSON.parse(e.target.dataset.row);
-        // setElement({
-        //   ID_MUSCULAR: groupMuscle.ID_MUSCULAR,
-        //   NOMBRE_GRUPO_MUSCULAR: groupMuscle.NOMBRE_GRUPO_MUSCULAR
-        // });
-        // setIsOpenEdit(!isOpenEdit);
+        const pago = JSON.parse(e.target.dataset.row);
+        setElement({
+            ID_PAGO: pago.ID_PAGO,
+            NOMBRE_CLIENTE: pago.NOMBRE_CLIENTE,
+            APELLIDO_CLIENTE: pago.APELLIDO_CLIENTE,
+            FECHA: pago.FECHA,
+            TIPO_PAGO: pago.TIPO_PAGO,
+            MONTO: pago.MONTO,
+            DETALLE: pago.DETALLE
+
+        });
+        setIsOpenEdit(!isOpenEdit);
     }
 
     const toggleModalDelete = (e) => {
-        // const groupMuscle = JSON.parse(e.target.dataset.row);
-        // setElement({
-        //   ID_MUSCULAR: groupMuscle.ID_MUSCULAR,
-        //   NOMBRE_GRUPO_MUSCULAR: groupMuscle.NOMBRE_GRUPO_MUSCULAR
-        // });
-        //   setIsOpenDelete(!isOpenDelete);
+        const pago = JSON.parse(e.target.dataset.row);
+        setElement({
+            ID_PAGO: pago.ID_PAGO,
+            NOMBRE_CLIENTE: pago.NOMBRE_CLIENTE,
+            APELLIDO_CLIENTE: pago.APELLIDO_CLIENTE
+        });
+        setIsOpenDelete(!isOpenDelete);
     }
 
     const handleSearchClient = (e) => {
@@ -119,40 +140,42 @@ export default function Payments() {
     };
 
     const handleInsert = (e) => {
-        //   commonDB.insert({ header: "grupo_muscular", size: "1", object: e }).then(response => {
-        //   setModalMsg(prevState => ({
-        //     ...prevState,
-        //     msg: response,
-        //     isMsgOpen: true
-        //   }));
-        //   fetchData();
-        // });
-        //  toggleModalInsert();
+        e.ID_CLIENTE = selectedClients.value;
+        console.log(selectedClients.value);
+        commonDB.insert({ header: "pago", size: "5", object: e }).then(response => {
+            setModalMsg(prevState => ({
+                ...prevState,
+                msg: response,
+                isMsgOpen: true
+            }));
+            fetchData();
+        });
+        toggleModalInsert();
     }
 
     const HandleEdit = (e) => {
-        // commonDB.update({ header: "grupo_muscular", size: "2", object: e }).then(response => {
-        //   setModalMsg(prevState => ({
-        //     ...prevState,
-        //     msg: response,
-        //     isMsgOpen: true
-        //   }));
-        //   fetchData();
-        // });
-        //setIsOpenEdit(!isOpenEdit);
+        commonDB.update({ header: "pago", size: "5", object: e }).then(response => {
+            setModalMsg(prevState => ({
+                ...prevState,
+                msg: response,
+                isMsgOpen: true
+            }));
+            fetchData();
+        });
+        setIsOpenEdit(!isOpenEdit);
 
     }
 
     const HandleDelete = (e) => {
-        // commonDB.delete({ header: "grupo_muscular", object: { id: e.muscule_group_id } }).then(response => {
-        //   setModalMsg(prevState => ({
-        //     ...prevState,
-        //     msg: response,
-        //     isMsgOpen: true
-        //   }));
-        //   fetchData();
-        // });
-        //setIsOpenDelete(!isOpenDelete);
+        commonDB.delete({ header: "pago", object: { id: e.pago_id } }).then(response => {
+            setModalMsg(prevState => ({
+                ...prevState,
+                msg: response,
+                isMsgOpen: true
+            }));
+            fetchData();
+        });
+        setIsOpenDelete(!isOpenDelete);
 
     }
     const handleSearch = (e) => {
@@ -188,7 +211,7 @@ export default function Payments() {
                 methods={{ toggleOpenModal: () => setIsOpenInsert(!isOpenInsert) }}
             >
                 <CustomForm onSubmit={handleInsert}>
-                   
+                    <LiveCustomSelect data={selectedClients} onChange={onChangeSearchClient} placeHolder={"Buscar cliente..."} loadOptions={searchClient} />
                     <CustomInput errorMsg="Ingrese la fecha" type="date" className='form-control mt-2' name='fecha_insert' placeholder='Fecha'></CustomInput>
                     <CustomInput errorMsg="Ingrese el tipo de pago" className='form-control mt-2' name='tipo_pago_insert' placeholder='Tipo de pago'></CustomInput>
                     <CustomInput errorMsg="Ingrese el monto" className='form-control mt-2' name='monto_insert' placeholder='Monto'></CustomInput>
@@ -206,8 +229,12 @@ export default function Payments() {
                 methods={{ toggleOpenModal: () => setIsOpenEdit(!isOpenEdit) }}
             >
                 <CustomForm onSubmit={HandleEdit}>
-                    <CustomInput className='form-control mt-2' type="hidden" name='pago_id' value={element.ID_MUSCULAR} placeholder='Id grupo muscular'></CustomInput>
-                    <CustomInput className='form-control mt-2' name='muscule_group_name' onChange={handleChange} value={element.NOMBRE_GRUPO_MUSCULAR} placeholder='Nombre grupo muscular'></CustomInput>
+                    <CustomInput className='form-control mt-2' type="hidden" name='pago_id' value={element.ID_PAGO} placeholder='Id pago'></CustomInput>
+                    <CustomInput errorMsg="Ingrese la fecha" type="date" className='form-control mt-2' value={element.FECHA} onChange={(e) => setElement(prevState => ({ ...prevState, FECHA: e.target.value }))} name='fecha_insert' placeholder='Fecha'></CustomInput>
+                    <CustomInput errorMsg="Ingrese el tipo de pago" className='form-control mt-2' value={element.TIPO_PAGO} onChange={(e) => setElement(prevState => ({ ...prevState, TIPO_PAGO: e.target.value }))} name='tipo_pago_insert' placeholder='Tipo de pago'></CustomInput>
+                    <CustomInput errorMsg="Ingrese el monto" className='form-control mt-2' value={element.MONTO} onChange={(e) => setElement(prevState => ({ ...prevState, MONTO: e.target.value }))} name='monto_insert' placeholder='Monto'></CustomInput>
+                    <CustomInput errorMsg="Ingrese el detalle" className='form-control mt-2' value={element.DETALLE} onChange={(e) => setElement(prevState => ({ ...prevState, DETALLE: e.target.value }))} name='detalle_insert' placeholder='Detalle de pago'></CustomInput>
+
                     <AddButton text="Guardar cambios" type="submit" />
                     <CancelButton fun={() => setIsOpenEdit(!isOpenEdit)} />
                 </CustomForm>
@@ -215,12 +242,11 @@ export default function Payments() {
             </CustomModal>
 
             <CustomModal
-                props={{ title: '¿Desea eliminar?', isOpen: isOpenDelete }}
+                props={{ title: "¿Desea eliminar el pago de " + element.NOMBRE_CLIENTE + " " + element.APELLIDO_CLIENTE + "?", isOpen: isOpenDelete }}
                 methods={{ toggleOpenModal: () => setIsOpenDelete(!isOpenDelete) }}
             >
                 <CustomForm onSubmit={HandleDelete}>
-                    <CustomInput className='form-control mt-2' type="hidden" name='muscule_group_id' value={element.ID_MUSCULAR} placeholder='ID grupo muscular'></CustomInput>
-                    <CustomInput className='form-control mt-2' name='muscule_group' value={element.NOMBRE_GRUPO_MUSCULAR} placeholder='Nombre grupo muscular'></CustomInput>
+                    <CustomInput className='form-control mt-2' type="hidden" name='pago_id' value={element.ID_PAGO} placeholder='ID pago'></CustomInput>
                     <AddButton text="Si" type="submit" />
                     <CancelButton fun={() => setIsOpenDelete(!isOpenDelete)} />
                 </CustomForm>
