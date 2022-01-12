@@ -121,7 +121,7 @@ export default function Ejercicio(){
             <div className="container">
                 <div className="container-insert-search__">
                   <AddButton text="Insertar" onClick={()=>setIsOpenInsert(true)} />
-                  <SingleCustomInput onChange={handleSearch} errorMsg="hahaha nombre del ejercicio" placeholder="Buscar" name="input-search" className="form-control"/>
+                  <SingleCustomInput onChange={handleSearch} placeholder="Buscar" name="input-search" className="search__"/>
                 </div>    
                 <Table
                   columns={columns}
@@ -136,8 +136,8 @@ export default function Ejercicio(){
               methods={{toggleOpenModal: ()=>setIsOpenInsert(!isOpenInsert)}}
                 >
               <CustomForm onSubmit={handleInsert}>
-                <CustomInput errorMsg="Inserte nombre del ejercicio" className='form-control mt-2' name='exercise_insert' placeholder='Nombre ejercicio'></CustomInput>
-                <CustomSelect focus="NOMBRE_GRUPO_MUSCULAR" errorMsg="Seleccione un grupo muscular"  className='form-control mt-2' name='muscule_group_insert' placeholder='Nombre grupo muscular' options={muscleGroupList}></CustomSelect>
+                <CustomInput errorMsg="Inserte nombre del ejercicio" className='mt-2' name='exercise_insert' placeholder='Nombre ejercicio'></CustomInput>
+                <CustomSelect focus="NOMBRE_GRUPO_MUSCULAR" errorMsg="Seleccione un grupo muscular"  className='mt-2' name='muscule_group_insert' placeholder='Nombre grupo muscular' options={muscleGroupList}></CustomSelect>
                 <AddButton text="Insertar"/>
                 <CancelButton fun={()=>setIsOpenInsert(false)}/>
               </CustomForm>
@@ -148,8 +148,8 @@ export default function Ejercicio(){
                 >
               <CustomForm onSubmit={HandleEdit}>
                 <CustomInput type="hidden" value={exerciseEdited.id} className='form-control mt-2' name='exerciseId'/>
-                <CustomInput name='exerciseEdit' onChange={(e)=>setExerciseEdited(prevState =>({...prevState,exercise:e.target.value}))} value={exerciseEdited.exercise} errorMsg="Escriba el nombre del ejercicio" className='form-control mt-2' placeholder='Nombre ejercicio'/>
-                <CustomSelect value={exerciseEdited.muscleGroup} onChange={(e)=>setExerciseEdited(prevState =>({...prevState,muscleGroup:e.target.value}))} focus="NOMBRE_GRUPO_MUSCULAR" errorMsg="Seleccione un grupo muscular"  className='form-control mt-2' name='muscleGroupSelect' placeholder='Nombre grupo muscular' options={muscleGroupList}/>
+                <CustomInput name='exerciseEdit' onChange={(e)=>setExerciseEdited(prevState =>({...prevState,exercise:e.target.value}))} value={exerciseEdited.exercise} errorMsg="Escriba el nombre del ejercicio" className='mt-2' placeholder='Nombre ejercicio'/>
+                <CustomSelect value={exerciseEdited.muscleGroup} onChange={(e)=>setExerciseEdited(prevState =>({...prevState,muscleGroup:e.target.value}))} focus="NOMBRE_GRUPO_MUSCULAR" errorMsg="Seleccione un grupo muscular"  className='mt-2' name='muscleGroupSelect' placeholder='Nombre grupo muscular' options={muscleGroupList}/>
                 <AddButton type="submit" text="Guardar cambios"/>
                 <CancelButton fun={()=>setIsOpenEdit(false)}/>
               </CustomForm>
