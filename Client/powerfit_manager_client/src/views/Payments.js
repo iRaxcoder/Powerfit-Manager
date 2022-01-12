@@ -8,7 +8,6 @@ import { CustomInput, SingleCustomInput } from "../components/CustomInput";
 import CancelButton from "../components/CancelButton"
 import commonDB from "../service/CommonDB";
 
-
 export default function Payments() {
     const [isOpenInsert, setIsOpenInsert] = useState(false);
     const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -189,7 +188,7 @@ export default function Payments() {
                 methods={{ toggleOpenModal: () => setIsOpenInsert(!isOpenInsert) }}
             >
                 <CustomForm onSubmit={handleInsert}>
-                    <Select onChange={handleSearchClient} options={clientList} isSearchable="true" />
+                   
                     <CustomInput errorMsg="Ingrese la fecha" type="date" className='form-control mt-2' name='fecha_insert' placeholder='Fecha'></CustomInput>
                     <CustomInput errorMsg="Ingrese el tipo de pago" className='form-control mt-2' name='tipo_pago_insert' placeholder='Tipo de pago'></CustomInput>
                     <CustomInput errorMsg="Ingrese el monto" className='form-control mt-2' name='monto_insert' placeholder='Monto'></CustomInput>
