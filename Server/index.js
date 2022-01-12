@@ -20,9 +20,16 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(session({
+    key: 'sid',
 	secret: 'secret',
-	resave: true,
-	saveUninitialized: true
+	resave: false,
+	saveUninitialized: false,
+    cookie: {
+        path: '/',
+      sameSite: 'none',
+      httpOnly: true,
+      secure: false,
+    }
 }));
 
 app.use(bodyParser.urlencoded({extended : true}));

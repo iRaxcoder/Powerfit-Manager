@@ -3,7 +3,7 @@ import AddButton from "../components/AddButton";
 import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
-import {CustomInput, SingleCustomInput,LiveCustomSelect} from "../components/CustomInput";
+import {CustomInput, SingleCustomInput} from "../components/CustomInput";
 import commonDB from "../service/CommonDB";
 import CancelButton from "../components/CancelButton";
 
@@ -16,22 +16,6 @@ export default function Client(){
   const clientsListRef= useRef();
   const [modalMsg, setModalMsg]= useState({isMsgOpen: false, msg: ""});
   clientsListRef.current=clientList;
-
-  //
-  const [selectedClients,setSelectedClients] = useState(null);
-  const searchClient = (find,callback) => {
-    commonDB.getSearch({header: "cliente",find:find}).then(response=>{
-      setSelectedClients(response);
-    })
-
-    callback(selectedClients.map(client=>({
-      label:client.NOMBRE_CLIENTE + " "+ client.APELLIDOS,
-      value: client.ID_CLIENTE 
-    })))
-  }
-  const onChangeSearchClient = (selected) =>{
-    setSelectedClients(selected);
-  }
     
   const columns = React.useMemo(
       () => [
@@ -56,7 +40,7 @@ export default function Client(){
     fetchClients();
   },[]);
 
-  if(!clientList) return "No se encuentran ejercicios";
+  if(!clientList) return "No se encuentran clientes aún.";
     
     const handleInsert = (e) => {
       commonDB.insert({header:"cliente",size:"6", object: e}).then(response=>{   
@@ -142,13 +126,12 @@ export default function Client(){
               methods={{toggleOpenModal: ()=>setIsOpenInsert(!isOpenInsert)}}
                 >
               <CustomForm onSubmit={handleInsert}>
-                <LiveCustomSelect data={selectedClients} onChange={onChangeSearchClient} placeHolder={"Buscar cliente..."} loadOptions={searchClient} />
-                <CustomInput errorMsg="Nombre requerido" className='form-control mt-2' name='client_name_insert' placeholder='Nombre'></CustomInput>
-                <CustomInput errorMsg="Apellidos requeridos" className='form-control mt-2' name='last_name_insert' placeholder='Apellidos'></CustomInput>
-                <CustomInput errorMsg="Edad requerida" className='form-control mt-2' name='age_name_insert' placeholder='Edad'></CustomInput>
-                <CustomInput errorMsg="Teléfono requerido" className='form-control mt-2' name='number_insert' placeholder='Teléfono'></CustomInput>
-                <CustomInput errorMsg="Correo requerido" className='form-control mt-2' name='email_insert' placeholder='Email'></CustomInput>
-                <CustomInput errorMsg="Este campo es requerido" className='form-control mt-2' name='illness_insert' placeholder='Enfermedad'></CustomInput>
+                <CustomInput errorMsg="Nombre requerido" className='mt-2' name='client_name_insert' placeholder='Nombre'></CustomInput>
+                <CustomInput errorMsg="Apellidos requeridos" className='mt-2' name='last_name_insert' placeholder='Apellidos'></CustomInput>
+                <CustomInput errorMsg="Edad requerida" className='mt-2' name='age_name_insert' placeholder='Edad'></CustomInput>
+                <CustomInput errorMsg="Teléfono requerido" className='mt-2' name='number_insert' placeholder='Teléfono'></CustomInput>
+                <CustomInput errorMsg="Correo requerido" className='mt-2' name='email_insert' placeholder='Email'></CustomInput>
+                <CustomInput errorMsg="Este campo es requerido" className='mt-2' name='illness_insert' placeholder='Enfermedad'></CustomInput>
                 <AddButton text="Insertar"/>
                 <CancelButton fun={()=>setIsOpenInsert(false)}/>
               </CustomForm>
