@@ -190,7 +190,7 @@ export default function Payments() {
         <div>
             <h1 className="text-left">Control Pagos</h1>
             <hr />
-            <div className="container text-left">
+            <div className="container">
                 <div className="container-insert-search__">
                     <AddButton text="Insertar" onClick={() => setIsOpenInsert(true)} />
                     <SingleCustomInput onChange={handleSearch} errorMsg="Ingrese la palabra a buscar" placeholder="Buscar" name="input" className="form-control" />
@@ -208,11 +208,11 @@ export default function Payments() {
                 methods={{ toggleOpenModal: () => setIsOpenInsert(!isOpenInsert) }}
             >
                 <CustomForm onSubmit={handleInsert}>
-                    <LiveCustomSelect data={selectedClients} onChange={onChangeSearchClient} placeHolder={"Buscar cliente..."} loadOptions={searchClient} />
-                    <CustomInput errorMsg="Ingrese la fecha" type="date" className='form-control mt-2' name='fecha_insert' placeholder='Fecha'></CustomInput>
-                    <CustomInput errorMsg="Ingrese el tipo de pago" className='form-control mt-2' name='tipo_pago_insert' placeholder='Tipo de pago'></CustomInput>
-                    <CustomInput errorMsg="Ingrese el monto" className='form-control mt-2' name='monto_insert' placeholder='Monto'></CustomInput>
-                    <CustomInput errorMsg="Ingrese el detalle" className='form-control mt-2' name='detalle_insert' placeholder='Detalle de pago'></CustomInput>
+                    <LiveCustomSelect data={selectedClients} onChange={onChangeSearchClient} className='mt-2' placeHolder={"Buscar cliente..."} loadOptions={searchClient} />
+                    <CustomInput errorMsg="Ingrese la fecha" type="date" className='mt-2' name='fecha_insert' placeholder='Fecha'></CustomInput>
+                    <CustomInput errorMsg="Ingrese el tipo de pago" className='mt-2' name='tipo_pago_insert' placeholder='Tipo de pago'></CustomInput>
+                    <CustomInput errorMsg="Ingrese el monto" className='mt-2' name='monto_insert' placeholder='Monto'></CustomInput>
+                    <CustomInput errorMsg="Ingrese el detalle" className='mt-2' name='detalle_insert' placeholder='Detalle de pago'></CustomInput>
 
                     <AddButton text="Insertar" type="submit" />
                     <CancelButton fun={() => setIsOpenInsert(!isOpenInsert)} />
@@ -225,11 +225,11 @@ export default function Payments() {
                 methods={{ toggleOpenModal: () => setIsOpenEdit(!isOpenEdit) }}
             >
                 <CustomForm onSubmit={HandleEdit}>
-                    <CustomInput className='form-control mt-2' type="hidden" name='pago_id' value={element.ID_PAGO} placeholder='Id pago'></CustomInput>
-                    <CustomInput errorMsg="Ingrese la fecha" type="date" className='form-control mt-2' value={moment(element.FECHA).format('YYYY-MM-DD')} onChange={(e) => setElement(prevState => ({ ...prevState, FECHA: e.target.value }))} name='fecha_insert' placeholder='Fecha'></CustomInput>
-                    <CustomInput errorMsg="Ingrese el tipo de pago" className='form-control mt-2' value={element.TIPO_PAGO} onChange={(e) => setElement(prevState => ({ ...prevState, TIPO_PAGO: e.target.value }))} name='tipo_pago_insert' placeholder='Tipo de pago'></CustomInput>
-                    <CustomInput errorMsg="Ingrese el monto" className='form-control mt-2' value={element.MONTO} onChange={(e) => setElement(prevState => ({ ...prevState, MONTO: e.target.value }))} name='monto_insert' placeholder='Monto'></CustomInput>
-                    <CustomInput errorMsg="Ingrese el detalle" className='form-control mt-2' value={element.DETALLE} onChange={(e) => setElement(prevState => ({ ...prevState, DETALLE: e.target.value }))} name='detalle_insert' placeholder='Detalle de pago'></CustomInput>
+                    <CustomInput className='mt-2' type="hidden" name='pago_id' value={element.ID_PAGO} placeholder='Id pago'></CustomInput>
+                    <CustomInput errorMsg="Ingrese la fecha" type="date" className='mt-2' value={moment(element.FECHA).format('YYYY-MM-DD')} onChange={(e) => setElement(prevState => ({ ...prevState, FECHA: e.target.value }))} name='fecha_insert' placeholder='Fecha'></CustomInput>
+                    <CustomInput errorMsg="Ingrese el tipo de pago" className='mt-2' value={element.TIPO_PAGO} onChange={(e) => setElement(prevState => ({ ...prevState, TIPO_PAGO: e.target.value }))} name='tipo_pago_insert' placeholder='Tipo de pago'></CustomInput>
+                    <CustomInput errorMsg="Ingrese el monto" className='mt-2' value={element.MONTO} onChange={(e) => setElement(prevState => ({ ...prevState, MONTO: e.target.value }))} name='monto_insert' placeholder='Monto'></CustomInput>
+                    <CustomInput errorMsg="Ingrese el detalle" className='mt-2' value={element.DETALLE} onChange={(e) => setElement(prevState => ({ ...prevState, DETALLE: e.target.value }))} name='detalle_insert' placeholder='Detalle de pago'></CustomInput>
 
                     <AddButton text="Guardar cambios" type="submit" />
                     <CancelButton fun={() => setIsOpenEdit(!isOpenEdit)} />
@@ -242,7 +242,7 @@ export default function Payments() {
                 methods={{ toggleOpenModal: () => setIsOpenDelete(!isOpenDelete) }}
             >
                 <CustomForm onSubmit={HandleDelete}>
-                    <CustomInput className='form-control mt-2' type="hidden" name='pago_id' value={element.ID_PAGO} placeholder='ID pago'></CustomInput>
+                    <CustomInput className='mt-2' type="hidden" name='pago_id' value={element.ID_PAGO} placeholder='ID pago'></CustomInput>
                     <AddButton text="Si" type="submit" />
                     <CancelButton fun={() => setIsOpenDelete(!isOpenDelete)} />
                 </CustomForm>

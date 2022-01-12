@@ -129,7 +129,7 @@ export default function GrupoMuscular() {
     <div>
       <h1 className="text-left">Control Grupo Muscular</h1>
       <hr />
-      <div className="container text-left">
+      <div className="container">
         <div className="container-insert-search__">
           <AddButton text="Insertar" onClick={() => setIsOpenInsert(true)} />
           <SingleCustomInput onChange={handleSearch} errorMsg="Nombre grupo muscular" placeholder="Buscar" name="input" className="form-control" />
@@ -148,7 +148,7 @@ export default function GrupoMuscular() {
         methods={{ toggleOpenModal: () => setIsOpenInsert(!isOpenInsert) }}
       >
         <CustomForm onSubmit={handleInsert}>
-          <CustomInput errorMsg="Inserte grupo muscular" className='form-control mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
+          <CustomInput errorMsg="Inserte grupo muscular" className='mt-2' name='muscule_group' placeholder='Nombre grupo muscular'></CustomInput>
           <AddButton text="Insertar" type="submit" />
           <CancelButton fun={() => setIsOpenInsert(!isOpenInsert)} />
         </CustomForm>
@@ -161,8 +161,8 @@ export default function GrupoMuscular() {
         methods={{ toggleOpenModal: () => setIsOpenEdit(!isOpenEdit) }}
       >
         <CustomForm onSubmit={HandleEdit}>
-          <CustomInput className='form-control mt-2' type="hidden" name='muscule_group_id' value={element.ID_MUSCULAR} placeholder='Id grupo muscular'></CustomInput>
-          <CustomInput className='form-control mt-2' name='muscule_group_name' onChange={handleChange} value={element.NOMBRE_GRUPO_MUSCULAR} placeholder='Nombre grupo muscular'></CustomInput>
+          <CustomInput className=' mt-2' type="hidden" name='muscule_group_id' value={element.ID_MUSCULAR} placeholder='Id grupo muscular'></CustomInput>
+          <CustomInput className=' mt-2' name='muscule_group_name' onChange={handleChange} value={element.NOMBRE_GRUPO_MUSCULAR} placeholder='Nombre grupo muscular'></CustomInput>
           <AddButton text="Guardar cambios" type="submit" />
           <CancelButton fun={() => setIsOpenEdit(!isOpenEdit)} />
         </CustomForm>
@@ -174,7 +174,7 @@ export default function GrupoMuscular() {
         methods={{ toggleOpenModal: () => setIsOpenDelete(!isOpenDelete) }}
       >
         <CustomForm onSubmit={HandleDelete}>
-          <CustomInput className='form-control mt-2' type="hidden" name='muscule_group_id' value={element.ID_MUSCULAR} placeholder='ID grupo muscular'></CustomInput>
+          <CustomInput className='mt-2' type="hidden" name='muscule_group_id' value={element.ID_MUSCULAR} placeholder='ID grupo muscular'></CustomInput>
           <AddButton text="Si" type="submit" />
           <CancelButton fun={() => setIsOpenDelete(!isOpenDelete)} />
         </CustomForm>
