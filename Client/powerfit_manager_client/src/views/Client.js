@@ -3,7 +3,7 @@ import AddButton from "../components/AddButton";
 import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
-import {CustomInput, SingleCustomInput} from "../components/CustomInput";
+import {CustomInput, SingleCustomInput,LiveCustomSelect} from "../components/CustomInput";
 import commonDB from "../service/CommonDB";
 import CancelButton from "../components/CancelButton";
 
@@ -16,6 +16,22 @@ export default function Client(){
   const clientsListRef= useRef();
   const [modalMsg, setModalMsg]= useState({isMsgOpen: false, msg: ""});
   clientsListRef.current=clientList;
+
+  //
+  const [selectedClients,setSelectedClients] = useState(null);
+  const searchClient = (find,callback) => {
+    commonDB.getSearch({header: "cliente",find:find}).then(response=>{
+      setSelectedClients(response);
+    })
+
+    callback(selectedClients.map(client=>({
+      label:client.NOMBRE_CLIENTE + " "+ client.APELLIDOS,
+      value: client.ID_CLIENTE 
+    })))
+  }
+  const onChangeSearchClient = (selected) =>{
+    setSelectedClients(selected);
+  }
     
   const columns = React.useMemo(
       () => [
@@ -126,6 +142,7 @@ export default function Client(){
               methods={{toggleOpenModal: ()=>setIsOpenInsert(!isOpenInsert)}}
                 >
               <CustomForm onSubmit={handleInsert}>
+                <LiveCustomSelect data={selectedClients} onChange={onChangeSearchClient} placeHolder={"Buscar cliente..."} loadOptions={searchClient} />
                 <CustomInput errorMsg="Nombre requerido" className='form-control mt-2' name='client_name_insert' placeholder='Nombre'></CustomInput>
                 <CustomInput errorMsg="Apellidos requeridos" className='form-control mt-2' name='last_name_insert' placeholder='Apellidos'></CustomInput>
                 <CustomInput errorMsg="Edad requerida" className='form-control mt-2' name='age_name_insert' placeholder='Edad'></CustomInput>

@@ -1,5 +1,8 @@
 import React from "react";
+import AsyncSelect from 'react-select/async'
+import makeAnimated from 'react-select/animated'
 
+const animatedComponent= makeAnimated();
 
 export const CustomInput = ({ register, errors, errorMsg, name, ...rest }) => {
   return (
@@ -29,6 +32,27 @@ export const CustomSelect = ({ register, options, focus, name, ...rest }) => {
         ))}
       </select>
     </>
+  );
+}
+
+export const LiveCustomSelect = ({data, onChange, placeHolder, loadOptions}) => {
+  return (
+    <AsyncSelect
+      value={data}
+      onChange={onChange}
+      placeholder={placeHolder}
+      loadOptions={loadOptions}
+      components={animatedComponent}
+      theme={(theme) => ({
+        ...theme,
+        borderRadius: 0,
+        colors: {
+          ...theme.colors,
+          primary25: '#558b23',
+          primary: 'black',
+        },
+      })}
+    />
   );
 }
 
