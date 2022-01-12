@@ -4,9 +4,11 @@ import AddButton from "../components/AddButton";
 import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
-import { CustomInput, SingleCustomInput, CustomSelect, LiveCustomSelect } from "../components/CustomInput";
+import { CustomInput, SingleCustomInput } from "../components/CustomInput";
 import CancelButton from "../components/CancelButton"
 import commonDB from "../service/CommonDB";
+import Select from 'react-select'
+import { validateElement } from "react-modal/lib/helpers/ariaAppHider";
 
 export default function Payments() {
     const [isOpenInsert, setIsOpenInsert] = useState(false);
@@ -72,16 +74,9 @@ export default function Payments() {
         })
     }
 
-    const fetchClients = () => {
-        commonDB.getAll({ header: "cliente" }).then(response => {
-            setClientList(response)
-        })
-    }
-
 
     useEffect(() => {
         fetchData();
-        fetchClients();
     }, [setData]);
     if (!data) return "No se encuentran datos";
 
@@ -107,6 +102,19 @@ export default function Payments() {
         // });
         //   setIsOpenDelete(!isOpenDelete);
     }
+
+    const handleSearchClient = (e) => {
+        console.log(e.target.value);
+        commonDB.getSearch({ header: "cliente", find: e.target.value }).then(response => {
+            console.log(response);
+            const options = response.map((client) => ({
+                name: client.ID_CLIENTE,
+                value: client.NOMBRE_CLIENTE + ' ' + client.APELLIDOS
+            }));
+            setClientList(options);
+        })
+
+    };
 
     const handleChange = (e) => {
         //setElement({ NOMBRE_GRUPO_MUSCULAR: e.muscule_group_name })
@@ -182,7 +190,7 @@ export default function Payments() {
                 methods={{ toggleOpenModal: () => setIsOpenInsert(!isOpenInsert) }}
             >
                 <CustomForm onSubmit={handleInsert}>
-                    <LiveCustomSelect search className='form-control mt-2' name='client_insert' placeholder='Nombre de clientes' options={clientList}></LiveCustomSelect>
+                    <Select onChange={handleSearchClient} options={clientList} isSearchable="true" />
                     <CustomInput errorMsg="Ingrese la fecha" type="date" className='form-control mt-2' name='fecha_insert' placeholder='Fecha'></CustomInput>
                     <CustomInput errorMsg="Ingrese el tipo de pago" className='form-control mt-2' name='tipo_pago_insert' placeholder='Tipo de pago'></CustomInput>
                     <CustomInput errorMsg="Ingrese el monto" className='form-control mt-2' name='monto_insert' placeholder='Monto'></CustomInput>

@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelect } from 'react-select-search';
+
 
 export const CustomInput = ({ register, errors, errorMsg, name, ...rest }) => {
   return (
@@ -32,26 +32,4 @@ export const CustomSelect = ({ register, options, focus, name, ...rest }) => {
   );
 }
 
-export const LiveCustomSelect = ({ options, value,search}) => {
-  const [snapshot, valueProps, optionProps] = useSelect({
-    options,
-    value,
-    search
-  });
-  return (
-       <>
-      <div>
-        <button className="btn" {...valueProps}>{snapshot.displayValue}</button>
-        {snapshot.focus && (
-          <ul>
-            {snapshot.options.map((option) => (
-              <li key={option.ID_CLIENTE}>
-                <button className="btn" {...optionProps} value={option.ID_CLIENTE}>{option.NOMBRE_CLIENTE +' '+ option.APELLIDOS}</button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-    </>
-  );
-}
+
