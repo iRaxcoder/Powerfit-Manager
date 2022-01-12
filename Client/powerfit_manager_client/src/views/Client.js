@@ -3,9 +3,11 @@ import AddButton from "../components/AddButton";
 import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
+import DownloadButton from "../components/DownloadButton";
 import {CustomInput, SingleCustomInput} from "../components/CustomInput";
 import commonDB from "../service/CommonDB";
 import CancelButton from "../components/CancelButton";
+import { exportToPdf } from "../utils/exportData";
 
 export default function Client(){
   const [isOpenInsert, setIsOpenInsert] = useState(false);
@@ -16,16 +18,18 @@ export default function Client(){
   const clientsListRef= useRef();
   const [modalMsg, setModalMsg]= useState({isMsgOpen: false, msg: ""});
   clientsListRef.current=clientList;
-    
+
+  const dataHeader = [["Nombre","Apellidos","Edad","Teléfono","Correo","Enfermedades"]];
+
   const columns = React.useMemo(
       () => [
-          { Header: '#', accessor: 'ID_CLIENTE',},
-          { Header: 'Nombre', accessor: 'NOMBRE_CLIENTE'},
-          { Header: 'Apellidos',accessor: 'APELLIDOS'},
-          { Header: 'Edad',accessor: 'EDAD'},
-          { Header: 'Teléfono',accessor: 'TELEFONO'},
-          { Header: 'Correo', accessor: 'EMAIL'},
-          { Header: 'Enfermedades', accessor: 'ENFERMEDAD'},
+          { Header: "ID", accessor: 'ID_CLIENTE',},
+          { Header: "Nombre", accessor: 'NOMBRE_CLIENTE'},
+          { Header: "Apellidos",accessor: 'APELLIDOS'},
+          { Header: "Edad",accessor: 'EDAD'},
+          { Header: "Telefono",accessor: 'TELEFONO'},
+          { Header: "Email", accessor: 'EMAIL'},
+          { Header: "Enfermedad", accessor: 'ENFERMEDAD'},
         ],
       []
   )
@@ -57,7 +61,7 @@ export default function Client(){
     const HandleOpenEdit = (e) => {
       const client = JSON.parse(e.target.dataset.row);
       setClientEdited(
-      {id:client.ID_CLIENTE,name:client.NOMBRE_CLIENTE, lastName: client.APELLIDOS, age: client.EDAD, number: client.TELEFONO, email: client.EMAIL, illness: client.ENFERMEDAD})
+      {name:client.NOMBRE_CLIENTE, lastName: client.APELLIDOS, age: client.EDAD, number: client.TELEFONO, email: client.EMAIL, illness: client.ENFERMEDAD})
       setIsOpenEdit(true);
     }
 
@@ -102,6 +106,12 @@ export default function Client(){
       }
     }
 
+    const exportPDF=()=>{
+      const data = clientsListRef.current.map((cliente)=>
+      ([cliente.ID_CLIENTE,cliente.NOMBRE_CLIENTE,cliente.APELLIDOS,cliente.EDAD,cliente.TELEFONO,cliente.EMAIL,cliente.ENFERMEDAD]));
+      exportToPdf(dataHeader,data, "Reporte de clientes");
+    }
+
     return (
         <div>
             <h1 className="text-left">Control de clientes</h1>
@@ -110,6 +120,7 @@ export default function Client(){
                 <div className="container-insert-search__">
                   <div>
                     <AddButton text="Insertar" onClick={()=>setIsOpenInsert(true)} />
+                    <DownloadButton onClick={exportPDF} text="PDF"/>
                   </div>
                   <SingleCustomInput onChange={handleSearch} placeholder="Buscar" name="input-search" className="search__"/>
                 </div>    
