@@ -40,12 +40,13 @@ thead{
     justify-content: space-between;
 }
 
+
+
 .container-insert-search__>input{
     width: 20%;
     border-radius: 5px;
     padding: 5px;
     height: 43px;
-    border: 2px solid black;
 }
 
 input{
@@ -53,9 +54,11 @@ input{
     border-radius: 5px;
     padding: 5px;
     height: 43px;
-    border: 1px solid black;
+    border: 1px solid rgba(58, 56, 56, 0.829);
+    outline: none;
 }
 
-.container-insert-search__>input:focus{
+input:focus{
+    border-width: 2px;
     border-color: #73be22;
 }
