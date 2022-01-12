@@ -7,6 +7,8 @@ import CustomForm from "../components/CustomForm";
 import { CustomInput, SingleCustomInput, LiveCustomSelect } from "../components/CustomInput";
 import CancelButton from "../components/CancelButton"
 import commonDB from "../service/CommonDB";
+import moment from 'moment'
+
 
 export default function Payments() {
     const [isOpenInsert, setIsOpenInsert] = useState(false);
@@ -27,40 +29,31 @@ export default function Payments() {
             TIPO_PAGO: '',
             MONTO: '',
             DETALLE: ''
-
-
         }
     ])
     const columns = React.useMemo(
         () => [
             {
-                Header: '#',
-                accessor: 'ID_PAGO',
+                Header: '#', accessor: 'ID_PAGO'
             },
             {
-                Header: 'Nombre',
-                accessor: 'NOMBRE_CLIENTE',
+                Header: 'Nombre', accessor: 'NOMBRE_CLIENTE'
             },
             {
-                Header: 'Apellido',
-                accessor: 'APELLIDO_CLIENTE',
+                Header: 'Apellido', accessor: 'APELLIDO_CLIENTE'
             },
 
             {
-                Header: 'Fecha',
-                accessor: 'FECHA',
+                Header: 'Fecha', accessor: 'FECHA'
             },
             {
-                Header: 'Tipo de Pago',
-                accessor: 'TIPO_PAGO',
+                Header: 'Tipo de Pago', accessor: 'TIPO_PAGO'
             },
             {
-                Header: 'Monto',
-                accessor: 'MONTO',
+                Header: 'Monto', accessor: 'MONTO'
             },
             {
-                Header: 'Detalles',
-                accessor: 'DETALLE',
+                Header: 'Detalles', accessor: 'DETALLE'
             }
 
         ],
@@ -82,10 +75,17 @@ export default function Payments() {
     }
     const fetchData = () => {
         commonDB.getAll({ header: "pago" }).then(response => {
+            convert(response)
+
             setData(response)
         })
     }
 
+    const convert = (e) => {
+        e.map((entrada) => {
+            entrada.FECHA = moment(entrada.FECHA).format('LL')
+        })
+    }
 
     useEffect(() => {
         fetchData();
@@ -176,12 +176,12 @@ export default function Payments() {
 
     }
     const handleSearch = (e) => {
-            if(e.target.value===undefined || e.target.value ===""){
-          fetchData();
-        }else{
-          commonDB.getSearch({header: "pago",find:e.target.value}).then(response=>{
-            setData(response);
-          })
+        if (e.target.value === undefined || e.target.value === "") {
+            fetchData();
+        } else {
+            commonDB.getSearch({ header: "pago", find: e.target.value }).then(response => {
+                setData(response);
+            })
         }
     }
 
@@ -220,14 +220,13 @@ export default function Payments() {
 
             </CustomModal>
 
-
             <CustomModal
                 props={{ title: 'Actualizar pago', isOpen: isOpenEdit }}
                 methods={{ toggleOpenModal: () => setIsOpenEdit(!isOpenEdit) }}
             >
                 <CustomForm onSubmit={HandleEdit}>
                     <CustomInput className='form-control mt-2' type="hidden" name='pago_id' value={element.ID_PAGO} placeholder='Id pago'></CustomInput>
-                    <CustomInput errorMsg="Ingrese la fecha" type="date" className='form-control mt-2' value={element.FECHA} onChange={(e) => setElement(prevState => ({ ...prevState, FECHA: e.target.value }))} name='fecha_insert' placeholder='Fecha'></CustomInput>
+                    <CustomInput errorMsg="Ingrese la fecha" type="date" className='form-control mt-2' value={moment(element.FECHA).format('YYYY-MM-DD')} onChange={(e) => setElement(prevState => ({ ...prevState, FECHA: e.target.value }))} name='fecha_insert' placeholder='Fecha'></CustomInput>
                     <CustomInput errorMsg="Ingrese el tipo de pago" className='form-control mt-2' value={element.TIPO_PAGO} onChange={(e) => setElement(prevState => ({ ...prevState, TIPO_PAGO: e.target.value }))} name='tipo_pago_insert' placeholder='Tipo de pago'></CustomInput>
                     <CustomInput errorMsg="Ingrese el monto" className='form-control mt-2' value={element.MONTO} onChange={(e) => setElement(prevState => ({ ...prevState, MONTO: e.target.value }))} name='monto_insert' placeholder='Monto'></CustomInput>
                     <CustomInput errorMsg="Ingrese el detalle" className='form-control mt-2' value={element.DETALLE} onChange={(e) => setElement(prevState => ({ ...prevState, DETALLE: e.target.value }))} name='detalle_insert' placeholder='Detalle de pago'></CustomInput>
@@ -239,7 +238,7 @@ export default function Payments() {
             </CustomModal>
 
             <CustomModal
-                props={{ title: "¿Desea eliminar el pago de " + element.NOMBRE_CLIENTE + " " + element.APELLIDO_CLIENTE + "de la fecha "+element.FECHA+"?", isOpen: isOpenDelete }}
+                props={{ title: "¿Desea eliminar el pago de " + element.NOMBRE_CLIENTE + " " + element.APELLIDO_CLIENTE + "de la fecha " + element.FECHA + "?", isOpen: isOpenDelete }}
                 methods={{ toggleOpenModal: () => setIsOpenDelete(!isOpenDelete) }}
             >
                 <CustomForm onSubmit={HandleDelete}>
