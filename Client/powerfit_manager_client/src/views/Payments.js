@@ -7,8 +7,7 @@ import CustomForm from "../components/CustomForm";
 import { CustomInput, SingleCustomInput } from "../components/CustomInput";
 import CancelButton from "../components/CancelButton"
 import commonDB from "../service/CommonDB";
-import Select from 'react-select'
-import { validateElement } from "react-modal/lib/helpers/ariaAppHider";
+
 
 export default function Payments() {
     const [isOpenInsert, setIsOpenInsert] = useState(false);
@@ -204,11 +203,11 @@ export default function Payments() {
 
 
             <CustomModal
-                props={{ title: 'Actualizar grupo muscular', isOpen: isOpenEdit }}
+                props={{ title: 'Actualizar pago', isOpen: isOpenEdit }}
                 methods={{ toggleOpenModal: () => setIsOpenEdit(!isOpenEdit) }}
             >
                 <CustomForm onSubmit={HandleEdit}>
-                    <CustomInput className='form-control mt-2' type="hidden" name='muscule_group_id' value={element.ID_MUSCULAR} placeholder='Id grupo muscular'></CustomInput>
+                    <CustomInput className='form-control mt-2' type="hidden" name='pago_id' value={element.ID_MUSCULAR} placeholder='Id grupo muscular'></CustomInput>
                     <CustomInput className='form-control mt-2' name='muscule_group_name' onChange={handleChange} value={element.NOMBRE_GRUPO_MUSCULAR} placeholder='Nombre grupo muscular'></CustomInput>
                     <AddButton text="Guardar cambios" type="submit" />
                     <CancelButton fun={() => setIsOpenEdit(!isOpenEdit)} />

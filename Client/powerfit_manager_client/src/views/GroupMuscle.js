@@ -4,7 +4,7 @@ import AddButton from "../components/AddButton";
 import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
-import { CustomInput, SingleCustomInput} from "../components/CustomInput";
+import { CustomInput, SingleCustomInput } from "../components/CustomInput";
 import CancelButton from "../components/CancelButton"
 import commonDB from "../service/CommonDB";
 
@@ -49,7 +49,7 @@ export default function GrupoMuscular() {
   }, []);
   if (!data) return "No se encuentran datos";
 
-  
+
   const toggleModalInsert = () => {
     setIsOpenInsert(!isOpenInsert);
 
@@ -78,7 +78,7 @@ export default function GrupoMuscular() {
   };
 
   const handleInsert = (e) => {
-     commonDB.insert({ header: "grupo_muscular", size: "1", object: e }).then(response => {
+    commonDB.insert({ header: "grupo_muscular", size: "1", object: e }).then(response => {
       setModalMsg(prevState => ({
         ...prevState,
         msg: response,
@@ -116,10 +116,10 @@ export default function GrupoMuscular() {
   }
   const handleSearch = (e) => {
     console.log(e.target.value);
-    if(e.target.value===undefined || e.target.value ===""){
+    if (e.target.value === undefined || e.target.value === "") {
       fetchData();
-    }else{
-      commonDB.getSearch({header: "grupo_muscular",find:e.target.value}).then(response=>{
+    } else {
+      commonDB.getSearch({ header: "grupo_muscular", find: e.target.value }).then(response => {
         setData(response);
       })
     }
@@ -170,12 +170,11 @@ export default function GrupoMuscular() {
       </CustomModal>
 
       <CustomModal
-        props={{ title: '¿Desea eliminar?', isOpen: isOpenDelete }}
+        props={{ title: "¿Desea eliminar '" + element.NOMBRE_GRUPO_MUSCULAR + "'?", isOpen: isOpenDelete }}
         methods={{ toggleOpenModal: () => setIsOpenDelete(!isOpenDelete) }}
       >
         <CustomForm onSubmit={HandleDelete}>
           <CustomInput className='form-control mt-2' type="hidden" name='muscule_group_id' value={element.ID_MUSCULAR} placeholder='ID grupo muscular'></CustomInput>
-          <CustomInput className='form-control mt-2' name='muscule_group' value={element.NOMBRE_GRUPO_MUSCULAR} placeholder='Nombre grupo muscular'></CustomInput>
           <AddButton text="Si" type="submit" />
           <CancelButton fun={() => setIsOpenDelete(!isOpenDelete)} />
         </CustomForm>
