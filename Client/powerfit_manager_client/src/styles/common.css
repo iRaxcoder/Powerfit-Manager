@@ -48,6 +48,14 @@ thead{
     border: 2px solid black;
 }
 
+input{
+    width: 100%;
+    border-radius: 5px;
+    padding: 5px;
+    height: 43px;
+    border: 1px solid black;
+}
+
 .container-insert-search__>input:focus{
-    border-color: #73be22 ;
+    border-color: #73be22;
 }

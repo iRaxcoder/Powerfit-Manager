@@ -20,14 +20,15 @@ module.exports.set = function(app,connection){
     });
 
     app.get('/aut/cerrar-sesion', function (req, res) {
-        if (req.session.loggedin) {
+        if (req.session.loggedin===true) {
             req.session.destroy(function() {
                 delete req.session.username;
                 req.session.loggedin = false;
                 res.clearCookie('connect.sid', { path: '/' });           
             });
         } else {
-            res.send('No se ha podido cerrar la sesión', 500); // public sessions don't containt sensible information so we leave them
+            console.log("no cerró");
+            res.status(500).send('No se ha podido cerrar la sesión'); // public sessions don't containt sensible information so we leave them
         }
     });
 
