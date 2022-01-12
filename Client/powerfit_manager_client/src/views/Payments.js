@@ -117,7 +117,8 @@ export default function Payments() {
         setElement({
             ID_PAGO: pago.ID_PAGO,
             NOMBRE_CLIENTE: pago.NOMBRE_CLIENTE,
-            APELLIDO_CLIENTE: pago.APELLIDO_CLIENTE
+            APELLIDO_CLIENTE: pago.APELLIDO_CLIENTE,
+            FECHA: pago.FECHA,
         });
         setIsOpenDelete(!isOpenDelete);
     }
@@ -133,10 +134,6 @@ export default function Payments() {
             setClientList(options);
         })
 
-    };
-
-    const handleChange = (e) => {
-        //setElement({ NOMBRE_GRUPO_MUSCULAR: e.muscule_group_name })
     };
 
     const handleInsert = (e) => {
@@ -179,13 +176,13 @@ export default function Payments() {
 
     }
     const handleSearch = (e) => {
-        //     if(e.target.value===undefined || e.target.value ===""){
-        //   fetchData();
-        // }else{
-        //   commonDB.getSearch({header: "grupo_muscular",find:e.target.value}).then(response=>{
-        //     setData(response);
-        //   })
-        // }
+            if(e.target.value===undefined || e.target.value ===""){
+          fetchData();
+        }else{
+          commonDB.getSearch({header: "pago",find:e.target.value}).then(response=>{
+            setData(response);
+          })
+        }
     }
 
     return (
@@ -242,7 +239,7 @@ export default function Payments() {
             </CustomModal>
 
             <CustomModal
-                props={{ title: "¿Desea eliminar el pago de " + element.NOMBRE_CLIENTE + " " + element.APELLIDO_CLIENTE + "?", isOpen: isOpenDelete }}
+                props={{ title: "¿Desea eliminar el pago de " + element.NOMBRE_CLIENTE + " " + element.APELLIDO_CLIENTE + "de la fecha "+element.FECHA+"?", isOpen: isOpenDelete }}
                 methods={{ toggleOpenModal: () => setIsOpenDelete(!isOpenDelete) }}
             >
                 <CustomForm onSubmit={HandleDelete}>
