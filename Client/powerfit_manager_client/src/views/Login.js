@@ -31,26 +31,19 @@ export default function Login() {
         }
     }
     return (
-        <div className='form-body'>
             <div className="form-signin">
-                <div className='col col-md-5 mt-4'>
-                    <div className='card'>
-                        <form method='post' onSubmit={handleSubmit} className='card-body'>
+                        <form method='post' onSubmit={handleSubmit} className='card-body__'>
                             <div>
                                 <img src={logo} className="responsive mb-2 login__img" alt="logo" />
-                                <h2 className='mb-4'>Ingresar</h2>
+                                <h2 className='mb-4'>Powerfit Manager</h2>
                             </div>
-                            <div>
-                                <div className='form__input'></div>
-                                <input onChange={handleInputChange} className=' form-control mt-2 login__input' name='userName' placeholder='Usuario'></input>
-                                <input onChange={handleInputChange} className='form-control mt-2 login__input' type="password" name='secret' placeholder='Contraseña'></input>
+                            <div class="form-input">
+                                <input onChange={handleInputChange} className='mt-2 login__input' name='userName' placeholder='Usuario'></input>
+                                <input onChange={handleInputChange} className='mt-2 login__input' type="password" name='secret' placeholder='Contraseña'></input>
                             </div>
-                            <button type='submit' className='btn mt-2'>INICIAR SESIÓN</button>
+                            <button type='submit' className='btn btn-login mt-2'>ENTRAR</button>
                         </form>
-                    </div>
-                </div>
             </div>
-        </div>
     );
 }
 
