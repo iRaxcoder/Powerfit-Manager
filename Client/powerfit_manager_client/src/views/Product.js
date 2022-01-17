@@ -8,88 +8,97 @@ import {CustomInput, SingleCustomInput} from "../components/CustomInput";
 import commonDB from "../service/CommonDB";
 import CancelButton from "../components/CancelButton";
 import { exportToPdf } from "../utils/exportData";
+import moment from "moment";
 
 export default function Client(){
   const [isOpenInsert, setIsOpenInsert] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
-  const [productEdited, setProductEdited] = useState({id:0, name:"def", lastName:"def", age:0, number: "def", email:"def", illness: "def"});
+  const [productEdited, setProductEdited] = useState({id:0, name:"def", stock:"def", price:0, lastModified: "def", details:"def"});
   const [productList, setProductList] = useState(null);
   const productListRef= useRef();
   const [modalMsg, setModalMsg]= useState({isMsgOpen: false, msg: ""});
   productListRef.current=productList;
 
-  const dataHeader = [["Nombre","Stock","Precio Unitario","Ultimo ingreso","Detalles"]];
+  const dataHeader = [["ID","Nombre","Stock","Precio Unitario","Ultimo ingreso","Detalles"]];
 
   const columns = React.useMemo(
       () => [
-          { Header: "ID", accessor: 'ID_CLIENTE',},
-          { Header: "Nombre", accessor: 'NOMBRE_CLIENTE'},
-          { Header: "Disponible",accessor: 'APELLIDOS'},
-          { Header: "Precio Unit",accessor: 'EDAD'},
-          { Header: "Ult.Ingreso",accessor: 'TELEFONO'},
-          { Header: "Detalles", accessor: 'EMAIL'},
+          { Header: "ID", accessor: 'ID_PRODUCTO',},
+          { Header: "Nombre", accessor: 'NOMBRE'},
+          { Header: "Disponible",accessor: 'STOCK'},
+          { Header: "Precio Unit",accessor: 'PRECIO_UNITARIO'},
+          { Header: "Ult.Ingreso",accessor: 'ULT_INGRESO'},
+          { Header: "Detalles", accessor: 'DETALLES'},
         ],
       []
   )
 
-  const fetchClients = () => {
-      commonDB.getAll({header:"cliente"}).then(response=>{
+  const formatDate = (e) => {
+    e.map((entrada) => {
+        entrada.ULT_INGRESO = moment(entrada.ULT_INGRESO).format('LL')
+    })
+}
+
+  const fetchProducts = () => {
+      commonDB.getAll({header:"producto"}).then(response=>{
+      formatDate(response)
       setProductList(response)
     })
   }
   
   useEffect(()=>{
-    fetchClients();
+    fetchProducts();
   },[]);
 
-  if(!productList) return "No se encuentran clientes aún.";
+  if(!productList) return "No se encuentran productos aún.";
     
     const handleInsert = (e) => {
-      commonDB.insert({header:"cliente",size:"6", object: e}).then(response=>{   
+      commonDB.insert({header:"producto",size:"5", object: e}).then(response=>{   
           setModalMsg(prevState =>({
             ...prevState,
             msg: response,
             isMsgOpen: true
           }));
-        fetchClients();
+        fetchProducts();
       })
       setIsOpenInsert(false);
     }
 
     const HandleOpenEdit = (e) => {
-      const client = JSON.parse(e.target.dataset.row);
+      const product = JSON.parse(e.target.dataset.row);
+      product.ULT_INGRESO=moment(product.ULT_INGRESO).format('YYYY-MM-DD');
       setProductEdited(
-      {name:client.NOMBRE_CLIENTE, lastName: client.APELLIDOS, age: client.EDAD, number: client.TELEFONO, email: client.EMAIL, illness: client.ENFERMEDAD})
+      {id: product.ID_PRODUCTO,name:product.NOMBRE, stock: product.STOCK, price: product.PRECIO_UNITARIO, lastModified: product.ULT_INGRESO, details: product.DETALLES})
       setIsOpenEdit(true);
     }
 
     const HandleEdit = () => {
-        commonDB.update({header:"cliente",size:"7", object: productEdited}).then(response=>{   
+        commonDB.update({header:"producto",size:"6", object: productEdited}).then(response=>{   
           setModalMsg(prevState =>({
             ...prevState,
             msg: response,
             isMsgOpen: true
           }));
-          fetchClients();
+          fetchProducts();
         })
       setIsOpenEdit(false);
     }
 
     const HandleOpenDelete = (e) => {
-      const client = JSON.parse(e.target.dataset.row);
-      setProductEdited({id:client.ID_CLIENTE,name:client.NOMBRE_CLIENTE,lastName:client.APELLIDOS})
+      const product = JSON.parse(e.target.dataset.row);
+      setProductEdited({id:product.ID_PRODUCTO,name:product.NOMBRE})
       setIsOpenDelete(true);
     }
 
     const HandleDelete = () => {
-      commonDB.delete({header:"cliente", object: {id:productEdited.id}}).then(response=>{   
+      commonDB.delete({header:"producto", object: {id:productEdited.id}}).then(response=>{   
         setModalMsg(prevState =>({
           ...prevState,
           msg: response,
           isMsgOpen: true
         }));
-        fetchClients();
+        fetchProducts();
       })
     setIsOpenDelete(false);
     }
@@ -97,23 +106,24 @@ export default function Client(){
     const handleSearch = (e) => {
       console.log(e.target.value);
       if(e.target.value===undefined || e.target.value ===""){
-        fetchClients();
+        fetchProducts();
       }else{
-        commonDB.getSearch({header: "cliente",find:e.target.value}).then(response=>{
+        commonDB.getSearch({header: "producto",find:e.target.value}).then(response=>{
+          formatDate(response)
           setProductList(response);
         })
       }
     }
 
     const exportPDF=()=>{
-      const data = productListRef.current.map((cliente)=>
-      ([cliente.ID_CLIENTE,cliente.NOMBRE_CLIENTE,cliente.APELLIDOS,cliente.EDAD,cliente.TELEFONO,cliente.EMAIL,cliente.ENFERMEDAD]));
-      exportToPdf(dataHeader,data, "Reporte de clientes");
+      const data = productListRef.current.map((product)=>
+      ([product.ID_PRODUCTO,product.NOMBRE,product.STOCK,product.PRECIO_UNITARIO,product.ULT_INGRESO,product.DETALLES]));
+      exportToPdf(dataHeader,data, "Reporte de productos en inventario");
     }
 
     return (
         <div>
-            <h1 className="text-left">Control de clientes</h1>
+            <h1 className="text-left">Control de inventario</h1>
             <hr/>
             <div className="container">
                 <div className="container-insert-search__">
@@ -132,38 +142,36 @@ export default function Client(){
                 />
             </div>
             <CustomModal
-              props={{title: 'Insertar cliente', isOpen: isOpenInsert}}
+              props={{title: 'Insertar producto', isOpen: isOpenInsert}}
               methods={{toggleOpenModal: ()=>setIsOpenInsert(!isOpenInsert)}}
                 >
               <CustomForm onSubmit={handleInsert}>
-                <CustomInput errorMsg="Nombre requerido" className='mt-2' name='client_name_insert' placeholder='Nombre'></CustomInput>
-                <CustomInput errorMsg="Apellidos requeridos" className='mt-2' name='last_name_insert' placeholder='Apellidos'></CustomInput>
-                <CustomInput errorMsg="Edad requerida" className='mt-2' name='age_name_insert' placeholder='Edad'></CustomInput>
-                <CustomInput errorMsg="Teléfono requerido" className='mt-2' name='number_insert' placeholder='Teléfono'></CustomInput>
-                <CustomInput errorMsg="Correo requerido" className='mt-2' name='email_insert' placeholder='Email'></CustomInput>
-                <CustomInput errorMsg="Este campo es requerido" className='mt-2' name='illness_insert' placeholder='Enfermedad'></CustomInput>
+                <CustomInput errorMsg="nombre requerido" className='mt-2' name='product_name_insert' placeholder='Nombre'></CustomInput>
+                <CustomInput type="number" min="1" errorMsg="cantidad requerida" className='mt-2' name='stock_insert' placeholder='Cantidad'></CustomInput>
+                <CustomInput min="1" type="number" errorMsg="precio requerido" className='mt-2' name='price_insert' placeholder='Precio'></CustomInput>
+                <CustomInput type="date" errorMsg="ingreso requerido" className='mt-2' name='date_insert' placeholder='fecha de ingreso'></CustomInput>
+                <CustomInput errorMsg="detalles requeridos" className='mt-2' name='details_insert' placeholder='Detalles'></CustomInput>
                 <AddButton text="Insertar"/>
                 <CancelButton fun={()=>setIsOpenInsert(false)}/>
               </CustomForm>
             </CustomModal>
             <CustomModal
-              props={{title: 'Modificar cliente', isOpen: isOpenEdit}}
+              props={{title: 'Modificar producto', isOpen: isOpenEdit}}
               methods={{toggleOpenModal: ()=>setIsOpenEdit(!isOpenEdit)}}
                 >
               <CustomForm onSubmit={HandleEdit}>
-                <CustomInput type="hidden" value={productEdited.id} className='form-control mt-2' name='client_id_edit'/>
-                <CustomInput errorMsg="Nombre requerido" onChange={(e)=>setProductEdited(prevState =>({...prevState,name:e.target.value}))} value={productEdited.name} className='form-control mt-2' name='client_name_edit' placeholder='Nombre'></CustomInput>
-                <CustomInput errorMsg="Apellidos requeridos" onChange={(e)=>setProductEdited(prevState =>({...prevState,lastName:e.target.value}))} value={productEdited.lastName} className='form-control mt-2' name='last_name_editt' placeholder='Apellidos'></CustomInput>
-                <CustomInput errorMsg="Edad requerida" onChange={(e)=>setProductEdited(prevState =>({...prevState,age:e.target.value}))} value={productEdited.age} className='form-control mt-2' name='age_name_edit' placeholder='Edad'></CustomInput>
-                <CustomInput errorMsg="Teléfono requerido" onChange={(e)=>setProductEdited(prevState =>({...prevState,number:e.target.value}))}value={productEdited.number} className='form-control mt-2' name='number_edit' placeholder='Teléfono'></CustomInput>
-                <CustomInput errorMsg="Correo requerido"onChange={(e)=>setProductEdited(prevState =>({...prevState,email:e.target.value}))} value={productEdited.email} className='form-control mt-2' name='email_edit' placeholder='Email'></CustomInput>
-                <CustomInput errorMsg="Este campo es requerido"onChange={(e)=>setProductEdited(prevState =>({...prevState,illness:e.target.value}))} value={productEdited.illness} className='form-control mt-2' name='illness_edit' placeholder='Enfermedad'></CustomInput>
+                <CustomInput type="hidden" value={productEdited.id} className='form-control mt-2' name='product_id_edit'/> 
+                <CustomInput errorMsg="Nombre requerido" onChange={(e)=>setProductEdited(prevState =>({...prevState,name:e.target.value}))} value={productEdited.name} className='form-control mt-2' name='name_edit' placeholder='Nombre'></CustomInput>
+                <CustomInput type="number" errorMsg="cantidad requerida" onChange={(e)=>setProductEdited(prevState =>({...prevState,stock:e.target.value}))} value={productEdited.stock} className='form-control mt-2' name='stock_editt' placeholder='cantidad'></CustomInput>
+                <CustomInput type="number" errorMsg="precio requerido" onChange={(e)=>setProductEdited(prevState =>({...prevState,price:e.target.value}))} value={productEdited.price} className='form-control mt-2' name='price_edit' placeholder='precio'></CustomInput>
+                <CustomInput type="date" errorMsg="fecha ingreso requerida" onChange={(e)=>setProductEdited(prevState =>({...prevState,lastModified:e.target.value}))}value={moment(productEdited.lastModified).format('YYYY-MM-DD')} className='form-control mt-2' name='date_edit' placeholder='Teléfono'></CustomInput>
+                <CustomInput errorMsg="detalle requerido"onChange={(e)=>setProductEdited(prevState =>({...prevState,details:e.target.value}))} value={productEdited.details} className='form-control mt-2' name='details_edit' placeholder='detalles'></CustomInput>
                 <AddButton type="submit" text="Guardar cambios"/>
                 <CancelButton fun={()=>setIsOpenEdit(false)}/>
               </CustomForm>
             </CustomModal>
             <CustomModal
-              props={{title: "¿Está seguro que desea eliminar el cliente '"+ productEdited.name+ " "+productEdited.lastName+"'?", isOpen: isOpenDelete}}
+              props={{title: "¿Está seguro que desea eliminar el producto '"+ productEdited.name+"'?", isOpen: isOpenDelete}}
               methods={{toggleOpenModal: ()=>setIsOpenDelete(!isOpenDelete)}}
                 >
               <CustomForm onSubmit={HandleDelete}>

@@ -16,7 +16,6 @@ module.exports.set = function (app, connection) {
             if (error) throw error;
             response.send("Registro insertado")
             }
-
         );
 
     });
