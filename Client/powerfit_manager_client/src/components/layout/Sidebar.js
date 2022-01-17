@@ -50,6 +50,10 @@ export default function Sidebar ({children}){
                                 <i className='bx bx-grid-alt nav__icon'></i>
                                 <span className='nav__text'>Inicio</span>
                             </Link>
+                            <Link to="/inventario"  id='2' onClick={()=> changeActualLinkColor('2')} href='#' className='nav__link '>
+                                <i className='bx bx-box nav__icon'></i>
+                                <span className='nav__text'>Inventario</span>
+                            </Link>
                             <Link to="/asistencia"  id='2' onClick={()=> changeActualLinkColor('2')} href='#' className='nav__link '>
                                 <i className='bx bxs-hand nav__icon'></i>
                                 <span className='nav__text'>Asistencia</span>
@@ -78,11 +82,11 @@ export default function Sidebar ({children}){
                                 <i class="fa fa-object-group nav__icon" aria-hidden="true"></i>
                                 <span className='nav__text'>Grupos musculares</span>
                             </Link>
-                        </ul>
-                        <Link onClick={exit} to="/" className='nav__link mt-4'>
+                            <Link onClick={exit} to="/" className='nav__link mt-4'>
                             <i class='bx bx-log-out nav__icon'></i>
                             <span className='nav__text'>Salir</span>    
-                        </Link>
+                            </Link>
+                        </ul>
                     </div>
                 </nav>
             </div>
