@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { useTable, usePagination } from 'react-table'
 import DeleteButton from "../components/DeleteButton";
 import EditButton from "../components/EditButton";
@@ -7,6 +7,7 @@ const Table = (props) => {
   const columns = props.columns;
   const data = props.data;
   const aux = props.aux;
+  const mostrar = props.mostrar;
   const {
     getTableProps,
     getTableBodyProps,
@@ -26,12 +27,17 @@ const Table = (props) => {
     { columns, data },
     usePagination
   )
- 
+
   const { pageIndex, pageSize } = state
- 
+
   useEffect(() => {
-    setPageSize(4);
-}, []);
+    if(mostrar== null){
+      setPageSize(4); 
+    }else{
+      setPageSize(mostrar);
+    }
+    
+  }, []);
   return (
     <div className="table-responsive">
       <table {...getTableProps()} className="table table-striped table-dark">
@@ -81,23 +87,25 @@ const Table = (props) => {
         </span>
         <span>
           Pag :{' '}
-          <input type='number' defaultValue={pageIndex+1}
-               onChange={ e => { const pageNumber = e.target.value ? Number(e.target.value) - 1 :0
-               gotoPage(pageNumber)}}  style={{width :'40px',height:'35px'}}/>
+          <input type='number' defaultValue={pageIndex + 1}
+            onChange={e => {
+              const pageNumber = e.target.value ? Number(e.target.value) - 1 : 0
+              gotoPage(pageNumber)
+            }} style={{ width: '40px', height: '35px' }} />
         </span>
-        <select value={pageSize} onChange={e => setPageSize(Number(e.target.value))} style={{width :'100px',height:'35px'}}>
-                {
-                  [3,10,25,50].map(pageSize => (
-                    <option key={pageSize} value={pageSize}>
-                      Ver {pageSize}
-                    </option>
-                  ))
-                }
+        <select value={pageSize} onChange={e => setPageSize(Number(e.target.value))} style={{ width: '100px', height: '35px' }}>
+          {
+            [3, 10, 25, 50].map(pageSize => (
+              <option key={pageSize} value={pageSize}>
+                Ver {pageSize}
+              </option>
+            ))
+          }
         </select>
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>{'<<'}</button>
         <button onClick={() => previousPage()} disabled={!canPreviousPage}>Anterior</button>
         <button onClick={() => nextPage()} disabled={!canNextPage}>Siguiente</button>
-        <button onClick={() => gotoPage(pageCount -1)} disabled={!canNextPage}>{'>>'}</button>
+        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>{'>>'}</button>
       </div>
     </div>
   );
