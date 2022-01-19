@@ -31,7 +31,7 @@ const Table = (props) => {
   const { pageIndex, pageSize } = state
 
   useEffect(() => {
-    if (mostrar === null || mostrar === undefined) {
+    if (isNaN(mostrar)) {
       setPageSize(4);
     } else {
       setPageSize(mostrar);
