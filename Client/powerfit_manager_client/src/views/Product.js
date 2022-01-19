@@ -43,9 +43,9 @@ export default function Client(){
   )
 
   const formatDate = (e) => {
-    e.map((entrada) => {
+    e.map(entrada => (
         entrada.ULT_INGRESO = moment(entrada.ULT_INGRESO).format('LL')
-    })
+    ))
 }
 
   const fetchProducts = () => {

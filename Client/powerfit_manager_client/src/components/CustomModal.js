@@ -1,4 +1,4 @@
-import React, {useState, Children, createElement} from 'react';
+import React, {Children, createElement} from 'react';
 import './../styles/Modal/Modal.css'
 import Modal from 'react-modal'
 
