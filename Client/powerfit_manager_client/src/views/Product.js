@@ -7,7 +7,7 @@ import DownloadButton from "../components/DownloadButton";
 import {CustomInput, SingleCustomInput} from "../components/CustomInput";
 import commonDB from "../service/CommonDB";
 import CancelButton from "../components/CancelButton";
-import { exportToPdf } from "../utils/exportData";
+import { exportToPdf, ExportToCsv } from "../utils/exportData";
 import moment from "moment";
 
 export default function Client(){
@@ -20,7 +20,15 @@ export default function Client(){
   const [modalMsg, setModalMsg]= useState({isMsgOpen: false, msg: ""});
   productListRef.current=productList;
 
-  const dataHeader = [["ID","Nombre","Stock","Precio Unitario","Ultimo ingreso","Detalles"]];
+  const dataHeaderPDF = [["ID","Nombre","Stock","Precio Unitario","Ultimo ingreso","Detalles"]];
+  const dataHeaderCSV = [ 
+    { label: "ID", key: 'ID_PRODUCTO',},
+    { label: "Nombre", key: 'NOMBRE'},
+    { label: "Disponible",key: 'STOCK'},
+    { label: "Precio Unit",key: 'PRECIO_UNITARIO'},
+    { label: "Ult.Ingreso",key: 'ULT_INGRESO'},
+    { label: "Detalles", key: 'DETALLES'}
+                      ]
 
   const columns = React.useMemo(
       () => [
@@ -118,7 +126,7 @@ export default function Client(){
     const exportPDF=()=>{
       const data = productListRef.current.map((product)=>
       ([product.ID_PRODUCTO,product.NOMBRE,product.STOCK,product.PRECIO_UNITARIO,product.ULT_INGRESO,product.DETALLES]));
-      exportToPdf(dataHeader,data, "Reporte de productos en inventario");
+      exportToPdf(dataHeaderPDF,data, "Reporte de productos en inventario");
     }
 
     return (
@@ -130,6 +138,7 @@ export default function Client(){
                   <div>
                     <AddButton text="Insertar" onClick={()=>setIsOpenInsert(true)} />
                     <DownloadButton onClick={exportPDF} text="PDF"/>
+                    <ExportToCsv headers={dataHeaderCSV} data={productList} fileName={"productos_powerfit_"+moment()+".csv"}/>
                   </div>
                   <SingleCustomInput onChange={handleSearch} placeholder="Buscar" name="input-search" className="search__"/>
                 </div>    

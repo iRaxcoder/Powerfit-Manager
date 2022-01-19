@@ -1,5 +1,7 @@
 import jsPDF from 'jspdf'
 import "jspdf-autotable";
+import {CSVLink} from 'react-csv';
+import DownloadButton from './../components/DownloadButton';
 
 let base64String = "";
 let imageBase64Stringsep="";
@@ -32,7 +34,6 @@ export const exportToPdf = (headers,data, title) => {
     const doc = new jsPDF(orientation, unit, size);
     doc.setFontSize(15);
     
-    
 
     let content = {
       headStyles: {fillColor: "#558b23"},
@@ -48,3 +49,19 @@ export const exportToPdf = (headers,data, title) => {
     doc.autoTable(content);
     doc.save("./reporte.pdf")
 }
+
+export const ExportToCsv = ({headers,data,fileName}) => {
+    const csvReport = {
+        data: data,
+        headers: headers,
+        filename: fileName
+    };
+
+    return (
+        <CSVLink {...csvReport}>
+           <DownloadButton text="CSV"/>
+        </CSVLink>
+    );
+}
+
+
