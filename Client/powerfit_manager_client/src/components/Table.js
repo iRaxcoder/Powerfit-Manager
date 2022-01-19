@@ -31,12 +31,12 @@ const Table = (props) => {
   const { pageIndex, pageSize } = state
 
   useEffect(() => {
-    if(mostrar== null){
-      setPageSize(4); 
-    }else{
+    if (mostrar === null || mostrar === undefined) {
+      setPageSize(4);
+    } else {
       setPageSize(mostrar);
     }
-    
+
   }, []);
   return (
     <div className="table-responsive">
@@ -94,6 +94,9 @@ const Table = (props) => {
             }} style={{ width: '40px', height: '35px' }} />
         </span>
         <select value={pageSize} onChange={e => setPageSize(Number(e.target.value))} style={{ width: '100px', height: '35px' }}>
+          <option key={1} value={1}>
+            Cantidad a ver
+          </option>
           {
             [3, 10, 25, 50].map(pageSize => (
               <option key={pageSize} value={pageSize}>

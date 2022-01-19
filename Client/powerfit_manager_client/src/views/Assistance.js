@@ -4,7 +4,7 @@ import AddButton from "../components/AddButton";
 import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
-import { CustomInput, SingleCustomInput, LiveCustomSelect } from "../components/CustomInput";
+import { CustomInput, SingleCustomInput, LiveCustomSelect, CustomSelect } from "../components/CustomInput";
 import CancelButton from "../components/CancelButton"
 import commonDB from "../service/CommonDB";
 import moment from 'moment'
@@ -16,7 +16,6 @@ export default function Assistance() {
     const [isOpenDelete, setIsOpenDelete] = useState(false);
     const [modalMsg, setModalMsg] = useState({ isMsgOpen: false, msg: "" });
     const [data, setData] = useState(null);
-    const [clientList, setClientList] = useState(null);
     const [selectedClients, setSelectedClients] = useState(null);
     const dataRef = useRef();
     dataRef.current = data;
@@ -48,6 +47,8 @@ export default function Assistance() {
         []
     )
 
+    const selectFiltro = [{value:'Hoy'}, {value:'Ayer'},{value:'Todas las Semanas'}];
+
     const searchClient = (find, callback) => {
         commonDB.getSearch({ header: "cliente", find: find }).then(response => {
             setSelectedClients(response);
@@ -62,13 +63,13 @@ export default function Assistance() {
         setSelectedClients(selected);
     }
     const fetchData = () => {
-        commonDB.getAll({ header: "asistencia" }).then(response => {
-            convert(response)
-            setData(response)
+        commonDB.getSearch({ header: "asistencia_filtro", find: 'Hoy' }).then(response => {
+            convertDate(response)
+            setData(response);
         })
     }
 
-    const convert = (e) => {
+    const convertDate = (e) => {
         e.map((entrada) => {
             entrada.FECHA = moment(entrada.FECHA).format('LL')
         })
@@ -105,19 +106,6 @@ export default function Assistance() {
         });
         setIsOpenDelete(!isOpenDelete);
     }
-
-    const handleSearchClient = (e) => {
-        console.log(e.target.value);
-        commonDB.getSearch({ header: "cliente", find: e.target.value }).then(response => {
-            console.log(response);
-            const options = response.map((client) => ({
-                name: client.ID_CLIENTE,
-                value: client.NOMBRE_CLIENTE + ' ' + client.APELLIDOS
-            }));
-            setClientList(options);
-        })
-
-    };
 
     const handleInsert = (e) => {
         e.ID_CLIENTE = selectedClients.value;
@@ -163,11 +151,22 @@ export default function Assistance() {
             fetchData();
         } else {
             commonDB.getSearch({ header: "asistencia", find: e.target.value }).then(response => {
+                convertDate(response)
                 setData(response);
             })
         }
     }
-
+    const handleFiltro = (e) => {
+        if (e.target.value === undefined || e.target.value === "") {
+            fetchData();
+        } else {
+            commonDB.getSearch({ header: "asistencia_filtro", find: e.target.value }).then(response => {
+                convertDate(response)
+                setData(response);
+            })
+        }
+    }
+    
     return (
 
         <div>
@@ -175,14 +174,19 @@ export default function Assistance() {
             <hr />
             <div className="container">
                 <div className="container-insert-search__">
-                    <AddButton text="Insertar" onClick={() => setIsOpenInsert(true)} />
+                    <div className="d-flex flex-row">
+                        <AddButton text="Insertar" onClick={() => setIsOpenInsert(true)} />
+                        <CustomForm>
+                        <CustomSelect focus="value" onChange={handleFiltro} errorMsg="Seleccione una opción" className='mt-2 ml-2' name='filtro' placeholder='Nombre grupo muscular' options={selectFiltro}></CustomSelect>
+                        </CustomForm>
+                    </div>
                     <SingleCustomInput onChange={handleSearch} errorMsg="Ingrese la palabra a buscar" placeholder="Buscar" name="input" className="form-control" />
                 </div>
                 <Table
                     columns={columns}
                     data={data}
                     aux={dataRef.current}
-                    mostrar={data[0].CANT}
+                    mostrar={data.length}
                     funEdit={(e) => toggleModalEdit(e)}
                     funDelete={(e) => toggleModalDelete(e)}
                 />
