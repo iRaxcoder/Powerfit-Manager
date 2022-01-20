@@ -47,7 +47,7 @@ export default function Assistance() {
         []
     )
 
-    const selectFiltro = [{value:'Hoy'}, {value:'Ayer'},{value:'Todas las Semanas'}];
+    const selectFiltro = [{ value: 'Hoy' }, { value: 'Ayer' }, { value: 'Todas las Semanas' }];
 
     const searchClient = (find, callback) => {
         commonDB.getSearch({ header: "cliente", find: find }).then(response => {
@@ -166,7 +166,8 @@ export default function Assistance() {
             })
         }
     }
-    
+
+
     return (
 
         <div>
@@ -177,7 +178,7 @@ export default function Assistance() {
                     <div className="d-flex flex-row">
                         <AddButton text="Insertar" onClick={() => setIsOpenInsert(true)} />
                         <CustomForm>
-                        <CustomSelect focus="value" onChange={handleFiltro} errorMsg="Seleccione una opción" className='mt-2 ml-2' name='filtro' placeholder='Nombre grupo muscular' options={selectFiltro}></CustomSelect>
+                            <CustomSelect focus="value" onChange={handleFiltro} errorMsg="Seleccione una opción" className='mt-2 ml-2' name='filtro' placeholder='Nombre grupo muscular' options={selectFiltro}></CustomSelect>
                         </CustomForm>
                     </div>
                     <SingleCustomInput onChange={handleSearch} errorMsg="Ingrese la palabra a buscar" placeholder="Buscar" name="input" className="form-control" />
@@ -186,7 +187,6 @@ export default function Assistance() {
                     columns={columns}
                     data={data}
                     aux={dataRef.current}
-                    mostrar={data.length}
                     funEdit={(e) => toggleModalEdit(e)}
                     funDelete={(e) => toggleModalDelete(e)}
                 />
