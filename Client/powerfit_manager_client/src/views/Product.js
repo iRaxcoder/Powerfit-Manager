@@ -10,7 +10,7 @@ import CancelButton from "../components/CancelButton";
 import { exportToPdf, ExportToCsv } from "../utils/exportData";
 import moment from "moment";
 
-export default function Client(){
+export default function Product(){
   const [isOpenInsert, setIsOpenInsert] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);

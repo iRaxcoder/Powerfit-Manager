@@ -7,6 +7,7 @@ import Client from '../views/Client.js'
 import Payments from '../views/Payments.js'
 import Product from '../views/Product.js'
 import Assistance from '../views/Assistance.js'
+import Sales from '../views/Sales.js'
 
 const homeView = {
     element: <Sidebar><Home/></Sidebar>,
@@ -44,4 +45,9 @@ const assistanceView = {
     path: '/asistencia'
 }
 
-export default [homeView,LoginView,groupMuscleView, ExerciseView, ClientView,PaymentsView,productView,assistanceView];
+const salesView = {
+    element: <Sidebar><Sales/></Sidebar>,
+    path: '/ventas'
+}
+
+export default [homeView,LoginView,groupMuscleView, ExerciseView, ClientView,PaymentsView,productView,assistanceView,salesView];
