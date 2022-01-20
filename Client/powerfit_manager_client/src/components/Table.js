@@ -1,13 +1,32 @@
 import React, { useEffect } from "react";
 import { useTable, usePagination } from 'react-table'
-import DeleteButton from "../components/DeleteButton";
-import EditButton from "../components/EditButton";
+import DeleteButton from "./DeleteButton";
+import EditButton from "./EditButton";
+import InfoButton from "./InfoButton";
 
 const Table = (props) => {
   const columns = props.columns;
   const data = props.data;
   const aux = props.aux;
   const mostrar = props.mostrar;
+  const editRestricted=props.editRestricted;
+
+  const manageTableButtons = (index) => {
+    if (editRestricted){
+      return (
+        <>
+        <InfoButton/>
+        <DeleteButton fun={props.funDelete} rowObject={JSON.stringify(aux[index])} />
+        </>
+      );
+    }
+    return (
+      <>
+      <EditButton fun={props.funEdit} rowObject={JSON.stringify(aux[index])} />
+      <DeleteButton fun={props.funDelete} rowObject={JSON.stringify(aux[index])} />
+      </>
+    );
+  }
   const {
     getTableProps,
     getTableBodyProps,
@@ -69,9 +88,8 @@ const Table = (props) => {
                     </td>
                   )
                 })}
-                <td>
-                  <EditButton fun={props.funEdit} rowObject={JSON.stringify(aux[index])} />
-                  <DeleteButton fun={props.funDelete} rowObject={JSON.stringify(aux[index])} />
+                <td>    
+                  {manageTableButtons(index)}          
                 </td>
               </tr>
             )

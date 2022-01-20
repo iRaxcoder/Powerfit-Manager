@@ -12,81 +12,76 @@ import moment from "moment";
 
 export default function Sales(){
   const [isOpenInsert, setIsOpenInsert] = useState(false);
-  const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
-  const [productEdited, setProductEdited] = useState({id:0, name:"def", stock:"def", price:0, lastModified: "def", details:"def"});
-  const [productList, setProductList] = useState(null);
-  const productListRef= useRef();
+  const [saleEdited, setSaleEdited] = useState({id:0, name:"def", stock:"def", price:0, lastModified: "def", details:"def"});
+  const [saleList, setSaleList] = useState(null);
+  const saleListRef= useRef();
   const [modalMsg, setModalMsg]= useState({isMsgOpen: false, msg: ""});
-  productListRef.current=productList;
+  saleListRef.current=saleList;
 
-  const dataHeaderPDF = [["ID","Nombre","Stock","Precio Unitario","Ultimo ingreso","Detalles"]];
+  const dataHeaderPDF = [["ID Venta","ID Cliente","Fecha","Total"]];
   const dataHeaderCSV = [ 
-    { label: "ID", key: 'ID_PRODUCTO',},
-    { label: "Nombre", key: 'NOMBRE'},
-    { label: "Disponible",key: 'STOCK'},
-    { label: "Precio Unit",key: 'PRECIO_UNITARIO'},
-    { label: "Ult.Ingreso",key: 'ULT_INGRESO'},
-    { label: "Detalles", key: 'DETALLES'}
+    { label: "ID Venta", key: 'ID_VENTA',},
+    { label: "ID Cliente", key: 'ID_CLIENTE'},
+    { label: "Fecha",key: 'FECHA'},
+    { label: "Total",key: 'TOTAL'},
                       ]
 
   const columns = React.useMemo(
       () => [
-          { Header: "ID", accessor: 'ID_PRODUCTO',},
-          { Header: "Nombre", accessor: 'NOMBRE'},
-          { Header: "Disponible",accessor: 'STOCK'},
-          { Header: "Precio Unit",accessor: 'PRECIO_UNITARIO'},
-          { Header: "Ult.Ingreso",accessor: 'ULT_INGRESO'},
-          { Header: "Detalles", accessor: 'DETALLES'},
+          { Header: "ID Venta", accessor: 'ID_VENTA',},
+          { Header: "ID Cliente", accessor: 'ID_CLIENTE'},
+          { Header: "Fecha",accessor: 'FECHA'},
+          { Header: "Total",accessor: 'TOTAL'},
         ],
       []
   )
 
   const formatDate = (e) => {
     e.map(entrada => (
-        entrada.ULT_INGRESO = moment(entrada.ULT_INGRESO).format('LL')
+        entrada.FECHA = moment(entrada.FECHA).format('LL')
     ))
 }
 
-  const fetchProducts = () => {
-      commonDB.getAll({header:"producto"}).then(response=>{
+  const fetchSales = () => {
+      commonDB.getAll({header:"venta"}).then(response=>{
       formatDate(response)
-      setProductList(response)
+      setSaleList(response)
     })
   }
   
   useEffect(()=>{
-    fetchProducts();
+    fetchSales();
   },[]);
 
-  if(!productList) return "No se encuentran ventas aún.";
+  if(!saleList) return "No se encuentran ventas aún.";
     
     const handleInsert = (e) => {
-      commonDB.insert({header:"producto",size:"5", object: e}).then(response=>{   
+      commonDB.insert({header:"venta",size:"5", object: e}).then(response=>{   
           setModalMsg(prevState =>({
             ...prevState,
             msg: response,
             isMsgOpen: true
           }));
-        fetchProducts();
+        fetchSales();
       })
       setIsOpenInsert(false);
     }
 
     const HandleOpenDelete = (e) => {
-      const product = JSON.parse(e.target.dataset.row);
-      setProductEdited({id:product.ID_PRODUCTO,name:product.NOMBRE})
+      const sale = JSON.parse(e.target.dataset.row);
+      setSaleEdited({id:sale.ID_VENTA})
       setIsOpenDelete(true);
     }
 
     const HandleDelete = () => {
-      commonDB.delete({header:"producto", object: {id:productEdited.id}}).then(response=>{   
+      commonDB.delete({header:"venta", object: {id:saleEdited.id}}).then(response=>{   
         setModalMsg(prevState =>({
           ...prevState,
           msg: response,
           isMsgOpen: true
         }));
-        fetchProducts();
+        fetchSales();
       })
     setIsOpenDelete(false);
     }
@@ -94,17 +89,17 @@ export default function Sales(){
     const handleSearch = (e) => {
       console.log(e.target.value);
       if(e.target.value===undefined || e.target.value ===""){
-        fetchProducts();
+        fetchSales();
       }else{
         commonDB.getSearch({header: "producto",find:e.target.value}).then(response=>{
           formatDate(response)
-          setProductList(response);
+          setSaleList(response);
         })
       }
     }
 
     const exportPDF=()=>{
-      const data = productListRef.current.map((product)=>
+      const data = saleListRef.current.map((product)=>
       ([product.ID_PRODUCTO,product.NOMBRE,product.STOCK,product.PRECIO_UNITARIO,product.ULT_INGRESO,product.DETALLES]));
       exportToPdf(dataHeaderPDF,data, "Reporte de productos en inventario");
     }
@@ -118,14 +113,15 @@ export default function Sales(){
                   <div>
                     <AddButton text="Insertar" onClick={()=>setIsOpenInsert(true)} />
                     <DownloadButton onClick={exportPDF} text="PDF"/>
-                    <ExportToCsv headers={dataHeaderCSV} data={productList} fileName={"productos_powerfit_"+moment()+".csv"}/>
+                    <ExportToCsv headers={dataHeaderCSV} data={saleList} fileName={"ventas_powerfit_"+moment()+".csv"}/>
                   </div>
                   <SingleCustomInput onChange={handleSearch} placeholder="Buscar" name="input-search" className="search__"/>
                 </div>    
                 <Table
                   columns={columns}
-                  data={productList}
-                  aux={productListRef.current}
+                  editRestricted={true}
+                  data={saleList}
+                  aux={saleListRef.current}
                   funDelete={HandleOpenDelete}
                 />
             </div>
@@ -144,11 +140,11 @@ export default function Sales(){
               </CustomForm>
             </CustomModal>
             <CustomModal
-              props={{title: "¿Está seguro que desea eliminar la venta '"+ productEdited.name+"'?", isOpen: isOpenDelete}}
+              props={{title: "¿Está seguro que desea eliminar la venta número #'"+ saleEdited.id+"'?", isOpen: isOpenDelete}}
               methods={{toggleOpenModal: ()=>setIsOpenDelete(!isOpenDelete)}}
                 >
               <CustomForm onSubmit={HandleDelete}>
-                <CustomInput type="hidden" value={productEdited.id} className='form-control mt-2' name='exerciseIdDelete'/>
+                <CustomInput type="hidden" value={saleEdited.id} className='form-control mt-2' name='exerciseIdDelete'/>
                 <AddButton text="Sí, estoy seguro."/>
                 <CancelButton fun={()=>setIsOpenDelete(false)}/>
               </CustomForm>
