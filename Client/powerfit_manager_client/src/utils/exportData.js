@@ -6,26 +6,25 @@ import DownloadButton from './../components/DownloadButton';
 let base64String = "";
 let imageBase64Stringsep="";
 
-const convertToBase64File = () =>{
-    var reader = new FileReader();
+// const convertToBase64File = (callback) =>{
+//     var reader = new FileReader();
 
-    var aFileParts = ['<img src="../assets/img/logoreport.jpg"></img>'];
-    var oMyBlob = new Blob(aFileParts, {type : 'text/html'}); // the blob
+//     var aFileParts = ['<img src="../assets/img/logoreport.jpg"></img>'];
+//     var oMyBlob = new Blob(aFileParts, {type : 'img/jpeg'}); // the blob
       
-    reader.onload = function () {
-         base64String = reader.result.replace("data:", "")
-            .replace(/^.+,/, "");
-  
-        imageBase64Stringsep = base64String;
-        console.log(base64String);
-    }
-    reader.readAsDataURL(oMyBlob);
-}
+//     reader.onload = function () {
+//          base64String = reader.result;
+//         callback(base64String);
+//         // imageBase64Stringsep = base64String;
+//         // console.log(base64String);
+//     }
+//     reader.readAsDataURL(oMyBlob);
+// }
 
 
 
 export const exportToPdf = (headers,data, title) => {
-    //convertToBase64File();
+   
     const unit = "pt";
     const size = "A4"; // Use A1, A2, A3 or A4
     const orientation = "landscape"; // portrait or landscape
@@ -33,7 +32,11 @@ export const exportToPdf = (headers,data, title) => {
     const marginLeft = 40;
     const doc = new jsPDF(orientation, unit, size);
     doc.setFontSize(15);
-    
+    // convertToBase64File((file)=>{
+    //     doc.addImage(file, 'JPEG', 10, 100, 150, 76);
+    //     console.log(file);
+    // });
+   
 
     let content = {
       headStyles: {fillColor: "#558b23"},
@@ -47,7 +50,7 @@ export const exportToPdf = (headers,data, title) => {
 
     doc.text(title, marginLeft, 40);
     doc.autoTable(content);
-    doc.save("./reporte.pdf")
+    doc.save(title+".pdf")
 }
 
 export const ExportToCsv = ({headers,data,fileName}) => {
