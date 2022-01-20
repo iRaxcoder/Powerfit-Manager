@@ -70,9 +70,9 @@ export default function Sidebar ({children}){
                                 <i className='bx bxs-notepad nav__icon'></i>
                                 <span className='nav__text'>Medidas</span>
                             </Link>
-                            <Link to="/pagos" id='7' onClick={()=> changeActualLinkColor('7')} href='#' className='nav__link '>
+                            <Link to="/membresia" id='7' onClick={()=> changeActualLinkColor('7')} href='#' className='nav__link '>
                                 <i className='bx bx-dollar-circle nav__icon'></i>
-                                <span className='nav__text'>Pagos</span>
+                                <span className='nav__text'>Membresia</span>
                             </Link>
                             <Link to="/rutinas" id='8' onClick={ ()=> changeActualLinkColor('8')} href='#' className='nav__link '>
                                 <i className='bx bx-dumbbell nav__icon' ></i>
