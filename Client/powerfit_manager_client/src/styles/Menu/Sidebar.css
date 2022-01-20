@@ -59,6 +59,7 @@ a{
 .nav{
     height: 100%;
     display: flex;
+    font-size: 14px;
     flex-direction: column;
     justify-content: space-between;
     overflow: hidden;
@@ -71,7 +72,7 @@ a{
 }
 
 
-@keyframes rotation {
+/* @keyframes rotation {
   0% {
     transform:rotate(0deg);
   }
@@ -87,11 +88,11 @@ a{
 	  animation-iteration-count: infinite;
 	  animation-timing-function: linear;
     margin-right: 1.2rem;
-}
+} */
 
 .show_max_size{
-  width: 100px;
-  height: 100px;
+  width: 70px;
+  height: 70px;
   margin-left: 1em;
 }
 
@@ -108,7 +109,7 @@ a{
     height: 18px;
     background-color: var(--second-color);
     border-radius: 50%;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     color: var(--first-color);
     display: -webkit-box;
     display: -ms-flexbox;
@@ -131,7 +132,7 @@ a{
     -webkit-box-align: center;
         -ms-flex-align: center;
             align-items: center;
-    padding: .5rem;
+    padding: .2rem;
     margin-bottom: 0.8rem;
     border-radius: .5rem;
     color: var(--white-color);
@@ -156,7 +157,7 @@ a{
   
   /*Show menu*/
   .show {
-    width: 168px;
+    width: 140px;
   }
   
   /*Rotar el simbolito toggle*/

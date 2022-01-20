@@ -54,40 +54,45 @@ export default function Sidebar ({children}){
                                 <i className='bx bx-box nav__icon'></i>
                                 <span className='nav__text'>Inventario</span>
                             </Link>
-                            <Link to="/asistencia"  id='2' onClick={()=> changeActualLinkColor('2')} href='#' className='nav__link '>
+                            <Link to="/ventas"  id='3' onClick={()=> changeActualLinkColor('3')} href='#' className='nav__link '>
+                                <i className='bx bxs-gift nav__icon'></i>
+                                <span className='nav__text'>Ventas</span>
+                            </Link>
+                            <Link to="/asistencia"  id='4' onClick={()=> changeActualLinkColor('4')} href='#' className='nav__link '>
                                 <i className='bx bxs-hand nav__icon'></i>
                                 <span className='nav__text'>Asistencia</span>
                             </Link>
-                            <Link to="/clientes" id='3' onClick={()=> changeActualLinkColor('3')} href='#' className='nav__link '>
+                            <Link to="/clientes" id='5' onClick={()=> changeActualLinkColor('5')} href='#' className='nav__link '>
                                 <i className='bx bxs-group nav__icon' ></i>
                                 <span className='nav__text'>Clientes</span>
                             </Link>
-                            < Link to="/medidas" id='4' onClick={ ()=>changeActualLinkColor('4')} href='#' className='nav__link '>
+                            < Link to="/medidas" id='6' onClick={ ()=>changeActualLinkColor('6')} href='#' className='nav__link '>
                                 <i className='bx bxs-notepad nav__icon'></i>
                                 <span className='nav__text'>Medidas</span>
                             </Link>
-                            <Link to="/pagos" id='5' onClick={()=> changeActualLinkColor('5')} href='#' className='nav__link '>
+                            <Link to="/pagos" id='7' onClick={()=> changeActualLinkColor('7')} href='#' className='nav__link '>
                                 <i className='bx bx-dollar-circle nav__icon'></i>
                                 <span className='nav__text'>Pagos</span>
                             </Link>
-                            <Link to="/rutinas" id='6' onClick={ ()=> changeActualLinkColor('6')} href='#' className='nav__link '>
+                            <Link to="/rutinas" id='8' onClick={ ()=> changeActualLinkColor('8')} href='#' className='nav__link '>
                                 <i className='bx bx-dumbbell nav__icon' ></i>
                                 <span className='nav__text'>Rutinas</span>
                             </Link>
-                            <Link to="/ejercicios" id='7' onClick={()=> changeActualLinkColor('7')} href='#' className='nav__link '>
+                            <Link to="/ejercicios" id='9' onClick={()=> changeActualLinkColor('9')} href='#' className='nav__link '>
                                 <i className='bx bx-run nav__icon' ></i>
                                 <span className='nav__text'>Ejercicios</span>
                             </Link>
-                            < Link to="/grupos-musculares" id='8' onClick={()=>changeActualLinkColor('8')} href='#' className='nav__link '>
+                            < Link to="/grupos-musculares" id='10' onClick={()=>changeActualLinkColor('10')} href='#' className='nav__link '>
                                 <i class="fa fa-object-group nav__icon" aria-hidden="true"></i>
                                 <span className='nav__text'>Grupos musculares</span>
                             </Link>
-                            <Link onClick={exit} to="/" className='nav__link mt-4'>
-                            <i class='bx bx-log-out nav__icon'></i>
+                        </ul>
+                        
+                    </div>
+                    <Link onClick={exit} to="/" className='nav__link'>
+                            <i class='bx bx-log-out nav__icon' aria-hidden="true"></i>
                             <span className='nav__text'>Salir</span>    
                             </Link>
-                        </ul>
-                    </div>
                 </nav>
             </div>
             <main>{children}</main>
