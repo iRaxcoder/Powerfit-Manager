@@ -4,7 +4,7 @@ import Exercise from '../views/Exercise.js'
 import GroupMuscle from '../views/GroupMuscle'
 import Sidebar from '../components/layout/Sidebar.js'
 import Client from '../views/Client.js'
-import Payments from '../views/Payments.js'
+import Membership from '../views/Membership.js'
 import Product from '../views/Product.js'
 import Assistance from '../views/Assistance.js'
 import Sales from '../views/Sales.js'
@@ -30,9 +30,9 @@ const ClientView = {
     path: '/clientes'
 }
 
-const PaymentsView = {
-    element: <Sidebar><Payments/></Sidebar>,
-    path: '/pagos'
+const membershipView = {
+    element: <Sidebar><Membership/></Sidebar>,
+    path: '/membresia'
 }
 
 const productView = {
@@ -50,4 +50,4 @@ const salesView = {
     path: '/ventas'
 }
 
-export default [homeView,LoginView,groupMuscleView, ExerciseView, ClientView,PaymentsView,productView,assistanceView,salesView];
+export default [homeView,LoginView,groupMuscleView, ExerciseView, ClientView,membershipView,productView,assistanceView,salesView];

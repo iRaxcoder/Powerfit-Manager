@@ -10,7 +10,7 @@ import commonDB from "../service/CommonDB";
 import moment from 'moment'
 
 
-export default function Payments() {
+export default function Membership() {
     const [isOpenInsert, setIsOpenInsert] = useState(false);
     const [isOpenEdit, setIsOpenEdit] = useState(false);
     const [isOpenDelete, setIsOpenDelete] = useState(false);
@@ -22,19 +22,21 @@ export default function Payments() {
     dataRef.current = data;
     const [element, setElement] = useState([
         {
-            ID_PAGO: '',
+            ID_MEMBRESIA: '',
             NOMBRE_CLIENTE: '',
             APELLIDO_CLIENTE: '',
-            FECHA: '',
+            FECHA_INICIO: '',
+            FECHA_FIN: '',
             TIPO_PAGO: '',
             MONTO: '',
-            DETALLE: ''
+            DETALLE: '',
+            ESTADO: ''
         }
     ])
     const columns = React.useMemo(
         () => [
             {
-                Header: '#', accessor: 'ID_PAGO'
+                Header: '#', accessor: 'ID_MEMBRESIA'
             },
             {
                 Header: 'Nombre', accessor: 'NOMBRE_CLIENTE'
@@ -44,7 +46,10 @@ export default function Payments() {
             },
 
             {
-                Header: 'Fecha', accessor: 'FECHA'
+                Header: 'Fecha inico', accessor: 'FECHA_INICIO'
+            },
+            {
+                Header: 'Fecha fin', accessor: 'FECHA_FIN'
             },
             {
                 Header: 'Tipo de Pago', accessor: 'TIPO_PAGO'
@@ -55,6 +60,11 @@ export default function Payments() {
             {
                 Header: 'Detalles', accessor: 'DETALLE'
             }
+            ,
+            {
+                Header: 'Estado', accessor: 'ESTADO'
+            }
+
 
         ],
         []
@@ -74,16 +84,17 @@ export default function Payments() {
         setSelectedClients(selected);
     }
     const fetchData = () => {
-        commonDB.getAll({ header: "pago" }).then(response => {
-            convert(response)
+        commonDB.getAll({ header: "membresia" }).then(response => {
+            convertDate(response)
 
             setData(response)
         })
     }
 
-    const convert = (e) => {
+    const convertDate = (e) => {
         e.map((entrada) => {
-            entrada.FECHA = moment(entrada.FECHA).format('LL')
+            entrada.FECHA_INICIO = moment(entrada.FECHA_INICIO).format('LL')
+            entrada.FECHA_FIN = moment(entrada.FECHA_FIN).format('LL')
         })
     }
 
@@ -100,10 +111,11 @@ export default function Payments() {
     const toggleModalEdit = (e) => {
         const pago = JSON.parse(e.target.dataset.row);
         setElement({
-            ID_PAGO: pago.ID_PAGO,
+            ID_MEMBRESIA: pago.ID_MEMBRESIA,
             NOMBRE_CLIENTE: pago.NOMBRE_CLIENTE,
             APELLIDO_CLIENTE: pago.APELLIDO_CLIENTE,
-            FECHA: pago.FECHA,
+            FECHA_INICIO: pago.FECHA_INICIO,
+            FECHA_FIN: pago.FECHA_FIN,
             TIPO_PAGO: pago.TIPO_PAGO,
             MONTO: pago.MONTO,
             DETALLE: pago.DETALLE
@@ -115,31 +127,20 @@ export default function Payments() {
     const toggleModalDelete = (e) => {
         const pago = JSON.parse(e.target.dataset.row);
         setElement({
-            ID_PAGO: pago.ID_PAGO,
+            ID_MEMBRESIA: pago.ID_MEMBRESIA,
             NOMBRE_CLIENTE: pago.NOMBRE_CLIENTE,
             APELLIDO_CLIENTE: pago.APELLIDO_CLIENTE,
-            FECHA: pago.FECHA,
+            FECHA_INICIO: pago.FECHA_INICIO,
+            FECHA_FIN:pago.FECHA_FIN
         });
         setIsOpenDelete(!isOpenDelete);
     }
 
-    const handleSearchClient = (e) => {
-        console.log(e.target.value);
-        commonDB.getSearch({ header: "cliente", find: e.target.value }).then(response => {
-            console.log(response);
-            const options = response.map((client) => ({
-                name: client.ID_CLIENTE,
-                value: client.NOMBRE_CLIENTE + ' ' + client.APELLIDOS
-            }));
-            setClientList(options);
-        })
-
-    };
-
+   
     const handleInsert = (e) => {
         e.ID_CLIENTE = selectedClients.value;
         console.log(selectedClients.value);
-        commonDB.insert({ header: "pago", size: "5", object: e }).then(response => {
+        commonDB.insert({ header: "membresia", size: "6", object: e }).then(response => {
             setModalMsg(prevState => ({
                 ...prevState,
                 msg: response,
@@ -151,7 +152,7 @@ export default function Payments() {
     }
 
     const HandleEdit = (e) => {
-        commonDB.update({ header: "pago", size: "5", object: e }).then(response => {
+        commonDB.update({ header: "membresia", size: "6", object: e }).then(response => {
             setModalMsg(prevState => ({
                 ...prevState,
                 msg: response,
@@ -164,7 +165,7 @@ export default function Payments() {
     }
 
     const HandleDelete = (e) => {
-        commonDB.delete({ header: "pago", object: { id: e.pago_id } }).then(response => {
+        commonDB.delete({ header: "membresia", object: { id: e.membresia_id } }).then(response => {
             setModalMsg(prevState => ({
                 ...prevState,
                 msg: response,
@@ -179,7 +180,7 @@ export default function Payments() {
         if (e.target.value === undefined || e.target.value === "") {
             fetchData();
         } else {
-            commonDB.getSearch({ header: "pago", find: e.target.value }).then(response => {
+            commonDB.getSearch({ header: "membresia", find: e.target.value }).then(response => {
                 setData(response);
             })
         }
@@ -188,7 +189,7 @@ export default function Payments() {
     return (
 
         <div>
-            <h1 className="text-left">Control Pagos</h1>
+            <h1 className="text-left">Control Membresía</h1>
             <hr />
             <div className="container">
                 <div className="container-insert-search__">
@@ -204,12 +205,13 @@ export default function Payments() {
                 />
             </div>
             <CustomModal
-                props={{ title: 'Insertar pago', isOpen: isOpenInsert }}
+                props={{ title: 'Insertar membresía', isOpen: isOpenInsert }}
                 methods={{ toggleOpenModal: () => setIsOpenInsert(!isOpenInsert) }}
             >
                 <CustomForm onSubmit={handleInsert}>
                     <LiveCustomSelect data={selectedClients} onChange={onChangeSearchClient} className='mt-2' placeHolder={"Buscar cliente..."} loadOptions={searchClient} />
-                    <CustomInput errorMsg="Ingrese la fecha" type="date" className='mt-2' name='fecha_insert' placeholder='Fecha'></CustomInput>
+                    <CustomInput errorMsg="Ingrese la fecha de inicio" type="date" className='mt-2' name='fecha_inicio_insert' placeholder='Fecha Inicio'></CustomInput>
+                    <CustomInput errorMsg="Ingrese la fecha de fin" type="date" className='mt-2' name='fecha_fin_insert' placeholder='Fecha Fin'></CustomInput>
                     <CustomInput errorMsg="Ingrese el tipo de pago" className='mt-2' name='tipo_pago_insert' placeholder='Tipo de pago'></CustomInput>
                     <CustomInput errorMsg="Ingrese el monto" className='mt-2' name='monto_insert' placeholder='Monto'></CustomInput>
                     <CustomInput errorMsg="Ingrese el detalle" className='mt-2' name='detalle_insert' placeholder='Detalle de pago'></CustomInput>
@@ -221,12 +223,13 @@ export default function Payments() {
             </CustomModal>
 
             <CustomModal
-                props={{ title: 'Actualizar pago', isOpen: isOpenEdit }}
+                props={{ title: 'Actualizar membresía', isOpen: isOpenEdit }}
                 methods={{ toggleOpenModal: () => setIsOpenEdit(!isOpenEdit) }}
             >
                 <CustomForm onSubmit={HandleEdit}>
-                    <CustomInput className='mt-2' type="hidden" name='pago_id' value={element.ID_PAGO} placeholder='Id pago'></CustomInput>
-                    <CustomInput errorMsg="Ingrese la fecha" type="date" className='mt-2' value={moment(element.FECHA).format('YYYY-MM-DD')} onChange={(e) => setElement(prevState => ({ ...prevState, FECHA: e.target.value }))} name='fecha_insert' placeholder='Fecha'></CustomInput>
+                    <CustomInput className='mt-2' type="hidden" name='membresia_id' value={element.ID_MEMBRESIA} placeholder='Id membresia'></CustomInput>
+                    <CustomInput errorMsg="Ingrese la fecha inicio" type="date" className='mt-2' value={moment(element.FECHA_INICIO).format('YYYY-MM-DD')} onChange={(e) => setElement(prevState => ({ ...prevState, FECHA_INICIO: e.target.value }))} name='fecha_inicio_insert' placeholder='Fecha  Inicio'></CustomInput>
+                    <CustomInput errorMsg="Ingrese la fecha de fin" type="date" className='mt-2' value={moment(element.FECHA_FIN).format('YYYY-MM-DD')} onChange={(e) => setElement(prevState => ({ ...prevState, FECHA_FIN: e.target.value }))} name='fecha_fin_insert' placeholder='Fecha Fin'></CustomInput>
                     <CustomInput errorMsg="Ingrese el tipo de pago" className='mt-2' value={element.TIPO_PAGO} onChange={(e) => setElement(prevState => ({ ...prevState, TIPO_PAGO: e.target.value }))} name='tipo_pago_insert' placeholder='Tipo de pago'></CustomInput>
                     <CustomInput errorMsg="Ingrese el monto" className='mt-2' value={element.MONTO} onChange={(e) => setElement(prevState => ({ ...prevState, MONTO: e.target.value }))} name='monto_insert' placeholder='Monto'></CustomInput>
                     <CustomInput errorMsg="Ingrese el detalle" className='mt-2' value={element.DETALLE} onChange={(e) => setElement(prevState => ({ ...prevState, DETALLE: e.target.value }))} name='detalle_insert' placeholder='Detalle de pago'></CustomInput>
@@ -238,11 +241,11 @@ export default function Payments() {
             </CustomModal>
 
             <CustomModal
-                props={{ title: "¿Desea eliminar el pago de " + element.NOMBRE_CLIENTE + " " + element.APELLIDO_CLIENTE + "de la fecha " + element.FECHA + "?", isOpen: isOpenDelete }}
+                props={{ title: "¿Desea eliminar membresía de " + element.NOMBRE_CLIENTE + " " + element.APELLIDO_CLIENTE + " de la fecha " + element.FECHA_INICIO +" al "+element.FECHA_FIN+ "?", isOpen: isOpenDelete }}
                 methods={{ toggleOpenModal: () => setIsOpenDelete(!isOpenDelete) }}
             >
                 <CustomForm onSubmit={HandleDelete}>
-                    <CustomInput className='mt-2' type="hidden" name='pago_id' value={element.ID_PAGO} placeholder='ID pago'></CustomInput>
+                    <CustomInput className='mt-2' type="hidden" name='membresia_id' value={element.ID_MEMBRESIA} placeholder='ID pago'></CustomInput>
                     <AddButton text="Si" type="submit" />
                     <CancelButton fun={() => setIsOpenDelete(!isOpenDelete)} />
                 </CustomForm>
