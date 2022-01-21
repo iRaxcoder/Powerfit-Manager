@@ -112,7 +112,6 @@ export default function Product(){
     }
 
     const handleSearch = (e) => {
-      console.log(e.target.value);
       if(e.target.value===undefined || e.target.value ===""){
         fetchProducts();
       }else{

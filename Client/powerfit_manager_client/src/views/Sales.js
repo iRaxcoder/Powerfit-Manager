@@ -4,7 +4,8 @@ import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
 import DownloadButton from "../components/DownloadButton";
-import {CustomInput, SingleCustomInput} from "../components/CustomInput";
+import {CustomInput, SingleCustomInput, LiveCustomSelect} from "../components/CustomInput";
+import ProductItem from "../components/ProductItem";
 import commonDB from "../service/CommonDB";
 import CancelButton from "../components/CancelButton";
 import { exportToPdf, ExportToCsv } from "../utils/exportData";
@@ -15,9 +16,11 @@ export default function Sales(){
   const [isOpenDelete, setIsOpenDelete] = useState(false);
   const [saleEdited, setSaleEdited] = useState({id:0, name:"def", stock:"def", price:0, lastModified: "def", details:"def"});
   const [saleList, setSaleList] = useState(null);
+  const [productList, setProductList] = useState(null);
   const saleListRef= useRef();
   const [modalMsg, setModalMsg]= useState({isMsgOpen: false, msg: ""});
   saleListRef.current=saleList;
+  const [selectedClients, setSelectedClients] = useState(null);
 
   const dataHeaderPDF = [["ID Venta","ID Cliente","Fecha","Total"]];
   const dataHeaderCSV = [ 
@@ -49,12 +52,36 @@ export default function Sales(){
       setSaleList(response)
     })
   }
+
+  const fetchProducts = () => {
+    commonDB.getAll({header:"producto"}).then(response=>{
+    formatDate(response)
+    setProductList(response)
+    })
+  }
   
   useEffect(()=>{
     fetchSales();
+    fetchProducts();
   },[]);
 
   if(!saleList) return "No se encuentran ventas aún.";
+  if(!productList) return "No se encuentran productos aún."
+
+  const searchClient = (find, callback) => {
+    commonDB.getSearch({ header: "cliente", find: find }).then(response => {
+        setSelectedClients(response);
+    })
+
+    callback(selectedClients.map(client => ({
+        label: client.NOMBRE_CLIENTE + " " + client.APELLIDOS,
+        value: client.ID_CLIENTE
+    })))
+  }
+
+  const onChangeSearchClient = (selected) => {
+    setSelectedClients(selected);
+  }
     
     const handleInsert = (e) => {
       commonDB.insert({header:"venta",size:"5", object: e}).then(response=>{   
@@ -104,6 +131,28 @@ export default function Sales(){
       exportToPdf(dataHeaderPDF,data, "Reporte de productos en inventario");
     }
 
+    const showProducts = productList.map((product,index)=>{
+        return (
+          <ProductItem 
+          key={index}
+          name={product.NOMBRE} 
+          stock={product.STOCK} 
+          details={product.DETALLES} 
+          price={product.PRECIO_UNITARIO}/>
+        );
+    })
+
+    const handleSearchProduct = (e) => {
+      if(e.target.value===undefined || e.target.value ===""){
+        fetchProducts();
+      }else{
+        commonDB.getSearch({header: "producto",find:e.target.value}).then(response=>{
+          formatDate(response)
+          setProductList(response);
+        })
+      }
+    }
+
     return (
         <div>
             <h1 className="text-left">Control de ventas</h1>
@@ -126,25 +175,21 @@ export default function Sales(){
                 />
             </div>
             <CustomModal
-              props={{title: 'Insertar producto', isOpen: isOpenInsert}}
+              props={{title: 'Realizar venta', isOpen: isOpenInsert}}
               methods={{toggleOpenModal: ()=>setIsOpenInsert(!isOpenInsert)}}
                 >
-              <CustomForm onSubmit={handleInsert}>
-                <CustomInput errorMsg="nombre requerido" className='mt-2' name='product_name_insert' placeholder='Nombre'></CustomInput>
-                <CustomInput type="number" min="1" errorMsg="cantidad requerida" className='mt-2' name='stock_insert' placeholder='Cantidad'></CustomInput>
-                <CustomInput min="1" type="number" errorMsg="precio requerido" className='mt-2' name='price_insert' placeholder='Precio'></CustomInput>
-                <CustomInput type="date" errorMsg="ingreso requerido" className='mt-2' name='date_insert' placeholder='fecha de ingreso'></CustomInput>
-                <CustomInput errorMsg="detalles requeridos" className='mt-2' name='details_insert' placeholder='Detalles'></CustomInput>
-                <AddButton text="Insertar"/>
-                <CancelButton fun={()=>setIsOpenInsert(false)}/>
-              </CustomForm>
+                <LiveCustomSelect data={selectedClients} onChange={onChangeSearchClient} className='mt-2' placeHolder={"Seleccionar comprador (cliente)..."} loadOptions={searchClient} />
+                <CustomForm>
+                  <CustomInput onChange={handleSearchProduct} placeHolder="Buscar un producto..." type="text" className='form-control mt-2 mb-2' name='searchProducto'/>
+                </CustomForm>
+                {showProducts}
             </CustomModal>
             <CustomModal
               props={{title: "¿Está seguro que desea eliminar la venta número #'"+ saleEdited.id+"'?", isOpen: isOpenDelete}}
               methods={{toggleOpenModal: ()=>setIsOpenDelete(!isOpenDelete)}}
                 >
               <CustomForm onSubmit={HandleDelete}>
-                <CustomInput type="hidden" value={saleEdited.id} className='form-control mt-2' name='exerciseIdDelete'/>
+                <CustomInput type="hidden" value={saleEdited.id} className='form-control mt-2' name='salesIdDelete'/>
                 <AddButton text="Sí, estoy seguro."/>
                 <CancelButton fun={()=>setIsOpenDelete(false)}/>
               </CustomForm>
