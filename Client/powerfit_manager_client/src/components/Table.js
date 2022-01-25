@@ -24,7 +24,7 @@ const Table = (props) => {
     if (allOptionsRestricted) {
       return (
         <>
-          <InfoButton />
+          <InfoButton fun={props.funSee} rowObject={JSON.stringify(aux[index])}/>
           <EditButton fun={props.funEdit} rowObject={JSON.stringify(aux[index])} />
           <DeleteButton fun={props.funDelete} rowObject={JSON.stringify(aux[index])} />
         </>
