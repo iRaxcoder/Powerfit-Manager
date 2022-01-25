@@ -6,6 +6,12 @@ import { CustomInput } from './CustomInput'
 
 const ProductItem= (props) =>{
     const { register, formState: { errors }, handleSubmit } = useForm();
+    const isOrdered = 
+    props.ordered===undefined?
+    <button type='submit' className='product-shop bx bxl-shopify'></button>
+    :
+    <button disabled type='submit' className='product-shop bx bxl-shopify'></button>
+        
     return (
         <>
             <form noValidate onSubmit={handleSubmit(props.onQueue)} className='product-item'>
@@ -16,7 +22,7 @@ const ProductItem= (props) =>{
                 <p className='product-price'>Precio: ₡{props.price}/u</p>
                 <div className='product-check'>
                     <input type="number" {...register("quantityOrder",{required:true,min:1})} defaultValue={props.stock===0?0:1} min={props.stock===0?0:1}max={props.stock}></input>    
-                    <button type='submit' className='product-shop bx bxl-shopify'></button>
+                    {isOrdered}
                 </div>
                 {errors["quantityOrder"] && <p className="mt-1 text-secondary">{"*Cantidad disponible requerida"}</p>}
             </form>

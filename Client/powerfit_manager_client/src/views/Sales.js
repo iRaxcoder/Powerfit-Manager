@@ -23,6 +23,7 @@ export default function Sales(){
   const [modalMsg, setModalMsg]= useState({isMsgOpen: false, msg: ""});
   saleListRef.current=saleList;
   const [selectedClients, setSelectedClients] = useState(null);
+  const [totalCarAmount, setTotalCarAmount] = useState(0);
 
   const dataHeaderPDF = [["ID Venta","ID Cliente","Fecha","Total"]];
   const dataHeaderCSV = [ 
@@ -137,6 +138,9 @@ export default function Sales(){
     const onQueueProduct = (e) =>{
       const selectedProduct= productList[e.productId];
       selectedProduct.ordered=e.quantityOrder;
+      selectedProduct.listPosition=e.productId;
+      selectedProduct.subtotal=Number(selectedProduct.PRECIO_UNITARIO)*Number(selectedProduct.ordered);
+      setTotalCarAmount(totalCarAmount+selectedProduct.subtotal);
       if(selectedProduct.ordered>selectedProduct.STOCK){
         alert("El producto excede lo disponible");
       }else{
@@ -147,7 +151,8 @@ export default function Sales(){
 
     const showProducts = productList.map((product,index)=>{
         return (
-          <ProductItem 
+          <ProductItem
+          ordered={product.ordered}
           id={index}
           onQueue={onQueueProduct}
           name={product.NOMBRE} 
@@ -158,7 +163,11 @@ export default function Sales(){
     })
 
     const onDeleteProductCar= (index) => {
-       setCarProducts(carProducts.filter((_,i)=>i!==index));
+      const selectedProduct= productList[carProducts[index].listPosition];
+      selectedProduct.STOCK=Number(selectedProduct.STOCK)+Number(selectedProduct.ordered);
+      selectedProduct.ordered=undefined;
+      setTotalCarAmount(totalCarAmount-Number(carProducts[index].subtotal));
+      setCarProducts(carProducts.filter((_,i)=>i!==index));
     }
 
     const handleSearchProduct = (e) => {
@@ -171,11 +180,29 @@ export default function Sales(){
         })
       }
     }
-
     const refreshCar = () => {
+      setTotalCarAmount(0);
+      carProducts.forEach(
+        product =>{
+          productList[product.listPosition].STOCK = Number(productList[product.listPosition].STOCK) + Number(product.ordered)
+          productList[product.listPosition].ordered = undefined
+        });
       setCarProducts([]);
     }
-
+    const getTotalCar = () => {
+      let total=0;
+      if(carProducts.length!==0){
+        carProducts.forEach(product => total+=(Number(product.subtotal)));
+      }
+      setTotalCarAmount(total);
+    }
+    const onCarItemAmount = (e,index) => {
+      const carProductsCopy=[...carProducts];
+      const carItem=carProductsCopy[index];
+      carItem.subtotal=Number(carItem.PRECIO_UNITARIO) * Number(e.target.value);
+      setCarProducts(carProductsCopy);
+      getTotalCar();
+    }
     return (
         <div>
             <h1 className="text-left">Control de ventas</h1>
@@ -205,13 +232,21 @@ export default function Sales(){
                   <h3 className="shoping-car-title">Cola de productos</h3>
                   {carProducts.map((product,index)=>{
                     return (
-                     <div className="car-item">
-                        <h4 className="car-item-title">{product.NOMBRE}</h4>
-                        <input className="product-quantity" type="number" defaultValue={product.ordered} max={product.STOCK} min={product.STOCK===0?0:1}></input>
-                        <button onClick={()=>onDeleteProductCar(index)} className="btn btn-danger">X</button>
-                     </div>
+                      <>
+                      <div className="car-item">
+                          <div>
+                            <h4 className="car-item-subtotal">subtotal: ₡{product.subtotal}</h4>
+                          </div>
+                          <div className="car-item-order">
+                            <h4 className="car-item-title">{product.NOMBRE}</h4>
+                            <input className="product-quantity" type="number" onChange={(e)=>onCarItemAmount(e,index)} defaultValue={product.ordered} max={product.STOCK===0?product.ordered:Number(product.STOCK) + Number(product.ordered)} min={1}></input>
+                            <button onClick={()=>onDeleteProductCar(index)} className="btn btn-danger">X</button>
+                          </div>
+                      </div>
+                     </>
                     );
                   })}
+                  <h4 className="car-total">Total: ₡{totalCarAmount} </h4>
                   <ul className="car-options">
                     <a className="car-option confirm">Finalizar venta</a>
                     <a onClick={refreshCar} className="car-option quit">Limpiar</a>
