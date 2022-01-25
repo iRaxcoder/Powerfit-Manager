@@ -130,12 +130,12 @@ export default function Membership() {
             NOMBRE_CLIENTE: pago.NOMBRE_CLIENTE,
             APELLIDO_CLIENTE: pago.APELLIDO_CLIENTE,
             FECHA_INICIO: pago.FECHA_INICIO,
-            FECHA_FIN:pago.FECHA_FIN
+            FECHA_FIN: pago.FECHA_FIN
         });
         setIsOpenDelete(!isOpenDelete);
     }
 
-   
+
     const handleInsert = (e) => {
         e.ID_CLIENTE = selectedClients.value;
         console.log(selectedClients.value);
@@ -188,7 +188,7 @@ export default function Membership() {
     return (
 
         <div>
-            <h1 className="text-left">Control Membresía</h1>
+            <h1 className="text-left">Control de Medidas</h1>
             <hr />
             <div className="container">
                 <div className="container-insert-search__">
@@ -199,25 +199,50 @@ export default function Membership() {
                     columns={columns}
                     data={data}
                     aux={dataRef.current}
+                    allAction={true}
                     funEdit={(e) => toggleModalEdit(e)}
                     funDelete={(e) => toggleModalDelete(e)}
                 />
             </div>
             <CustomModal
-                props={{ title: 'Insertar membresía', isOpen: isOpenInsert }}
+                props={{ title: 'Insertar Medidas', isOpen: isOpenInsert }}
                 methods={{ toggleOpenModal: () => setIsOpenInsert(!isOpenInsert) }}
             >
-                <CustomForm onSubmit={handleInsert}>
-                    <LiveCustomSelect data={selectedClients} onChange={onChangeSearchClient} className='mt-2' placeHolder={"Buscar cliente..."} loadOptions={searchClient} />
-                    <CustomInput errorMsg="Ingrese la fecha de inicio" type="date" className='mt-2' name='fecha_inicio_insert' placeholder='Fecha Inicio'></CustomInput>
-                    <CustomInput errorMsg="Ingrese la fecha de fin" type="date" className='mt-2' name='fecha_fin_insert' placeholder='Fecha Fin'></CustomInput>
-                    <CustomInput errorMsg="Ingrese el tipo de pago" className='mt-2' name='tipo_pago_insert' placeholder='Tipo de pago'></CustomInput>
-                    <CustomInput errorMsg="Ingrese el monto" className='mt-2' name='monto_insert' placeholder='Monto'></CustomInput>
-                    <CustomInput errorMsg="Ingrese el detalle" className='mt-2' name='detalle_insert' placeholder='Detalle de pago'></CustomInput>
+                <form noValidate onSubmit={handleInsert}>
+                    <div>
+                        <h4 className="text-left">Datos</h4>
+                        <hr />
+                        <LiveCustomSelect data={selectedClients} onChange={onChangeSearchClient} className='mt-2' placeHolder={"Buscar cliente..."} loadOptions={searchClient} />
+                        <CustomInput errorMsg="Ingrese edad" type="number" className='mt-2' name='edad_insert' placeholder='Edad'></CustomInput>
+                        <CustomInput register errorMsg="Ingrese la fecha" type="date" className='mt-2' name='fecha_insert' placeholder='Fecha'></CustomInput>
+                        <CustomInput errorMsg="Ingrese el peso" type="number" step="0.01" className='mt-2' name='peso_insert' placeholder='Peso'></CustomInput>
+                        <CustomInput errorMsg="Ingrese la altura" type="number" step="0.01" className='mt-2' name='altura_insert' placeholder='Altura'></CustomInput>
+                        <CustomInput errorMsg="Ingrese la grasa corporal" type="number" step="0.01" className='mt-2' name='grasa_corporal_insert' placeholder='Grasa Corporal'></CustomInput>
+                        <CustomInput errorMsg="Ingrese la agua corporal" type="number" step="0.01" className='mt-2' name='agua_corporal_insert' placeholder='Agua Corporal'></CustomInput>
+                        <CustomInput errorMsg="Ingrese la masa muscular" type="number" step="0.01" className='mt-2' name='masa_muscular_insert' placeholder='Masa Múscular'></CustomInput>
+                        <CustomInput errorMsg="Ingrese la valorción física" type="number" step="0.01" className='mt-2' name='valora_fisica_insert' placeholder='Valoración Física'></CustomInput>
+                        <CustomInput errorMsg="Ingrese el Metab. basal" type="number" step="0.01" className='mt-2' name='metab_basal_insert' placeholder='Metab. Basal'></CustomInput>
+                        <CustomInput errorMsg="Ingrese la edad metabolica" type="number" step="0.01" className='mt-2' name='edad_metab_insert' placeholder='Edad Metab.'></CustomInput>
+                        <CustomInput errorMsg="Ingrese la masa ósea" type="number" step="0.01" className='mt-2' name='masa_osea_insert' placeholder='Masa Ósea'></CustomInput>
+                        <CustomInput errorMsg="Ingrese la grasa visceral" type="number" step="0.01" className='mt-2' name='grasa_visceral_insert' placeholder='Grasa Visceral'></CustomInput>
+                    </div>
+                    <div>
+                        <h4 className="text-left">Circunferencias (Antropometría)</h4>
+                        <hr />
+                        <CustomInput errorMsg="Ingrese B.D" type="number" step="0.01" className='mt-2' name='bd_insert' placeholder='B.D'></CustomInput>
+                        <CustomInput errorMsg="Ingrese B.I" type="number" step="0.01" className='mt-2' name='bi_insert' placeholder='B.I'></CustomInput>
+                        <CustomInput errorMsg="Ingrese el pecho" type="number" step="0.01" className='mt-2' name='pecho_insert' placeholder='Pecho'></CustomInput>
+                        <CustomInput errorMsg="Ingrese el ABD." type="number" step="0.01" className='mt-2' name='abd_insert' placeholder='ABD'></CustomInput>
+                        <CustomInput errorMsg="Ingrese la cadera" type="number" step="0.01" className='mt-2' name='cadera_insert' placeholder='Cadera'></CustomInput>
+                        <CustomInput errorMsg="Ingrese M.D" type="number" step="0.01" className='mt-2' name='md_insert' placeholder='M.D'></CustomInput>
+                        <CustomInput errorMsg="Ingrese M.I" type="number" step="0.01" className='mt-2' name='mi_insert' placeholder='M.I'></CustomInput>
+                        <CustomInput errorMsg="Ingrese P.D" type="number" step="0.01" className='mt-2' name='pd_insert' placeholder='P.D'></CustomInput>
+                        <CustomInput errorMsg="Ingrese P.I" type="number" step="0.01" className='mt-2' name='pi_insert' placeholder='P.I'></CustomInput>
+                    </div>
 
                     <AddButton text="Insertar" type="submit" />
                     <CancelButton fun={() => setIsOpenInsert(!isOpenInsert)} />
-                </CustomForm>
+                </form>
 
             </CustomModal>
 
@@ -240,7 +265,7 @@ export default function Membership() {
             </CustomModal>
 
             <CustomModal
-                props={{ title: "¿Desea eliminar membresía de " + element.NOMBRE_CLIENTE + " " + element.APELLIDO_CLIENTE + " de la fecha " + element.FECHA_INICIO +" al "+element.FECHA_FIN+ "?", isOpen: isOpenDelete }}
+                props={{ title: "¿Desea eliminar membresía de " + element.NOMBRE_CLIENTE + " " + element.APELLIDO_CLIENTE + " de la fecha " + element.FECHA_INICIO + " al " + element.FECHA_FIN + "?", isOpen: isOpenDelete }}
                 methods={{ toggleOpenModal: () => setIsOpenDelete(!isOpenDelete) }}
             >
                 <CustomForm onSubmit={HandleDelete}>

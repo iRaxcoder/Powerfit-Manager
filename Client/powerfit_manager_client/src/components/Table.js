@@ -9,21 +9,31 @@ const Table = (props) => {
   const data = props.data;
   const aux = props.aux;
   const mostrar = props.mostrar;
-  const editRestricted=props.editRestricted;
+  const editRestricted = props.editRestricted;
+  const allOptionsRestricted = props.allAction;
 
   const manageTableButtons = (index) => {
-    if (editRestricted){
+    if (editRestricted) {
       return (
         <>
-        <InfoButton/>
-        <DeleteButton fun={props.funDelete} rowObject={JSON.stringify(aux[index])} />
+          <InfoButton />
+          <DeleteButton fun={props.funDelete} rowObject={JSON.stringify(aux[index])} />
+        </>
+      );
+    }
+    if (allOptionsRestricted) {
+      return (
+        <>
+          <InfoButton />
+          <EditButton fun={props.funEdit} rowObject={JSON.stringify(aux[index])} />
+          <DeleteButton fun={props.funDelete} rowObject={JSON.stringify(aux[index])} />
         </>
       );
     }
     return (
       <>
-      <EditButton fun={props.funEdit} rowObject={JSON.stringify(aux[index])} />
-      <DeleteButton fun={props.funDelete} rowObject={JSON.stringify(aux[index])} />
+        <EditButton fun={props.funEdit} rowObject={JSON.stringify(aux[index])} />
+        <DeleteButton fun={props.funDelete} rowObject={JSON.stringify(aux[index])} />
       </>
     );
   }
@@ -88,8 +98,8 @@ const Table = (props) => {
                     </td>
                   )
                 })}
-                <td>    
-                  {manageTableButtons(index)}          
+                <td>
+                  {manageTableButtons(index)}
                 </td>
               </tr>
             )
