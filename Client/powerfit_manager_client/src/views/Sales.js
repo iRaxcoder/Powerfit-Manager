@@ -10,6 +10,7 @@ import commonDB from "../service/CommonDB";
 import CancelButton from "../components/CancelButton";
 import { exportToPdf, ExportToCsv } from "../utils/exportData";
 import moment from "moment";
+import "../styles/Sales/shopingCar.css"
 
 export default function Sales(){
   const [isOpenInsert, setIsOpenInsert] = useState(false);
@@ -17,6 +18,7 @@ export default function Sales(){
   const [saleEdited, setSaleEdited] = useState({id:0, name:"def", stock:"def", price:0, lastModified: "def", details:"def"});
   const [saleList, setSaleList] = useState(null);
   const [productList, setProductList] = useState(null);
+  const [carProducts, setCarProducts] = useState([]);
   const saleListRef= useRef();
   const [modalMsg, setModalMsg]= useState({isMsgOpen: false, msg: ""});
   saleListRef.current=saleList;
@@ -63,6 +65,7 @@ export default function Sales(){
   useEffect(()=>{
     fetchSales();
     fetchProducts();
+    
   },[]);
 
   if(!saleList) return "No se encuentran ventas aún.";
@@ -131,16 +134,32 @@ export default function Sales(){
       exportToPdf(dataHeaderPDF,data, "Reporte de productos en inventario");
     }
 
+    const onQueueProduct = (e) =>{
+      const selectedProduct= productList[e.productId];
+      selectedProduct.ordered=e.quantityOrder;
+      if(selectedProduct.ordered>selectedProduct.STOCK){
+        alert("El producto excede lo disponible");
+      }else{
+        selectedProduct.STOCK=selectedProduct.STOCK-e.quantityOrder;
+        setCarProducts([...carProducts,selectedProduct]);
+      }
+    }
+
     const showProducts = productList.map((product,index)=>{
         return (
           <ProductItem 
-          key={index}
+          id={index}
+          onQueue={onQueueProduct}
           name={product.NOMBRE} 
           stock={product.STOCK} 
-          details={product.DETALLES} 
+          details={product.DETALLES}
           price={product.PRECIO_UNITARIO}/>
         );
     })
+
+    const onDeleteProductCar= (index) => {
+       setCarProducts(carProducts.filter((_,i)=>i!==index));
+    }
 
     const handleSearchProduct = (e) => {
       if(e.target.value===undefined || e.target.value ===""){
@@ -151,6 +170,10 @@ export default function Sales(){
           setProductList(response);
         })
       }
+    }
+
+    const refreshCar = () => {
+      setCarProducts([]);
     }
 
     return (
@@ -178,6 +201,22 @@ export default function Sales(){
               props={{title: 'Realizar venta', isOpen: isOpenInsert}}
               methods={{toggleOpenModal: ()=>setIsOpenInsert(!isOpenInsert)}}
                 >
+                <div className="shoping-car">
+                  <h3 className="shoping-car-title">Cola de productos</h3>
+                  {carProducts.map((product,index)=>{
+                    return (
+                     <div className="car-item">
+                        <h4 className="car-item-title">{product.NOMBRE}</h4>
+                        <input className="product-quantity" type="number" defaultValue={product.ordered} max={product.STOCK} min={product.STOCK===0?0:1}></input>
+                        <button onClick={()=>onDeleteProductCar(index)} className="btn btn-danger">X</button>
+                     </div>
+                    );
+                  })}
+                  <ul className="car-options">
+                    <a className="car-option confirm">Finalizar venta</a>
+                    <a onClick={refreshCar} className="car-option quit">Limpiar</a>
+                  </ul> 
+                </div>
                 <LiveCustomSelect data={selectedClients} onChange={onChangeSearchClient} className='mt-2' placeHolder={"Seleccionar comprador (cliente)..."} loadOptions={searchClient} />
                 <CustomForm>
                   <CustomInput onChange={handleSearchProduct} placeHolder="Buscar un producto..." type="text" className='form-control mt-2 mb-2' name='searchProducto'/>

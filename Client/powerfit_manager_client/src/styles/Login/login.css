@@ -2,6 +2,7 @@
 .card-body__{
     background-color: #6FB722;
     height: 500px;
+    border-radius: 10px;
     -webkit-box-shadow: 4px 46px 80px -52px rgba(0,0,0,1);
     -moz-box-shadow: 4px 46px 80px -52px rgba(0,0,0,1);
     box-shadow: 4px 46px 80px -52px rgba(0,0,0,1);

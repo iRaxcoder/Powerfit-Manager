@@ -1,0 +1,66 @@
+.shoping-car-title{
+    font-family: arial;
+    font-size: 20px;
+    border-bottom: 1px solid #000;
+    padding-bottom: 5px;
+}
+
+
+.shoping-car{
+    border-radius: 5px;
+    box-shadow: 6px 6px 5px rgba(0, 0, 0, 0.486);
+    padding:10px;
+    text-align: center;
+    display: block;
+    position: fixed;
+    width: 22%;
+    height: max-content;
+    right: 10px;
+    bottom: 0;
+    top: 230px;
+    background:  #e6e6e6  ;
+}
+
+.car-item{
+    background: #fff;
+    display: flex;
+    font-size: 20px;
+    margin: 5px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.car-item-title{
+    font-size: 15px;
+    margin-right: 10px;
+    line-height: 35px
+}
+
+.product-quantity{
+    margin-right: 10px;
+}
+
+.car-option{
+    display: inline-block;
+    margin: 10px;
+    border: 1px solid #000;
+    padding: 5px;
+    background: #000;
+    cursor: pointer;
+}
+
+.car-options{
+    color: #fff;
+}
+
+.car-options .car-option.confirm:hover{
+    color:#73be22;
+    border-color:#73be22 ;
+}
+
+.car-options .car-option.quit:hover{
+    color:crimson;
+    border-color: crimson;
+}
+

@@ -1,10 +1,10 @@
 import React, {Children, createElement } from "react";
 import {useForm} from "react-hook-form"
 
-export default function Form ({ children, onSubmit}){
+export default function Form ({ children, onSubmit,...rest}){
   const { register, formState: { errors }, handleSubmit } = useForm();
     return (
-           <form noValidate onSubmit={handleSubmit(onSubmit)}>
+           <form  {...rest} noValidate onSubmit={handleSubmit(onSubmit)}>
                {Children.map(children, child => {
               return child.props.name
                 ? createElement(child.type, {
