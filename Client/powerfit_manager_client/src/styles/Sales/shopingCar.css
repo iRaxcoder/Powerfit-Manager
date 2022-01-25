@@ -23,21 +23,23 @@
 
 .car-item{
     background: #fff;
-    display: flex;
     font-size: 20px;
     margin: 5px;
     border: 1px solid #000;
     border-radius: 5px;
     padding: 10px;
+    max-width: 100%;
 }
 
 .car-item-title{
-    font-size: 15px;
+    font-size: 13px;
     margin-right: 10px;
-    line-height: 35px
+    line-height: 35px;
 }
 
 .product-quantity{
+    width: 30%;
+    height: 15%;
     margin-right: 10px;
 }
 
@@ -64,3 +66,12 @@
     border-color: crimson;
 }
 
+.car-item-subtotal{
+    text-align: left;
+    text-decoration: underline;
+    font-size: 14px;
+}
+
+.car-item-order{
+    display: flex;
+}
