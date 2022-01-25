@@ -73,14 +73,17 @@ export default function Sales(){
   if(!productList) return "No se encuentran productos aún."
 
   const searchClient = (find, callback) => {
-    commonDB.getSearch({ header: "cliente", find: find }).then(response => {
+    if(find!==undefined){
+      commonDB.getSearch({ header: "cliente", find: find }).then(response => {
         setSelectedClients(response);
-    })
-
-    callback(selectedClients.map(client => ({
+      })
+    }
+    if(Array.isArray(selectedClients)){
+      callback(selectedClients.map(client => ({
         label: client.NOMBRE_CLIENTE + " " + client.APELLIDOS,
         value: client.ID_CLIENTE
-    })))
+      })))
+    }
   }
 
   const onChangeSearchClient = (selected) => {
@@ -142,7 +145,11 @@ export default function Sales(){
       selectedProduct.subtotal=Number(selectedProduct.PRECIO_UNITARIO)*Number(selectedProduct.ordered);
       setTotalCarAmount(totalCarAmount+selectedProduct.subtotal);
       if(selectedProduct.ordered>selectedProduct.STOCK){
-        alert("El producto excede lo disponible");
+        setModalMsg(prevState =>({
+          ...prevState,
+          msg: "El producto excede lo disponible",
+          isMsgOpen: true
+        }));
       }else{
         selectedProduct.STOCK=selectedProduct.STOCK-e.quantityOrder;
         setCarProducts([...carProducts,selectedProduct]);
@@ -151,6 +158,7 @@ export default function Sales(){
 
     const showProducts = productList.map((product,index)=>{
         return (
+          <>
           <ProductItem
           ordered={product.ordered}
           id={index}
@@ -159,6 +167,7 @@ export default function Sales(){
           stock={product.STOCK} 
           details={product.DETALLES}
           price={product.PRECIO_UNITARIO}/>
+          </>
         );
     })
 
@@ -202,6 +211,26 @@ export default function Sales(){
       carItem.subtotal=Number(carItem.PRECIO_UNITARIO) * Number(e.target.value);
       setCarProducts(carProductsCopy);
       getTotalCar();
+    }
+
+    const onFinishSell = () => {
+      if (selectedClients!==null ){
+          if(carProducts.length>=1){
+            
+          }else{
+            setModalMsg(prevState =>({
+              ...prevState,
+              msg: "Debe agregar al menos un producto en el carrito.",
+              isMsgOpen: true
+            }));
+          }
+      }else{
+        setModalMsg(prevState =>({
+          ...prevState,
+          msg: "Debe seleccionar un cliente para proceeder con la venta.",
+          isMsgOpen: true
+        }));
+      }
     }
     return (
         <div>
@@ -248,7 +277,7 @@ export default function Sales(){
                   })}
                   <h4 className="car-total">Total: ₡{totalCarAmount} </h4>
                   <ul className="car-options">
-                    <a className="car-option confirm">Finalizar venta</a>
+                    <a onClick={onFinishSell} className="car-option confirm">Finalizar venta</a>
                     <a onClick={refreshCar} className="car-option quit">Limpiar</a>
                   </ul> 
                 </div>
@@ -256,7 +285,9 @@ export default function Sales(){
                 <CustomForm>
                   <CustomInput onChange={handleSearchProduct} placeHolder="Buscar un producto..." type="text" className='form-control mt-2 mb-2' name='searchProducto'/>
                 </CustomForm>
-                {showProducts}
+                <div className="product-list">
+                 {showProducts}
+                </div>
             </CustomModal>
             <CustomModal
               props={{title: "¿Está seguro que desea eliminar la venta número #'"+ saleEdited.id+"'?", isOpen: isOpenDelete}}
@@ -267,6 +298,12 @@ export default function Sales(){
                 <AddButton text="Sí, estoy seguro."/>
                 <CancelButton fun={()=>setIsOpenDelete(false)}/>
               </CustomForm>
+            </CustomModal>
+            <CustomModal 
+              props={{title: 'Mensaje del sistema', isOpen: modalMsg.isMsgOpen}}
+              methods={{toggleOpenModal: ()=>setModalMsg(!modalMsg.isMsgOpen)}}
+              >
+              <p>{modalMsg.msg}</p>
             </CustomModal>
             <CustomModal 
               props={{title: 'Mensaje del sistema', isOpen: modalMsg.isMsgOpen}}

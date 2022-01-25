@@ -2,12 +2,14 @@
     /* position: fixed;
     top: 50%;
     left: 50%; */
+     position: relative; 
     width: 80%;
+    max-height: 100vh;
     height: max-content;
-    transform: translate(-50%, -50%);
+    /* transform: translate(-50%, -50%); */
     border: 1px solid #ccc;
     background: #fff;
-    overflow: scroll;
+    /* overflow: scroll; */
     border-radius: 4px;
     outline: none;
     padding: 20px;
