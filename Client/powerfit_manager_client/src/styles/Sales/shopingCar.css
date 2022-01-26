@@ -81,3 +81,9 @@
     overflow: scroll;
     overflow-x: hidden;
 }
+
+ul.order-product-list{
+    list-style-position: inside;
+    margin: 40px 0;
+    list-style-image: url(/src/assets/img/checkout.png);
+}

@@ -7,6 +7,7 @@ import DownloadButton from "../components/DownloadButton";
 import {CustomInput, SingleCustomInput, LiveCustomSelect} from "../components/CustomInput";
 import ProductItem from "../components/ProductItem";
 import commonDB from "../service/CommonDB";
+import SalesDB from "../service/Sales";
 import CancelButton from "../components/CancelButton";
 import { exportToPdf, ExportToCsv } from "../utils/exportData";
 import moment from "moment";
@@ -22,8 +23,10 @@ export default function Sales(){
   const saleListRef= useRef();
   const [modalMsg, setModalMsg]= useState({isMsgOpen: false, msg: ""});
   saleListRef.current=saleList;
-  const [selectedClients, setSelectedClients] = useState(null);
+  const [selectedClients, setSelectedClients] = useState([]);
   const [totalCarAmount, setTotalCarAmount] = useState(0);
+  const [isOpenOrder, setIsOpenOrder] = useState(false);
+  const [orderClient, setOrderClient]= useState("def");
 
   const dataHeaderPDF = [["ID Venta","ID Cliente","Fecha","Total"]];
   const dataHeaderCSV = [ 
@@ -75,6 +78,7 @@ export default function Sales(){
   const searchClient = (find, callback) => {
     if(find!==undefined){
       commonDB.getSearch({ header: "cliente", find: find }).then(response => {
+        setOrderClient(response[0].ID_CLIENTE);
         setSelectedClients(response);
       })
     }
@@ -214,9 +218,10 @@ export default function Sales(){
     }
 
     const onFinishSell = () => {
-      if (selectedClients!==null ){
+      if (selectedClients!==null && selectedClients.label !==undefined){
           if(carProducts.length>=1){
-            
+            console.log(selectedClients);
+            setIsOpenOrder(true);
           }else{
             setModalMsg(prevState =>({
               ...prevState,
@@ -231,6 +236,19 @@ export default function Sales(){
           isMsgOpen: true
         }));
       }
+    }
+
+    const handleOrder = () => {
+      SalesDB.insert({header:"venta", orderHeader: {clientId:orderClient,total:totalCarAmount},
+      orderProducts:carProducts}).then(response=>{   
+        setModalMsg(prevState =>({
+          ...prevState,
+          msg: response,
+          isMsgOpen: true
+        }));
+        fetchSales();
+      })
+    setIsOpenOrder(false);
     }
     return (
         <div>
@@ -297,6 +315,22 @@ export default function Sales(){
                 <CustomInput type="hidden" value={saleEdited.id} className='form-control mt-2' name='salesIdDelete'/>
                 <AddButton text="Sí, estoy seguro."/>
                 <CancelButton fun={()=>setIsOpenDelete(false)}/>
+              </CustomForm>
+            </CustomModal>
+            <CustomModal
+              props={{title: "Confirmar compra a nombre de '"+ selectedClients.label+"'?", isOpen: isOpenOrder}}
+              methods={{toggleOpenModal: ()=>setIsOpenDelete(!isOpenOrder)}}
+                >
+                {/* <ul role="list" className="order-product-list">
+                  {carProducts.map((product)=>{
+                    return (
+                      <li className="order-product-item">{product.NOMBRE}</li>
+                      );
+                  })}
+                </ul> */}
+              <CustomForm onSubmit={handleOrder}>
+                <AddButton text="Confirmar"/>
+                <CancelButton fun={()=>setIsOpenOrder(false)}/>
               </CustomForm>
             </CustomModal>
             <CustomModal 
