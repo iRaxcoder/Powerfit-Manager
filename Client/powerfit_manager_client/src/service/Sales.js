@@ -17,6 +17,19 @@ const SalesDB = {
             });
         return response;
     },
+    getSaleInfo: async (data) => {
+        //loading.style.display="block";
+        const response = await axios.post(BASE_URL + '/sales/get-sale-info', { data })
+            .then((response) => {
+                return response.data[0];
+            }).catch(error => {
+                console.log(error);
+            })
+            .finally(() => {
+                //loading.style.display="none";
+            });
+        return response;
+    },
 }
 
 export default SalesDB;

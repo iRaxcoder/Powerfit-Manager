@@ -12,6 +12,7 @@ import CancelButton from "../components/CancelButton";
 import { exportToPdf, ExportToCsv } from "../utils/exportData";
 import moment from "moment";
 import "../styles/Sales/shopingCar.css"
+import "../styles/Sales/orderInfo.css"
 
 export default function Sales(){
   const [isOpenInsert, setIsOpenInsert] = useState(false);
@@ -27,24 +28,38 @@ export default function Sales(){
   const [totalCarAmount, setTotalCarAmount] = useState(0);
   const [isOpenOrder, setIsOpenOrder] = useState(false);
   const [orderClient, setOrderClient]= useState("def");
+  const [isOpenSaleInfo, setisOpenSaleInfo]=useState(false);
+  const [saleHeader,setSaleHeader]=useState({saleId:0,client:"def",date:"def",total:0});
+  const [saleInfo,setSaleInfo]=useState([]);
 
   const dataHeaderPDF = [["ID Venta","ID Cliente","Fecha","Total"]];
   const dataHeaderCSV = [ 
     { label: "ID Venta", key: 'ID_VENTA',},
     { label: "ID Cliente", key: 'ID_CLIENTE'},
-    { label: "Fecha",key: 'FECHA'},
-    { label: "Total",key: 'TOTAL'},
+    { label: "Cliente", key: 'NOMBRE_CLIENTE'},
+    { label: "Fecha", key: 'FECHA'},
+    { label: "Total", key: 'TOTAL'},
                       ]
 
   const columns = React.useMemo(
       () => [
           { Header: "ID Venta", accessor: 'ID_VENTA',},
           { Header: "ID Cliente", accessor: 'ID_CLIENTE'},
+          {Header:"Cliente",accessor:"NOMBRE_CLIENTE"},
           { Header: "Fecha",accessor: 'FECHA'},
           { Header: "Total(₡)",accessor: 'TOTAL'},
         ],
       []
   )
+
+  const columnsSaleInfo = React.useMemo(
+    () => [
+        { Header: "Producto", accessor: 'NOMBRE',},
+        { Header: "Cantidad", accessor: 'CANTIDAD'},
+        {Header:"SubTotal",accessor:"SUBTOTAL"},
+      ],
+    []
+)
 
   const formatDate = (e) => {
     e.map(entrada => (
@@ -69,31 +84,28 @@ export default function Sales(){
   useEffect(()=>{
     fetchSales();
     fetchProducts();
-    
   },[]);
 
   if(!saleList) return "No se encuentran ventas aún.";
   if(!productList) return "No se encuentran productos aún."
 
-  const searchClient = (find, callback) => {
-    if(find!==undefined){
-      commonDB.getSearch({ header: "cliente", find: find }).then(response => {
-        setOrderClient(response[0].ID_CLIENTE);
-        setSelectedClients(response);
-      })
-    }
-    if(Array.isArray(selectedClients)){
-      callback(selectedClients.map(client => ({
-        label: client.NOMBRE_CLIENTE + " " + client.APELLIDOS,
-        value: client.ID_CLIENTE
-      })))
-    }
-  }
-
-  const onChangeSearchClient = (selected) => {
-    setSelectedClients(selected);
-  }
-    
+    const searchClient = (find, callback) => {
+      if(find!==undefined){
+        commonDB.getSearch({ header: "cliente", find: find }).then(response => {
+          setOrderClient(response[0].ID_CLIENTE);
+          setSelectedClients(response);
+        })
+      }
+      if(Array.isArray(selectedClients)){
+        callback(selectedClients.map(client => ({
+          label: client.NOMBRE_CLIENTE + " " + client.APELLIDOS,
+          value: client.ID_CLIENTE
+        })))
+      }
+    };  
+    const onChangeSearchClient = (selected) => {
+      setSelectedClients(selected);
+    }; 
     const handleInsert = (e) => {
       commonDB.insert({header:"venta",size:"5", object: e}).then(response=>{   
           setModalMsg(prevState =>({
@@ -104,14 +116,12 @@ export default function Sales(){
         fetchSales();
       })
       setIsOpenInsert(false);
-    }
-
+    };
     const HandleOpenDelete = (e) => {
       const sale = JSON.parse(e.target.dataset.row);
       setSaleEdited({id:sale.ID_VENTA})
       setIsOpenDelete(true);
-    }
-
+    };
     const HandleDelete = () => {
       commonDB.delete({header:"venta", object: {id:saleEdited.id}}).then(response=>{   
         setModalMsg(prevState =>({
@@ -122,8 +132,7 @@ export default function Sales(){
         fetchSales();
       })
     setIsOpenDelete(false);
-    }
-
+    };
     const handleSearch = (e) => {
       console.log(e.target.value);
       if(e.target.value===undefined || e.target.value ===""){
@@ -134,14 +143,12 @@ export default function Sales(){
           setSaleList(response);
         })
       }
-    }
-
+    };
     const exportPDF=()=>{
       const data = saleListRef.current.map((product)=>
       ([product.ID_PRODUCTO,product.NOMBRE,product.STOCK,product.PRECIO_UNITARIO,product.ULT_INGRESO,product.DETALLES]));
       exportToPdf(dataHeaderPDF,data, "Reporte de productos en inventario");
-    }
-
+    };
     const onQueueProduct = (e) =>{
       const selectedProduct= productList[e.productId];
       selectedProduct.ordered=e.quantityOrder;
@@ -158,8 +165,7 @@ export default function Sales(){
         selectedProduct.STOCK=selectedProduct.STOCK-e.quantityOrder;
         setCarProducts([...carProducts,selectedProduct]);
       }
-    }
-
+    };
     const showProducts = productList.map((product,index)=>{
         return (
           <>
@@ -173,16 +179,14 @@ export default function Sales(){
           price={product.PRECIO_UNITARIO}/>
           </>
         );
-    })
-
+    });
     const onDeleteProductCar= (index) => {
       const selectedProduct= productList[carProducts[index].listPosition];
       selectedProduct.STOCK=Number(selectedProduct.STOCK)+Number(selectedProduct.ordered);
       selectedProduct.ordered=undefined;
       setTotalCarAmount(totalCarAmount-Number(carProducts[index].subtotal));
       setCarProducts(carProducts.filter((_,i)=>i!==index));
-    }
-
+    };
     const handleSearchProduct = (e) => {
       if(e.target.value===undefined || e.target.value ===""){
         fetchProducts();
@@ -192,7 +196,7 @@ export default function Sales(){
           setProductList(response);
         })
       }
-    }
+    };
     const refreshCar = () => {
       setTotalCarAmount(0);
       carProducts.forEach(
@@ -201,21 +205,21 @@ export default function Sales(){
           productList[product.listPosition].ordered = undefined
         });
       setCarProducts([]);
-    }
+    };
     const getTotalCar = () => {
       let total=0;
       if(carProducts.length!==0){
         carProducts.forEach(product => total+=(Number(product.subtotal)));
       }
       setTotalCarAmount(total);
-    }
+    };
     const onCarItemAmount = (e,index) => {
       const carProductsCopy=[...carProducts];
       const carItem=carProductsCopy[index];
       carItem.subtotal=Number(carItem.PRECIO_UNITARIO) * Number(e.target.value);
       setCarProducts(carProductsCopy);
       getTotalCar();
-    }
+    };
 
     const onFinishSell = () => {
       if (selectedClients!==null && selectedClients.label !==undefined){
@@ -236,7 +240,7 @@ export default function Sales(){
           isMsgOpen: true
         }));
       }
-    }
+    };
 
     const handleOrder = () => {
       SalesDB.insert({orderHeader: {clientId:orderClient,total:totalCarAmount},
@@ -247,9 +251,22 @@ export default function Sales(){
           isMsgOpen: true
         }));
         fetchSales();
-      })
+      });
     setIsOpenOrder(false);
-    }
+    };
+
+    const handleOpenSaleInfo = async (e) => {
+      const row= JSON.parse(e.target.dataset.row);
+      setSaleHeader({saleId:row.ID_VENTA,client:row.NOMBRE_CLIENTE,date:moment(row.FECHA).format('L'),total:row.TOTAL});
+      setisOpenSaleInfo(true);
+      await(new Promise((resolve,reject)=>{
+        SalesDB.getSaleInfo({find: row.ID_VENTA}).then(response=>{
+          setSaleInfo(response);
+          resolve();
+          });
+      }));
+    };
+
     return (
         <div>
             <h1 className="text-left">Control de ventas</h1>
@@ -269,6 +286,7 @@ export default function Sales(){
                   data={saleList}
                   aux={saleListRef.current}
                   funDelete={HandleOpenDelete}
+                  funSee={handleOpenSaleInfo}
                 />
             </div>
             <CustomModal
@@ -340,10 +358,21 @@ export default function Sales(){
               <p>{modalMsg.msg}</p>
             </CustomModal>
             <CustomModal 
-              props={{title: 'Mensaje del sistema', isOpen: modalMsg.isMsgOpen}}
-              methods={{toggleOpenModal: ()=>setModalMsg(!modalMsg.isMsgOpen)}}
+              props={{title: 'Detalles de venta', isOpen: isOpenSaleInfo}}
+              methods={{toggleOpenModal: ()=>setisOpenSaleInfo(!isOpenSaleInfo)}}
               >
-              <p>{modalMsg.msg}</p>
+              <div className="order-info text-center">
+                <h4>Compra de {saleHeader.client}</h4>
+                <h4>Realizada el: {saleHeader.date} (ing)</h4>
+                <h4>Por un total de: ₡{saleHeader.total} colones (sin impuestos aplicables)</h4>
+                <h3>Lista de productos</h3>
+                <hr></hr>
+
+                <Table
+                  columns={columnsSaleInfo}
+                  data={saleInfo}
+                />
+              </div>
             </CustomModal>
         </div>
     );

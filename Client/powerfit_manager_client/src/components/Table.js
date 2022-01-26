@@ -16,7 +16,7 @@ const Table = (props) => {
     if (editRestricted) {
       return (
         <>
-          <InfoButton />
+          <InfoButton fun={props.funSee} rowObject={JSON.stringify(aux[index])}/>
           <DeleteButton fun={props.funDelete} rowObject={JSON.stringify(aux[index])} />
         </>
       );
@@ -30,6 +30,7 @@ const Table = (props) => {
         </>
       );
     }
+    if(props.funEdit ===undefined && props.funDelete===undefined)return "Sin acciones" ;
     return (
       <>
         <EditButton fun={props.funEdit} rowObject={JSON.stringify(aux[index])} />

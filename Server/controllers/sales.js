@@ -67,4 +67,15 @@ module.exports.set = function (app, connection) {
             });
         })
     })
+    app.post("/sales/get-sale-info", (req, res) => {
+        data = req.body.data;
+        connection.query('CALL sp_select_venta_info' +getSpParamSize["1"], data["find"], (err, rows, fields) => {
+            if (!err) {
+                res.send(rows);
+            }
+            else {
+                console.log(err);
+            }
+        })
+    })
 }
