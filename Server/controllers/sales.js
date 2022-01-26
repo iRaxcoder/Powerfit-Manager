@@ -23,14 +23,19 @@ module.exports.set = function (app, connection) {
     app.post("/sales/insert", (req, res) => {
         data = req.body.data;
         console.log(data);
-        // query = 'CALL sp_insert_' + data["header"] + getSpParamSize["2"];
-        // connection.query(query, Object.values(data["object"]), (err, rows, fields) => {
-        //     if (!err) {
-        //         saleId=rows[0][0];
-        //     }
-        //     else {
-        //         console.log(err);
-        //     }
-        // })
+        connection.beginTransaction(()=>{
+            if(err) {throw err;}
+            query = 'CALL sp_insert_venta' + getSpParamSize["2"];
+            connection.query(query, Object.values(data["orderHeader"]), (err, rows, fields) => {
+                if (!err) {
+                    saleId=rows[0][0];
+                }
+                else {
+                    console.log(err);
+                }
+            })
+            query='CALL sp_insert_cliente_producto'+getSpParamSize["4"];
+            
+        }) 
     })
 }

@@ -239,7 +239,7 @@ export default function Sales(){
     }
 
     const handleOrder = () => {
-      SalesDB.insert({header:"venta", orderHeader: {clientId:orderClient,total:totalCarAmount},
+      SalesDB.insert({orderHeader: {clientId:orderClient,total:totalCarAmount},
       orderProducts:carProducts}).then(response=>{   
         setModalMsg(prevState =>({
           ...prevState,

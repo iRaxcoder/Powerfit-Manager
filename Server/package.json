@@ -9,13 +9,13 @@
   "author": "Randall Mora Sánchez y Aracely Saénz Contreras",
   "license": "ISC",
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^10.0.0",
-    "express-session": "^1.17.2",
-    "mysql": "^2.18.1"
+    "cors": "2.8.5",
+    "dotenv": "10.0.0",
+    "express-session": "1.17.2",
+    "mysql": "2.18.1"
   },
   "devDependencies": {
     "express": "^4.17.1",
-    "nodemon": "^2.0.15"
+    "nodemon": "2.0.15"
   }
 }
