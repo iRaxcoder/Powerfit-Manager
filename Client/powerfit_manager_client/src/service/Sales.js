@@ -8,7 +8,7 @@ const SalesDB = {
         //loading.style.display="block";
         const response = await axios.post(BASE_URL + '/sales/insert', { data })
             .then((response) => {
-                return response.data[0];
+                return response.data;
             }).catch(error => {
                 console.log(error);
             })

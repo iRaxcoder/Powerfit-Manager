@@ -41,7 +41,7 @@ export default function Sales(){
           { Header: "ID Venta", accessor: 'ID_VENTA',},
           { Header: "ID Cliente", accessor: 'ID_CLIENTE'},
           { Header: "Fecha",accessor: 'FECHA'},
-          { Header: "Total",accessor: 'TOTAL'},
+          { Header: "Total(₡)",accessor: 'TOTAL'},
         ],
       []
   )
