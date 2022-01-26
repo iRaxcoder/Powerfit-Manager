@@ -29,17 +29,19 @@ export default function Membership() {
             FECHA: '', EDAD: '', PESO: '', ALTURA: '', GRASA_CORPORAL: '',
             AGUA_CORPORAL: '', MASA_MUSCULAR: '', VALORACION_FISICA: '',
             METABOLISMO_BASAL: '', EDAD_METABOLICA: '', MASA_OSEA: '',
-            GRASA_VISERAL: '', BRAZO_DERECHO:'', BRAZO_IZQUIERDO:'',
-            PECHO:'', ABDOME:'', CADERA:'', MUSLO_DERECHO:'', 
-            MUSLO_IZQUIERDO:'', PIERNA_DERECHA:'',PIERNA_IZQUIERDA:''
+            GRASA_VISERAL: '', BRAZO_DERECHO: '', BRAZO_IZQUIERDO: '',
+            PECHO: '', ABDOME: '', CADERA: '', MUSLO_DERECHO: '',
+            MUSLO_IZQUIERDO: '', PIERNA_DERECHA: '', PIERNA_IZQUIERDA: ''
         }
     ])
     const columns = React.useMemo(
         () => [
-            {Header: '#', accessor: 'ID_MEDICION'},
-            {Header: 'Nombre', accessor: 'NOMBRE_CLIENTE'},
-            {Header: 'Apellido', accessor: 'APELLIDO_CLIENTE'},
-            {Header: 'Fecha', accessor: 'FECHA'}
+            { Header: '#', accessor: 'ID_MEDICION' },
+            { Header: 'ID Datos', accessor: 'ID_DATOS' },
+            { Header: 'ID Circunferencia', accessor: 'ID_CIRCUNFERENCIA' },
+            { Header: 'Nombre', accessor: 'NOMBRE_CLIENTE' },
+            { Header: 'Apellido', accessor: 'APELLIDO_CLIENTE' },
+            { Header: 'Fecha', accessor: 'FECHA' }
         ],
         []
     )
@@ -118,7 +120,11 @@ export default function Membership() {
 
     const handleInsert = (e) => {
         e.ID_CLIENTE = selectedClients.value;
-        console.log(selectedClients.value);
+        console.log(e);
+        const datos= [e.peso_insert,e.altura_insert] ;
+        // const circunferencia;
+        // const medida_cliente;
+        console.log(datos);
         commonDB.insert({ header: "membresia", size: "6", object: e }).then(response => {
             setModalMsg(prevState => ({
                 ...prevState,
@@ -197,9 +203,6 @@ export default function Membership() {
                     <div className="row">
                         <div className="col">
                             <LiveCustomSelect data={selectedClients} onChange={onChangeSearchClient} className='mt-2' placeHolder={"Buscar cliente..."} loadOptions={searchClient} />
-                        </div>
-                        <div className="col">
-                            <input {...register('fecha_insert')} errorMsg="Ingrese la fecha" type="date" className='mt-2' placeholder='Fecha'></input>
                         </div>
                         <div className="col">
                             <input {...register('peso_insert')} errorMsg="Ingrese el peso" type="number" step="0.01" className='mt-2' placeholder='Peso'></input>
@@ -290,13 +293,8 @@ export default function Membership() {
 
                     <div className="row">
                         <div className="col">
-                            <input {...register('fecha_insert')} errorMsg="Ingrese la fecha" type="date" className='mt-2' placeholder='Fecha'></input>
-                        </div>
-                        <div className="col">
                             <input {...register('peso_insert')} errorMsg="Ingrese el peso" type="number" step="0.01" className='mt-2' placeholder='Peso'></input>
                         </div>
-                    </div>
-                    <div className="row">
 
                         <div className="col">
                             <input {...register('altura_insert')} errorMsg="Ingrese la altura" type="number" step="0.01" className='mt-2' placeholder='Altura'></input>
@@ -304,31 +302,40 @@ export default function Membership() {
                         <div className="col">
                             <input {...register('grasa_corporal_insert')} errorMsg="Ingrese la grasa corporal" type="number" step="0.01" className='mt-2' placeholder='Grasa Corporal'></input>
                         </div>
+                    </div>
+                    <div className="row">
+
                         <div className="col">
                             <input {...register('agua_corporal_insert')} errorMsg="Ingrese la agua corporal" type="number" step="0.01" className='mt-2' placeholder='Agua Corporal'></input>
                         </div>
-                    </div>
-                    <div className="row">
                         <div className="col">
                             <input {...register('masa_muscular_insert')} errorMsg="Ingrese la masa muscular" type="number" step="0.01" className='mt-2' placeholder='Masa Múscular'></input>
                         </div>
                         <div className="col">
                             <input {...register('valora_fisica_insert')} errorMsg="Ingrese la valorción física" type="number" step="0.01" className='mt-2' placeholder='Valoración Física'></input>
                         </div>
+                    </div>
+                    <div className="row">
+
                         <div className="col">
                             <input {...register('metab_basal_insert')} errorMsg="Ingrese el Metab. basal" type="number" step="0.01" className='mt-2' placeholder='Metab. Basal'></input>
                         </div>
-                    </div>
-                    <div className="row">
                         <div className="col">
                             <input {...register('edad_metab_insert')} errorMsg="Ingrese la edad metabolica" type="number" step="0.01" className='mt-2' placeholder='Edad Metab.'></input>
                         </div>
                         <div className="col">
                             <input {...register('masa_osea_insert')} errorMsg="Ingrese la masa ósea" type="number" step="0.01" className='mt-2' placeholder='Masa Ósea'></input>
                         </div>
+                    </div>
+                    <div className="row">
+
                         <div className="col">
                             <input {...register('grasa_visceral_insert')} errorMsg="Ingrese la grasa visceral" type="number" step="0.01" className='mt-2' placeholder='Grasa Visceral'></input>
                         </div>
+
+                        <div className="col"></div>
+
+                        <div className="col"></div>
                     </div>
 
                     <h5 className="text-left mt-2">Circunferencias (Antropometría)</h5>
@@ -393,7 +400,7 @@ export default function Membership() {
 
             </CustomModal>
             <CustomModal
-                props={{ title: 'Información Completa', isOpen:isOpenSee }}
+                props={{ title: 'Información Completa', isOpen: isOpenSee }}
                 methods={{ toggleOpenModal: () => setIsOpenSee(!isOpenSee) }}
             >
                 <p>{modalMsg.msg}</p>

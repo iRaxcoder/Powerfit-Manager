@@ -54,7 +54,7 @@ export default function Membership() {
                 Header: 'Tipo de Pago', accessor: 'TIPO_PAGO'
             },
             {
-                Header: 'Monto', accessor: 'MONTO'
+                Header: 'Monto (₡)', accessor: 'MONTO'
             },
             {
                 Header: 'Detalles', accessor: 'DETALLE'
@@ -137,8 +137,7 @@ export default function Membership() {
 
    
     const handleInsert = (e) => {
-        e.ID_CLIENTE = selectedClients.value;
-        console.log(selectedClients.value);
+        e.ID_CLIENTE = selectedClients.value;       
         commonDB.insert({ header: "membresia", size: "6", object: e }).then(response => {
             setModalMsg(prevState => ({
                 ...prevState,
