@@ -8,7 +8,7 @@ import { CustomInput, SingleCustomInput, LiveCustomSelect } from "../components/
 import CancelButton from "../components/CancelButton"
 import commonDB from "../service/CommonDB";
 import measuresDB from "../service/Measures";
-import moment from 'moment'
+import moment, { locale } from 'moment'
 import { useForm } from "react-hook-form"
 
 export default function Membership() {
@@ -88,7 +88,7 @@ export default function Membership() {
         setIsOpenSee(true);
         await (new Promise((resolve, reject) => {
             measuresDB.getInfo({ find: row.ID_MEDICION }).then(response => {
-                response.FECHA = moment(response.FECHA).format('LL');
+                response.FECHA = moment(response.FECHA).format('l')
                 setElementSee(response);
                 resolve();
             });
@@ -419,6 +419,7 @@ export default function Membership() {
                     </div>
                     <div className="col">
                         <h5>Fecha de registro: {elementSee.FECHA}</h5>
+                        <p>(mes/día/año)</p>
                     </div>
                 </div>
                 <hr></hr>
