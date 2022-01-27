@@ -319,14 +319,14 @@ export default function Sales(){
                 </div>
                 <LiveCustomSelect data={selectedClients} onChange={onChangeSearchClient} className='mt-2' placeHolder={"Seleccionar comprador (cliente)..."} loadOptions={searchClient} />
                 <CustomForm>
-                  <CustomInput onChange={handleSearchProduct} placeHolder="Buscar un producto..." type="text" className='form-control mt-2 mb-2' name='searchProducto'/>
+                  <CustomInput onChange={handleSearchProduct} placeHolder="Buscar un producto..." type="text" className='search__ mt-2 mb-2' name='searchProducto'/>
                 </CustomForm>
                 <div className="product-list">
                  {showProducts}
                 </div>
             </CustomModal>
             <CustomModal
-              props={{title: "¿Está seguro que desea eliminar la venta número #'"+ saleEdited.id+"'?", isOpen: isOpenDelete}}
+              props={{title: "¿Está seguro que desea eliminar la venta #"+ saleEdited.id+"?", isOpen: isOpenDelete}}
               methods={{toggleOpenModal: ()=>setIsOpenDelete(!isOpenDelete)}}
                 >
               <CustomForm onSubmit={HandleDelete}>
