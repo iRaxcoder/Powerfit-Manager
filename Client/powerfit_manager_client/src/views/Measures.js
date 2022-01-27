@@ -7,6 +7,7 @@ import CustomForm from "../components/CustomForm";
 import { CustomInput, SingleCustomInput, LiveCustomSelect } from "../components/CustomInput";
 import CancelButton from "../components/CancelButton"
 import commonDB from "../service/CommonDB";
+import measuresDB from "../service/Measures";
 import moment from 'moment'
 import { useForm } from "react-hook-form"
 
@@ -21,11 +22,11 @@ export default function Membership() {
     const dataRef = useRef();
     dataRef.current = data;
 
-    const { register, formState: { errors }, handleSubmit } = useForm();
-
+    const { register, formState: { errors }, handleSubmit, reset } = useForm();
+    const [elementSee, setElementSee] = useState([]);
     const [element, setElement] = useState([
         {
-            ID_MEDICION: '', NOMBRE_CLIENTE: '', APELLIDO_CLIENTE: '',
+            ID_MEDICION: '', ID_DATOS: '', ID_CIRCUNFERENCIA: '', NOMBRE_CLIENTE: '', APELLIDO_CLIENTE: '',
             FECHA: '', EDAD: '', PESO: '', ALTURA: '', GRASA_CORPORAL: '',
             AGUA_CORPORAL: '', MASA_MUSCULAR: '', VALORACION_FISICA: '',
             METABOLISMO_BASAL: '', EDAD_METABOLICA: '', MASA_OSEA: '',
@@ -60,17 +61,15 @@ export default function Membership() {
         setSelectedClients(selected);
     }
     const fetchData = () => {
-        commonDB.getAll({ header: "membresia" }).then(response => {
+        commonDB.getAll({ header: "medicion_cliente" }).then(response => {
             convertDate(response)
-
             setData(response)
         })
     }
 
     const convertDate = (e) => {
         e.map((entrada) => {
-            entrada.FECHA_INICIO = moment(entrada.FECHA_INICIO).format('LL')
-            entrada.FECHA_FIN = moment(entrada.FECHA_FIN).format('LL')
+            entrada.FECHA = moment(entrada.FECHA).format('LL')
         })
     }
 
@@ -84,9 +83,16 @@ export default function Membership() {
 
     }
 
-    const toggleModalSee = (e) => {
-        setIsOpenSee(!isOpenSee);
-
+    const toggleModalSee = async (e) => {
+        const row = JSON.parse(e.target.dataset.row);
+        setIsOpenSee(true);
+        await (new Promise((resolve, reject) => {
+            measuresDB.getInfo({ find: row.ID_MEDICION }).then(response => {
+                response.FECHA = moment(response.FECHA).format('LL');
+                setElementSee(response);
+                resolve();
+            });
+        }));
     }
 
     const toggleModalEdit = (e) => {
@@ -120,17 +126,20 @@ export default function Membership() {
 
     const handleInsert = (e) => {
         e.ID_CLIENTE = selectedClients.value;
-        console.log(e);
-        const datos= [e.peso_insert,e.altura_insert] ;
-        // const circunferencia;
-        // const medida_cliente;
-        console.log(datos);
-        commonDB.insert({ header: "membresia", size: "6", object: e }).then(response => {
+
+        const datos = [e.peso_insert, e.altura_insert, e.grasa_corporal_insert, e.agua_corporal_insert,
+        e.masa_muscular_insert, e.valora_fisica_insert, e.metab_basal_insert,
+        e.edad_metab_insert, e.masa_osea_insert, e.grasa_visceral_insert];
+        const circunferencia = [e.bd_insert, e.bi_insert, e.pecho_insert, e.abd_insert, e.cadera_insert,
+        e.md_insert, e.mi_insert, e.pd_insert, e.pi_insert];
+
+        measuresDB.insert({ header: e.ID_CLIENTE, datos: datos, circunferencia: circunferencia, sizeDatos: '10', sizeCircun: '9' }).then(response => {
             setModalMsg(prevState => ({
                 ...prevState,
                 msg: response,
                 isMsgOpen: true
             }));
+            reset();
             fetchData();
         });
         toggleModalInsert();
@@ -403,7 +412,56 @@ export default function Membership() {
                 props={{ title: 'Información Completa', isOpen: isOpenSee }}
                 methods={{ toggleOpenModal: () => setIsOpenSee(!isOpenSee) }}
             >
-                <p>{modalMsg.msg}</p>
+                <div className="row">
+                    <div className="col">
+                        <h5>{elementSee.NOMBRE_CLIENTE + ' ' + elementSee.APELLIDO_CLIENTE}</h5>
+                        <h6>Edad: {elementSee.EDAD}</h6>
+                    </div>
+                    <div className="col">
+                        <h5>Fecha de registro: {elementSee.FECHA}</h5>
+                    </div>
+                </div>
+                <hr></hr>
+                <div className="d-block text-left">
+                    <h5>Datos</h5>
+                    <div className="row">
+                        <div className="col">
+                            <p>Peso:{elementSee.PESO}</p>
+                            <p>Altura:{elementSee.ALTURA}</p>
+                            <p>Grasa Corporal: {elementSee.GRASA_CORPORAL}</p>
+                            <p>Agua Corporal: {elementSee.AGUA_CORPORAL}</p>
+
+                        </div>
+                        <div className="col">
+                            <p>Masa Muscular: {elementSee.MASA_MUSCULAR}</p>
+                            <p>Valoración Física: {elementSee.VALORACION_FISICA}</p>
+                            <p>Metab. Basal: {elementSee.METABOLISMO_BASAL}</p>
+                        </div>
+                        <div className="col">
+                            <p>Edad Metab.: {elementSee.EDAD_METABOLICA}</p>
+                            <p>Masa Osea:{elementSee.MASA_OSEA}</p>
+                            <p>Grasa Visceral: {elementSee.GRASA_VISERAL}</p>
+                        </div>
+                    </div>
+                    <h5>Circunferencia</h5>
+                    <div className="row">
+                        <div className="col">
+                            <p>BD: {elementSee.BRAZO_DERECHO}</p>
+                            <p>BI: {elementSee.BRAZO_IZQUIERDO}</p>
+                            <p>Pecho: {elementSee.PECHO}</p>
+                        </div>
+                        <div className="col">
+                            <p>ABD: {elementSee.ABDOMEN}</p>
+                            <p>Cadera: {elementSee.CADERA}</p>
+                            <p>MD: {elementSee.MUSLO_DERECHO}</p>
+                        </div>
+                        <div className="col">
+                            <p>MI:{elementSee.MUSLO_IZQUIERDO}</p>
+                            <p>PD:{elementSee.PIERNA_DERECHA}</p>
+                            <p>PI: {elementSee.PIERNA_IZQUIERDA}</p>
+                        </div>
+                    </div>
+                </div>
             </CustomModal>
 
             <CustomModal
