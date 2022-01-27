@@ -36,8 +36,11 @@ thead{
 }
 
 .container-insert-search__{
+    border: 1px solid rgba(0, 0, 0, 0.247);
     display: flex;
     justify-content: space-between;
+    padding: 5px;
+    margin-bottom: 5px;
 }
 
 
@@ -61,4 +64,9 @@ input, select{
 input:focus, select:focus{
     border-width: 2px;
     border-color: #73be22;
+}
+
+.table-responsive{
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.247);
 }

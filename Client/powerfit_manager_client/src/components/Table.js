@@ -62,7 +62,7 @@ const Table = (props) => {
 
   useEffect(() => {
     if (isNaN(mostrar)) {
-      setPageSize(4);
+      setPageSize(6);
     } else {
       setPageSize(mostrar);
     }
