@@ -4,7 +4,7 @@ import Table from "../components/Table";
 import CustomModal from "../components/CustomModal";
 import CustomForm from "../components/CustomForm";
 import DownloadButton from "../components/DownloadButton";
-import {CustomInput, SingleCustomInput, LiveCustomSelect} from "../components/CustomInput";
+import {CustomInput, SingleCustomInput, LiveCustomSelect, CustomSelect} from "../components/CustomInput";
 import ProductItem from "../components/ProductItem";
 import commonDB from "../service/CommonDB";
 import SalesDB from "../service/Sales";
@@ -31,6 +31,7 @@ export default function Sales(){
   const [isOpenSaleInfo, setisOpenSaleInfo]=useState(false);
   const [saleHeader,setSaleHeader]=useState({saleId:0,client:"def",date:"def",total:0});
   const [saleInfo,setSaleInfo]=useState([]);
+  const [filterType, setFilterType]=useState("hoy");
 
   const dataHeaderPDF = [["ID Venta","ID Cliente","Fecha","Total"]];
   const dataHeaderCSV = [ 
@@ -56,21 +57,23 @@ export default function Sales(){
     () => [
         { Header: "Producto", accessor: 'NOMBRE',},
         { Header: "Cantidad", accessor: 'CANTIDAD'},
-        {Header:"SubTotal",accessor:"SUBTOTAL"},
+        {Header:"Subtotal",accessor:"SUBTOTAL"},
       ],
     []
-)
+  )
+
+  const selectFilter = [{ value: 'Hoy' }, { value: 'Ayer' }, { value: 'Esta semana'}, { value: 'Todas'}];
 
   const formatDate = (e) => {
     e.map(entrada => (
         entrada.FECHA = moment(entrada.FECHA).format('LL')
     ))
-}
+  }
 
   const fetchSales = () => {
-      commonDB.getAll({header:"venta"}).then(response=>{
-      formatDate(response)
-      setSaleList(response)
+    commonDB.getSearch({ header: "ventas_filtro", find: "Hoy" }).then(response => {
+      formatDate(response);
+      setSaleList(response);
     })
   }
 
@@ -144,6 +147,17 @@ export default function Sales(){
         })
       }
     };
+    const handleFiltro = (e) => {
+      if (e.target.value === undefined || e.target.value === "") {
+          fetchSales();
+      } else {
+          commonDB.getSearch({ header: "ventas_filtro", find: e.target.value }).then(response => {
+              setFilterType((e.target.value).toLowerCase());
+              formatDate(response);
+              setSaleList(response);
+          })
+      }
+    }
     const exportPDF=()=>{
       const data = saleListRef.current.map((product)=>
       ([product.ID_PRODUCTO,product.NOMBRE,product.STOCK,product.PRECIO_UNITARIO,product.ULT_INGRESO,product.DETALLES]));
@@ -250,10 +264,19 @@ export default function Sales(){
           msg: response,
           isMsgOpen: true
         }));
-        fetchSales();
+        reloadSaleOrder();
       });
-    setIsOpenOrder(false);
     };
+
+    const reloadSaleOrder = () => {
+      fetchSales();
+      fetchProducts();
+      setCarProducts([]);
+      setTotalCarAmount(0);
+      setIsOpenInsert(false);
+      setIsOpenOrder(false);
+      setSelectedClients([]);
+    }
 
     const handleOpenSaleInfo = async (e) => {
       const row= JSON.parse(e.target.dataset.row);
@@ -273,13 +296,17 @@ export default function Sales(){
             <hr/>
             <div className="container">
                 <div className="container-insert-search__">
-                  <div>
+                  <div className="d-flex flex-row">
                     <AddButton text="Insertar" onClick={()=>setIsOpenInsert(true)} />
+                    <CustomForm>
+                        <CustomSelect focus="value" onChange={handleFiltro} errorMsg="Seleccione una opción" className='mt-2 ml-2' name='filtro' placeholder='seleccione una opcion' options={selectFilter}></CustomSelect>
+                    </CustomForm>
                     <DownloadButton onClick={exportPDF} text="PDF"/>
                     <ExportToCsv headers={dataHeaderCSV} data={saleList} fileName={"ventas_powerfit_"+moment()+".csv"}/>
                   </div>
                   <SingleCustomInput onChange={handleSearch} placeholder="Buscar" name="input-search" className="search__"/>
-                </div>    
+                </div>
+                <h4 className="data-filter">Mostrando ventas ({filterType})</h4>    
                 <Table
                   columns={columns}
                   editRestricted={true}
@@ -363,7 +390,7 @@ export default function Sales(){
               >
               <div className="order-info text-center">
                 <h4>Compra de {saleHeader.client}</h4>
-                <h4>Realizada el: {saleHeader.date} (ing)</h4>
+                <h4>Realizada el: {saleHeader.date} (dd/mm/aaaa)</h4>
                 <h4>Por un total de: ₡{saleHeader.total} colones (sin impuestos aplicables)</h4>
                 <h3>Lista de productos</h3>
                 <hr></hr>

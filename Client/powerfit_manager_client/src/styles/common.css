@@ -70,3 +70,10 @@ input:focus, select:focus{
     padding: 10px;
     border: 1px solid rgba(0, 0, 0, 0.247);
 }
+
+.data-filter{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-align: left;
+    text-decoration: underline;
+    font-size: 15px;
+}
