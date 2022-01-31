@@ -7,7 +7,8 @@ import DownloadButton from "../components/DownloadButton";
 import {CustomInput, SingleCustomInput} from "../components/CustomInput";
 import commonDB from "../service/CommonDB";
 import CancelButton from "../components/CancelButton";
-import { exportToPdf } from "../utils/exportData";
+import { exportToPdf, ExportToCsv } from "../utils/exportData";
+import moment from "moment";
 
 export default function Client(){
   const [isOpenInsert, setIsOpenInsert] = useState(false);
@@ -33,6 +34,16 @@ export default function Client(){
         ],
       []
   )
+
+  const dataHeaderCSV = [ 
+    { label: "ID cliente", key: 'ID_CLIENTE',},
+    { label: "Nombre", key: 'NOMBRE_CLIENTE'},
+    { label: "Apellidos", key: 'APELLIDOS'},
+    { label: "Edad", key: 'EDAD'},
+    { label: "Teléfono", key: 'TELEFONO'},
+    { label: "Email", key: 'EMAIL'},
+    { label: "Enfermedad", key: 'ENFERMEDAD'},
+                      ]
 
   const fetchClients = () => {
       commonDB.getAll({header:"cliente"}).then(response=>{
@@ -121,6 +132,7 @@ export default function Client(){
                   <div>
                     <AddButton text="Insertar" onClick={()=>setIsOpenInsert(true)} />
                     <DownloadButton onClick={exportPDF} text="PDF"/>
+                    <ExportToCsv headers={dataHeaderCSV} data={clientsListRef.current} fileName={"clientes_powerfit_"+moment()+".csv"}/>
                   </div>
                   <SingleCustomInput onChange={handleSearch} placeholder="Buscar" name="input-search" className="search__"/>
                 </div>    

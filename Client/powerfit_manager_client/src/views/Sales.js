@@ -10,7 +10,7 @@ import commonDB from "../service/CommonDB";
 import SalesDB from "../service/Sales";
 import CancelButton from "../components/CancelButton";
 import { exportToPdf, ExportToCsv } from "../utils/exportData";
-import moment from "moment";
+import moment from "moment/min/moment-with-locales";
 import "../styles/Sales/shopingCar.css"
 import "../styles/Sales/orderInfo.css"
 
@@ -31,9 +31,12 @@ export default function Sales(){
   const [isOpenSaleInfo, setisOpenSaleInfo]=useState(false);
   const [saleHeader,setSaleHeader]=useState({saleId:0,client:"def",date:"def",total:0});
   const [saleInfo,setSaleInfo]=useState([]);
+ const [saleInfoRef, setSaleInfoRef]=useState([]);
+
   const [filterType, setFilterType]=useState("hoy");
 
-  const dataHeaderPDF = [["ID Venta","ID Cliente","Fecha","Total"]];
+  const dataHeaderPDF = [["ID Venta","ID Cliente","Cliente","Fecha","Total"]];
+  const dataHeaderSalePDF = [["Producto","Cantidad","Subtotal(CRC)"]];
   const dataHeaderCSV = [ 
     { label: "ID Venta", key: 'ID_VENTA',},
     { label: "ID Cliente", key: 'ID_CLIENTE'},
@@ -66,7 +69,7 @@ export default function Sales(){
 
   const formatDate = (e) => {
     e.map(entrada => (
-        entrada.FECHA = moment(entrada.FECHA).format('LL')
+        entrada.FECHA = moment(entrada.FECHA).locale("es").format('LL')
     ))
   }
 
@@ -159,9 +162,16 @@ export default function Sales(){
       }
     }
     const exportPDF=()=>{
-      const data = saleListRef.current.map((product)=>
-      ([product.ID_PRODUCTO,product.NOMBRE,product.STOCK,product.PRECIO_UNITARIO,product.ULT_INGRESO,product.DETALLES]));
-      exportToPdf(dataHeaderPDF,data, "Reporte de productos en inventario");
+      const data = saleListRef.current.map((sale)=>
+      ([sale.ID_VENTA,sale.ID_CLIENTE,sale.NOMBRE_CLIENTE,sale.FECHA,sale.TOTAL]));
+      exportToPdf(dataHeaderPDF,data, "Reporte de ventas "+ moment());
+    };
+    const exportPDFSaleInfo=()=>{
+      const saleInfo = ["Compra de "+saleHeader.client,"Realizada el "+saleHeader.date
+      ,"Monto: "+saleHeader.total+" colones (sin impuestos aplicables)","Lista de productos: "];
+      const data = saleInfoRef.map((sale)=>
+      ([sale.NOMBRE,sale.CANTIDAD,sale.SUBTOTAL]));
+      exportToPdf(dataHeaderSalePDF,data, "Información de la venta "+ moment().format("DD/MM/YYYY"),saleInfo);
     };
     const onQueueProduct = (e) =>{
       const selectedProduct= productList[e.productId];
@@ -280,11 +290,12 @@ export default function Sales(){
 
     const handleOpenSaleInfo = async (e) => {
       const row= JSON.parse(e.target.dataset.row);
-      setSaleHeader({saleId:row.ID_VENTA,client:row.NOMBRE_CLIENTE,date:moment(row.FECHA).format('L'),total:row.TOTAL});
+      setSaleHeader({saleId:row.ID_VENTA,client:row.NOMBRE_CLIENTE,date:row.FECHA,total:row.TOTAL});
       setisOpenSaleInfo(true);
       await(new Promise((resolve,reject)=>{
         SalesDB.getSaleInfo({find: row.ID_VENTA}).then(response=>{
           setSaleInfo(response);
+          setSaleInfoRef(response);
           resolve();
           });
       }));
@@ -306,7 +317,7 @@ export default function Sales(){
                   </div>
                   <SingleCustomInput onChange={handleSearch} placeholder="Buscar" name="input-search" className="search__"/>
                 </div>
-                <h4 className="data-filter">Mostrando ventas ({filterType})</h4>    
+                <h4 className="data-filter">Mostrando ventas ({filterType}) {saleList.length} resultados</h4>    
                 <Table
                   columns={columns}
                   editRestricted={true}
@@ -388,13 +399,13 @@ export default function Sales(){
               props={{title: 'Detalles de venta', isOpen: isOpenSaleInfo}}
               methods={{toggleOpenModal: ()=>setisOpenSaleInfo(!isOpenSaleInfo)}}
               >
+              <DownloadButton onClick={exportPDFSaleInfo} text="Generar PDF"/>
               <div className="order-info text-center">
                 <h4>Compra de {saleHeader.client}</h4>
-                <h4>Realizada el: {saleHeader.date} (dd/mm/aaaa)</h4>
+                <h4>Realizada el {saleHeader.date}</h4>
                 <h4>Por un total de: ₡{saleHeader.total} colones (sin impuestos aplicables)</h4>
                 <h3>Lista de productos</h3>
                 <hr></hr>
-
                 <Table
                   columns={columnsSaleInfo}
                   data={saleInfo}
