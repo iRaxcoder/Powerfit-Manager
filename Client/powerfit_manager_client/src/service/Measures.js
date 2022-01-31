@@ -31,6 +31,32 @@ const measuresDB = {
             });
         return response;
     },
+    update: async function (data) {
+        //loading.style.display="block";
+        const response = await axios.put(BASE_URL + "/medidas/put", { data })
+            .then((response) => {
+                return response.data;
+            }).catch(error => {
+                console.log(error);
+            })
+            .finally(() => {
+                //loading.style.display="none";
+            });
+        return response;
+    },
+    delete: async function (data) {
+        //loading.style.display="block";
+        const response = await axios.put(BASE_URL + "/medidas/delete", { data })
+            .then((response) => {
+                return response.data;
+            }).catch(error => {
+                console.log(error);
+            })
+            .finally(() => {
+                //loading.style.display="none";
+            });
+        return response;
+    }
 
 }
 export default measuresDB;
