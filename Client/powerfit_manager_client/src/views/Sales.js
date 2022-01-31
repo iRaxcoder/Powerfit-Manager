@@ -13,10 +13,12 @@ import { exportToPdf, ExportToCsv } from "../utils/exportData";
 import moment from "moment/min/moment-with-locales";
 import "../styles/Sales/shopingCar.css"
 import "../styles/Sales/orderInfo.css"
+import DeleteButton from "../components/DeleteButton";
 
 export default function Sales(){
   const [isOpenInsert, setIsOpenInsert] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
+  const [isOpenGeneralView, setIsOpenGeneralView] = useState(false);
   const [saleEdited, setSaleEdited] = useState({id:0, name:"def", stock:"def", price:0, lastModified: "def", details:"def"});
   const [saleList, setSaleList] = useState(null);
   const [productList, setProductList] = useState(null);
@@ -31,7 +33,8 @@ export default function Sales(){
   const [isOpenSaleInfo, setisOpenSaleInfo]=useState(false);
   const [saleHeader,setSaleHeader]=useState({saleId:0,client:"def",date:"def",total:0});
   const [saleInfo,setSaleInfo]=useState([]);
- const [saleInfoRef, setSaleInfoRef]=useState([]);
+  const [saleInfoRef, setSaleInfoRef]=useState([]);
+  const [yearFilter, setYearFilter]=useState(new Date().getFullYear());
 
   const [filterType, setFilterType]=useState("hoy");
 
@@ -140,11 +143,11 @@ export default function Sales(){
     setIsOpenDelete(false);
     };
     const handleSearch = (e) => {
-      console.log(e.target.value);
       if(e.target.value===undefined || e.target.value ===""){
         fetchSales();
       }else{
-        commonDB.getSearch({header: "producto",find:e.target.value}).then(response=>{
+        commonDB.getSearch({header: "venta",find:e.target.value}).then(response=>{
+          setFilterType("búsqueda");
           formatDate(response)
           setSaleList(response);
         })
@@ -301,6 +304,10 @@ export default function Sales(){
       }));
     };
 
+    const onChangeYearFilter = (e) => {
+      setYearFilter(e.target.value);
+    }
+
     return (
         <div>
             <h1 className="text-left">Control de ventas</h1>
@@ -309,6 +316,7 @@ export default function Sales(){
                 <div className="container-insert-search__">
                   <div className="d-flex flex-row">
                     <AddButton text="Insertar" onClick={()=>setIsOpenInsert(true)} />
+                    <AddButton text="Vista general" onClick={()=>setIsOpenGeneralView(true)} />
                     <CustomForm>
                         <CustomSelect focus="value" onChange={handleFiltro} errorMsg="Seleccione una opción" className='mt-2 ml-2' name='filtro' placeholder='seleccione una opcion' options={selectFilter}></CustomSelect>
                     </CustomForm>
@@ -411,6 +419,20 @@ export default function Sales(){
                   data={saleInfo}
                 />
               </div>
+            </CustomModal>
+            <CustomModal 
+              props={{title: 'Vista general de ventas', isOpen: isOpenGeneralView}}
+              methods={{toggleOpenModal: ()=>setIsOpenGeneralView(!isOpenGeneralView)}}
+              >
+              <div className="form-group row d-flex justify-content-center">
+                <label htmlFor="lbl_annio_sale" class="col-sm-2 col-form-label">Año: </label>
+                  <div className="col-sm-4">
+                    <input id="lbl_annio_sale" onChange={onChangeYearFilter} value={yearFilter} placeholder="filtro de año" type="number" min={2022} className="input-search"></input>
+                  </div>
+                  <button className="btn btn-dark">Filtrar</button>
+              </div>
+              
+                
             </CustomModal>
         </div>
     );
