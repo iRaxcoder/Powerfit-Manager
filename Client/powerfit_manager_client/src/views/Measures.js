@@ -30,8 +30,8 @@ export default function Membership() {
             FECHA: '', EDAD: '', PESO: '', ALTURA: '', GRASA_CORPORAL: '',
             AGUA_CORPORAL: '', MASA_MUSCULAR: '', VALORACION_FISICA: '',
             METABOLISMO_BASAL: '', EDAD_METABOLICA: '', MASA_OSEA: '',
-            GRASA_VISERAL: '', BRAZO_DERECHO: '', BRAZO_IZQUIERDO: '',
-            PECHO: '', ABDOME: '', CADERA: '', MUSLO_DERECHO: '',
+            GRASA_VISCERAL: '', BRAZO_DERECHO: '', BRAZO_IZQUIERDO: '',
+            PECHO: '', ABDOMEN: '', CADERA: '', MUSLO_DERECHO: '',
             MUSLO_IZQUIERDO: '', PIERNA_DERECHA: '', PIERNA_IZQUIERDA: ''
         }
     ])
@@ -69,7 +69,7 @@ export default function Membership() {
 
     const convertDate = (e) => {
         e.map((entrada) => {
-            entrada.FECHA = moment(entrada.FECHA).format('LL')
+            entrada.FECHA = moment(new Date(entrada.FECHA)).format('LL')
         })
     }
 
@@ -88,37 +88,49 @@ export default function Membership() {
         setIsOpenSee(true);
         await (new Promise((resolve, reject) => {
             measuresDB.getInfo({ find: row.ID_MEDICION }).then(response => {
-                response.FECHA = moment(response.FECHA).format('l')
+                response.FECHA = moment(new Date(response.FECHA)).format('l')
                 setElementSee(response);
                 resolve();
             });
         }));
     }
 
-    const toggleModalEdit = (e) => {
-        const pago = JSON.parse(e.target.dataset.row);
-        setElement({
-            ID_MEMBRESIA: pago.ID_MEMBRESIA,
-            NOMBRE_CLIENTE: pago.NOMBRE_CLIENTE,
-            APELLIDO_CLIENTE: pago.APELLIDO_CLIENTE,
-            FECHA_INICIO: pago.FECHA_INICIO,
-            FECHA_FIN: pago.FECHA_FIN,
-            TIPO_PAGO: pago.TIPO_PAGO,
-            MONTO: pago.MONTO,
-            DETALLE: pago.DETALLE
-
-        });
+    const toggleModalEdit = async (e) => {
+        const row = JSON.parse(e.target.dataset.row);
         setIsOpenEdit(!isOpenEdit);
+        await (new Promise((resolve, reject) => {
+            measuresDB.getInfo({ find: row.ID_MEDICION }).then(response => {
+                response.FECHA = moment(new Date(response.FECHA)).format('l')
+                setElement({
+                    NOMBRE_CLIENTE: response.NOMBRE_CLIENTE,
+                    APELLIDO_CLIENTE: response.APELLIDO_CLIENTE,
+                    ID_DATOS: response.ID_DATOS, ID_CIRCUNFERENCIA: response.ID_CIRCUNFERENCIA,
+                    FECHA: response.FECHA, EDAD: response.EDAD, PESO: response.PESO, ALTURA: response.ALTURA,
+                    GRASA_CORPORAL: response.GRASA_CORPORAL, AGUA_CORPORAL: response.AGUA_CORPORAL,
+                    MASA_MUSCULAR: response.MASA_MUSCULAR, VALORACION_FISICA: response.VALORACION_FISICA,
+                    METABOLISMO_BASAL: response.METABOLISMO_BASAL, EDAD_METABOLICA: response.EDAD_METABOLICA, MASA_OSEA: response.MASA_OSEA,
+                    GRASA_VISCERAL: response.GRASA_VISCERAL, BRAZO_DERECHO: response.BRAZO_DERECHO, BRAZO_IZQUIERDO: response.BRAZO_IZQUIERDO,
+                    PECHO: response.PECHO, ABDOMEN: response.ABDOMEN, CADERA: response.CADERA, MUSLO_DERECHO: response.MUSLO_DERECHO,
+                    MUSLO_IZQUIERDO: response.MUSLO_IZQUIERDO, PIERNA_DERECHA: response.PIERNA_DERECHA, PIERNA_IZQUIERDA: response.PIERNA_IZQUIERDA
+
+                });
+                resolve();
+            });
+
+        }));
+
     }
 
     const toggleModalDelete = (e) => {
-        const pago = JSON.parse(e.target.dataset.row);
+        const medida = JSON.parse(e.target.dataset.row);
+        console.log(medida);
         setElement({
-            ID_MEMBRESIA: pago.ID_MEMBRESIA,
-            NOMBRE_CLIENTE: pago.NOMBRE_CLIENTE,
-            APELLIDO_CLIENTE: pago.APELLIDO_CLIENTE,
-            FECHA_INICIO: pago.FECHA_INICIO,
-            FECHA_FIN: pago.FECHA_FIN
+            ID_MEDICION: medida.ID_MEDICION,
+            ID_DATOS: medida.ID_DATOS,
+            ID_CIRCUNFERENCIA: medida.ID_CIRCUNFERENCIA,
+            NOMBRE_CLIENTE: medida.NOMBRE_CLIENTE,
+            APELLIDO_CLIENTE: medida.APELLIDO_CLIENTE,
+            FECHA: medida.FECHA
         });
         setIsOpenDelete(!isOpenDelete);
     }
@@ -146,7 +158,13 @@ export default function Membership() {
     }
 
     const HandleEdit = (e) => {
-        commonDB.update({ header: "membresia", size: "6", object: e }).then(response => {
+        const datos = [element.ID_DATOS, element.PESO, element.ALTURA, element.GRASA_CORPORAL, element.AGUA_CORPORAL,
+        element.MASA_MUSCULAR, element.VALORACION_FISICA, element.METABOLISMO_BASAL,
+        element.EDAD_METABOLICA, element.MASA_MUSCULAR, element.GRASA_VISCERAL];
+        const circunferencia = [element.ID_CIRCUNFERENCIA, element.BRAZO_DERECHO, element.BRAZO_IZQUIERDO, element.PECHO, element.ABDOMEN, element.CADERA,
+        element.MUSLO_DERECHO, element.MUSLO_IZQUIERDO, element.PIERNA_DERECHA, element.PIERNA_IZQUIERDA];
+
+        measuresDB.update({ datos: datos, circunferencia: circunferencia, sizeDatos: '11', sizeCircun: '10' }).then(response => {
             setModalMsg(prevState => ({
                 ...prevState,
                 msg: response,
@@ -159,14 +177,15 @@ export default function Membership() {
     }
 
     const HandleDelete = (e) => {
-        commonDB.delete({ header: "membresia", object: { id: e.membresia_id } }).then(response => {
-            setModalMsg(prevState => ({
-                ...prevState,
-                msg: response,
-                isMsgOpen: true
-            }));
-            fetchData();
-        });
+        console.log(e);
+        // commonDB.delete({ header: "membresia", object: { id: e.medidas_id } }).then(response => {
+        //     setModalMsg(prevState => ({
+        //         ...prevState,
+        //         msg: response,
+        //         isMsgOpen: true
+        //     }));
+        //     fetchData();
+        // });
         setIsOpenDelete(!isOpenDelete);
 
     }
@@ -292,54 +311,66 @@ export default function Membership() {
             </CustomModal>
 
             <CustomModal
-                props={{ title: "Actualizar medidas de " + element.NOMBRE_CLIENTE + " " + element.APELLIDO_CLIENTE + "?", isOpen: isOpenEdit }}
+                props={{ title: "Actualizar medidas de " + element.NOMBRE_CLIENTE + " " + element.APELLIDO_CLIENTE + " de la fecha: " + element.FECHA + "?", isOpen: isOpenEdit }}
                 methods={{ toggleOpenModal: () => setIsOpenEdit(!isOpenEdit) }}
             >
                 <form noValidate onSubmit={handleSubmit(HandleEdit)}>
 
                     <h5 className="text-left">Datos</h5>
                     <hr />
+                    <input {...register('id_datos_insert')} value={element.ID_DATOS} type="hidden" className='mt-2'></input>
+                    <input {...register('id_circun_insert')} value={element.ID_CIRCUNFERENCIA} type="hidden" className='mt-2'></input>
 
                     <div className="row">
                         <div className="col">
-                            <input {...register('peso_insert')} errorMsg="Ingrese el peso" type="number" step="0.01" className='mt-2' placeholder='Peso'></input>
+                            <input {...register('peso_insert')} value={element.PESO} onChange={(e) => setElement(prevState => ({ ...prevState, PESO: e.target.value }))}
+                                errorMsg="Ingrese el peso" type="number" step="0.01" className='mt-2' placeholder='Peso'></input>
                         </div>
 
                         <div className="col">
-                            <input {...register('altura_insert')} errorMsg="Ingrese la altura" type="number" step="0.01" className='mt-2' placeholder='Altura'></input>
+                            <input {...register('altura_insert')} value={element.ALTURA} onChange={(e) => setElement(prevState => ({ ...prevState, ALTURA: e.target.value }))}
+                                errorMsg="Ingrese la altura" type="number" step="0.01" className='mt-2' placeholder='Altura'></input>
                         </div>
                         <div className="col">
-                            <input {...register('grasa_corporal_insert')} errorMsg="Ingrese la grasa corporal" type="number" step="0.01" className='mt-2' placeholder='Grasa Corporal'></input>
+                            <input {...register('grasa_corporal_insert')} value={element.GRASA_CORPORAL} onChange={(e) => setElement(prevState => ({ ...prevState, GRASA_CORPORAL: e.target.value }))}
+                                errorMsg="Ingrese la grasa corporal" type="number" step="0.01" className='mt-2' placeholder='Grasa Corporal'></input>
                         </div>
                     </div>
                     <div className="row">
 
                         <div className="col">
-                            <input {...register('agua_corporal_insert')} errorMsg="Ingrese la agua corporal" type="number" step="0.01" className='mt-2' placeholder='Agua Corporal'></input>
+                            <input {...register('agua_corporal_insert')} value={element.AGUA_CORPORAL} onChange={(e) => setElement(prevState => ({ ...prevState, AGUA_CORPORAL: e.target.value }))}
+                                errorMsg="Ingrese la agua corporal" type="number" step="0.01" className='mt-2' placeholder='Agua Corporal'></input>
                         </div>
                         <div className="col">
-                            <input {...register('masa_muscular_insert')} errorMsg="Ingrese la masa muscular" type="number" step="0.01" className='mt-2' placeholder='Masa Múscular'></input>
+                            <input {...register('masa_muscular_insert')} value={element.MASA_MUSCULAR} onChange={(e) => setElement(prevState => ({ ...prevState, MASA_MUSCULAR: e.target.value }))}
+                                errorMsg="Ingrese la masa muscular" type="number" step="0.01" className='mt-2' placeholder='Masa Múscular'></input>
                         </div>
                         <div className="col">
-                            <input {...register('valora_fisica_insert')} errorMsg="Ingrese la valorción física" type="number" step="0.01" className='mt-2' placeholder='Valoración Física'></input>
-                        </div>
-                    </div>
-                    <div className="row">
-
-                        <div className="col">
-                            <input {...register('metab_basal_insert')} errorMsg="Ingrese el Metab. basal" type="number" step="0.01" className='mt-2' placeholder='Metab. Basal'></input>
-                        </div>
-                        <div className="col">
-                            <input {...register('edad_metab_insert')} errorMsg="Ingrese la edad metabolica" type="number" step="0.01" className='mt-2' placeholder='Edad Metab.'></input>
-                        </div>
-                        <div className="col">
-                            <input {...register('masa_osea_insert')} errorMsg="Ingrese la masa ósea" type="number" step="0.01" className='mt-2' placeholder='Masa Ósea'></input>
+                            <input {...register('valora_fisica_insert')} value={element.VALORACION_FISICA} onChange={(e) => setElement(prevState => ({ ...prevState, VALORACION_FISICA: e.target.value }))}
+                                errorMsg="Ingrese la valorción física" type="number" step="0.01" className='mt-2' placeholder='Valoración Física'></input>
                         </div>
                     </div>
                     <div className="row">
 
                         <div className="col">
-                            <input {...register('grasa_visceral_insert')} errorMsg="Ingrese la grasa visceral" type="number" step="0.01" className='mt-2' placeholder='Grasa Visceral'></input>
+                            <input {...register('metab_basal_insert')} value={element.METABOLISMO_BASAL} onChange={(e) => setElement(prevState => ({ ...prevState, METABOLISMO_BASAL: e.target.value }))}
+                                errorMsg="Ingrese el Metab. basal" type="number" step="0.01" className='mt-2' placeholder='Metab. Basal'></input>
+                        </div>
+                        <div className="col">
+                            <input {...register('edad_metab_insert')} value={element.EDAD_METABOLICA} onChange={(e) => setElement(prevState => ({ ...prevState, EDAD_METABOLICA: e.target.value }))}
+                                errorMsg="Ingrese la edad metabolica" type="number" step="0.01" className='mt-2' placeholder='Edad Metab.'></input>
+                        </div>
+                        <div className="col">
+                            <input {...register('masa_osea_insert')} value={element.MASA_OSEA} onChange={(e) => setElement(prevState => ({ ...prevState, MASA_OSEA: e.target.value }))}
+                                errorMsg="Ingrese la masa ósea" type="number" step="0.01" className='mt-2' placeholder='Masa Ósea'></input>
+                        </div>
+                    </div>
+                    <div className="row">
+
+                        <div className="col">
+                            <input {...register('grasa_visceral_insert')} value={element.GRASA_VISCERAL} onChange={(e) => setElement(prevState => ({ ...prevState, GRASA_VISCERAL: e.target.value }))}
+                                errorMsg="Ingrese la grasa visceral" type="number" step="0.01" className='mt-2' placeholder='Grasa Visceral'></input>
                         </div>
 
                         <div className="col"></div>
@@ -352,48 +383,46 @@ export default function Membership() {
                     <div className="row">
 
                         <div className="col">
-                            <input {...register('bd_insert')} errorMsg="Ingrese B.D" type="number" step="0.01" className='mt-2' placeholder='B.D'></input>
+                            <input {...register('bd_insert')} value={element.BRAZO_DERECHO} onChange={(e) => setElement(prevState => ({ ...prevState, BRAZO_DERECHO: e.target.value }))}
+                                errorMsg="Ingrese B.D" type="number" step="0.01" className='mt-2' placeholder='B.D'></input>
                         </div>
                         <div className="col">
-                            <input {...register('bi_insert')} errorMsg="Ingrese B.I" type="number" step="0.01" className='mt-2' placeholder='B.I'></input>
+                            <input {...register('bi_insert')} value={element.BRAZO_IZQUIERDO} onChange={(e) => setElement(prevState => ({ ...prevState, BRAZO_IZQUIERDO: e.target.value }))}
+                                errorMsg="Ingrese B.I" type="number" step="0.01" className='mt-2' placeholder='B.I'></input>
                         </div>
                         <div className="col">
-                            <input {...register('pecho_insert')} errorMsg="Ingrese el pecho" type="number" step="0.01" className='mt-2' placeholder='Pecho'></input>
+                            <input {...register('pecho_insert')} value={element.PECHO} onChange={(e) => setElement(prevState => ({ ...prevState, PECHO: e.target.value }))}
+                                errorMsg="Ingrese el pecho" type="number" step="0.01" className='mt-2' placeholder='Pecho'></input>
                         </div>
                         <div className="col">
-                            <input {...register('abd_insert')} errorMsg="Ingrese el ABD." type="number" step="0.01" className='mt-2' placeholder='ABD'></input>
+                            <input {...register('abd_insert')} value={element.ABDOMEN} onChange={(e) => setElement(prevState => ({ ...prevState, ABDOMEN: e.target.value }))}
+                                errorMsg="Ingrese el ABD." type="number" step="0.01" className='mt-2' placeholder='ABD'></input>
                         </div>
                         <div className="col">
-                            <input {...register('cadera_insert')} errorMsg="Ingrese la cadera" type="number" step="0.01" className='mt-2' placeholder='Cadera'></input>
+                            <input {...register('cadera_insert')} value={element.CADERA} onChange={(e) => setElement(prevState => ({ ...prevState, CADERA: e.target.value }))}
+                                errorMsg="Ingrese la cadera" type="number" step="0.01" className='mt-2' placeholder='Cadera'></input>
                         </div>
                         <div className="col">
-                            <input {...register('md_insert')} errorMsg="Ingrese M.D" type="number" step="0.01" className='mt-2' placeholder='M.D'></input>
+                            <input {...register('md_insert')} value={element.MUSLO_DERECHO} onChange={(e) => setElement(prevState => ({ ...prevState, MUSLO_DERECHO: e.target.value }))}
+                                errorMsg="Ingrese M.D" type="number" step="0.01" className='mt-2' placeholder='M.D'></input>
                         </div>
                         <div className="col">
-                            <input {...register('mi_insert')} errorMsg="Ingrese M.I" type="number" step="0.01" className='mt-2' placeholder='M.I'></input>
+                            <input {...register('mi_insert')} value={element.MUSLO_IZQUIERDO} onChange={(e) => setElement(prevState => ({ ...prevState, MUSLO_IZQUIERDO: e.target.value }))}
+                                errorMsg="Ingrese M.I" type="number" step="0.01" className='mt-2' placeholder='M.I'></input>
                         </div>
                         <div className="col">
-                            <input {...register('pd_insert')} errorMsg="Ingrese P.D" type="number" step="0.01" className='mt-2' placeholder='P.D'></input>
+                            <input {...register('pd_insert')} value={element.PIERNA_DERECHA} onChange={(e) => setElement(prevState => ({ ...prevState, PIERNA_DERECHA: e.target.value }))}
+                                errorMsg="Ingrese P.D" type="number" step="0.01" className='mt-2' placeholder='P.D'></input>
                         </div>
                         <div className="col">
-                            <input {...register('pi_insert')} errorMsg="Ingrese P.I" type="number" step="0.01" className='mt-2' placeholder='P.I'></input>
+                            <input {...register('pi_insert')} value={element.PIERNA_IZQUIERDA} onChange={(e) => setElement(prevState => ({ ...prevState, PIERNA_IZQUIERDA: e.target.value }))}
+                                errorMsg="Ingrese P.I" type="number" step="0.01" className='mt-2' placeholder='P.I'></input>
                         </div>
                     </div>
 
                     <AddButton text="Guardar cambios" type="submit" />
                     <CancelButton fun={() => setIsOpenEdit(!isOpenEdit)} />
                 </form>
-                {/* <CustomForm onSubmit={HandleEdit}>
-                    <CustomInput className='mt-2' type="hidden" name='membresia_id' value={element.ID_MEMBRESIA} placeholder='Id membresia'></CustomInput>
-                    <CustomInput errorMsg="Ingrese la fecha inicio" type="date" className='mt-2' value={moment(element.FECHA_INICIO).format('YYYY-MM-DD')} onChange={(e) => setElement(prevState => ({ ...prevState, FECHA_INICIO: e.target.value }))} name='fecha_inicio_insert' placeholder='Fecha  Inicio'></CustomInput>
-                    <CustomInput errorMsg="Ingrese la fecha de fin" type="date" className='mt-2' value={moment(element.FECHA_FIN).format('YYYY-MM-DD')} onChange={(e) => setElement(prevState => ({ ...prevState, FECHA_FIN: e.target.value }))} name='fecha_fin_insert' placeholder='Fecha Fin'></CustomInput>
-                    <CustomInput errorMsg="Ingrese el tipo de pago" className='mt-2' value={element.TIPO_PAGO} onChange={(e) => setElement(prevState => ({ ...prevState, TIPO_PAGO: e.target.value }))} name='tipo_pago_insert' placeholder='Tipo de pago'></CustomInput>
-                    <CustomInput errorMsg="Ingrese el monto" className='mt-2' value={element.MONTO} onChange={(e) => setElement(prevState => ({ ...prevState, MONTO: e.target.value }))} name='monto_insert' placeholder='Monto'></CustomInput>
-                    <CustomInput errorMsg="Ingrese el detalle" className='mt-2' value={element.DETALLE} onChange={(e) => setElement(prevState => ({ ...prevState, DETALLE: e.target.value }))} name='detalle_insert' placeholder='Detalle de pago'></CustomInput>
-
-                    <AddButton text="Guardar cambios" type="submit" />
-                    <CancelButton fun={() => setIsOpenEdit(!isOpenEdit)} />
-                </CustomForm> */}
 
             </CustomModal>
 
@@ -402,7 +431,10 @@ export default function Membership() {
                 methods={{ toggleOpenModal: () => setIsOpenDelete(!isOpenDelete) }}
             >
                 <CustomForm onSubmit={HandleDelete}>
-                    <CustomInput className='mt-2' type="hidden" name='membresia_id' value={element.ID_MEMBRESIA} placeholder='ID pago'></CustomInput>
+                    <CustomInput className='mt-2' type="number" name='medidas_id' value={element.ID_MEDICION}></CustomInput>
+                    <CustomInput className='mt-2' type="number" name='datos_id' value={element.ID_DATOS} ></CustomInput>
+                    <CustomInput className='mt-2' type="number" name='circunferencia_id' value={element.ID_CIRCUNFERENCIA} ></CustomInput>
+                    
                     <AddButton text="Si" type="submit" />
                     <CancelButton fun={() => setIsOpenDelete(!isOpenDelete)} />
                 </CustomForm>
@@ -441,7 +473,7 @@ export default function Membership() {
                         <div className="col">
                             <p>Edad Metab.: {elementSee.EDAD_METABOLICA}</p>
                             <p>Masa Osea:{elementSee.MASA_OSEA}</p>
-                            <p>Grasa Visceral: {elementSee.GRASA_VISERAL}</p>
+                            <p>Grasa Visceral: {elementSee.GRASA_VISCERAL}</p>
                         </div>
                     </div>
                     <h5>Circunferencia</h5>

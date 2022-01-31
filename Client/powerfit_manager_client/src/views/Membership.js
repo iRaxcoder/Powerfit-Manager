@@ -92,8 +92,8 @@ export default function Membership() {
 
     const convertDate = (e) => {
         e.map((entrada) => {
-            entrada.FECHA_INICIO = moment(entrada.FECHA_INICIO).format('LL')
-            entrada.FECHA_FIN = moment(entrada.FECHA_FIN).format('LL')
+            entrada.FECHA_INICIO = moment(new Date(entrada.FECHA_INICIO)).format('LL')
+            entrada.FECHA_FIN = moment(new Date(entrada.FECHA_FIN)).format('LL')
         })
     }
 
@@ -104,7 +104,6 @@ export default function Membership() {
 
     const toggleModalInsert = () => {
         setIsOpenInsert(!isOpenInsert);
-
     }
 
     const toggleModalEdit = (e) => {
