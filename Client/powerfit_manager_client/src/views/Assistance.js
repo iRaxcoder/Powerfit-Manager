@@ -71,7 +71,7 @@ export default function Assistance() {
 
     const convertDate = (e) => {
         e.map((entrada) => {
-            entrada.FECHA = moment(entrada.FECHA).format('LL')
+            entrada.FECHA = moment(new Date(entrada.FECHA)).format('LL')
         })
     }
 

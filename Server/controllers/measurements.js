@@ -84,4 +84,57 @@ module.exports.set = function (app, connection) {
         })
     })
 
+    app.put("/medidas/put", (req, res) => {
+        data = req.body.data;
+        connection.beginTransaction(async (err) => {
+            if (err) {
+                throw err;
+            }
+            query = 'CALL sp_update_medidas_datos' + getSpParamSize[data["sizeDatos"]];
+            connection.query(query, Object.values(data["datos"]), (err, rows, fields) => {
+                if (err) {
+                    connection.rollback(() => {
+                        res.send("No se ha podido realizar la venta.");
+                        console.log(err);
+                    })
+                }
+                query = 'CALL sp_update_medidas_circunferencia' + getSpParamSize[data["sizeCircun"]];
+                connection.query(query, Object.values(data["circunferencia"]), (err, rows, fields) => {
+                    if (err) {
+                        connection.rollback(() => {
+                            res.send("No se ha podido realizar la venta.");
+                            console.log(err);
+                        })
+                    }
+                    connection.commit((err) => {
+                        if (!err) {
+                            res.send("Modificado con éxito.");
+                        } else {
+                            connection.rollback(() => {
+                                res.send("No se ha podido realizar la venta.");
+                                console.log(err);
+                            })
+                        }
+                    })
+                })
+            })
+        })
+    })
+
+    app.put("/medidas/delete", (req, res) => {
+        data = req.body.data;
+        query = 'CALL sp_update_medidas_circunferencia'+ getSpParamSize[data["size"]];
+        connection.query(query, Object.values(data["object"]), (err, rows, fields) => {
+            if (!err) {
+                if (rows[0][0].msg === SUCCESS) {
+                    res.send("Eliminado con éxito");
+                } else if (rows[0][0].msg === ERROR) {
+                    res.send("Ha ocurrido un error al modificar");
+                }
+            }
+            else {
+                console.log("error de bd:" + err);
+            }
+        })
+    })
 }
