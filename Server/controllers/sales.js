@@ -77,5 +77,40 @@ module.exports.set = function (app, connection) {
                 console.log(err);
             }
         })
-    })
+    });
+
+    app.post('/sales/get-stats', (req, res) =>{
+        var data=req.body.data;
+        var salesStats={};
+        connection.query('CALL sp_select_search_estadisticas_ventas' +getSpParamSize["1"], data["year"], (err, rows, fields) => {
+            if (!err) {
+               salesStats.highlights=rows;
+               connection.query('CALL sp_select_search_estads_productos' +getSpParamSize["1"], data["year"], (err, rows, fields) => {
+                   if(!err){
+                    salesStats.productStats=rows;
+                    connection.query('CALL sp_select_search_ventas_mes' +getSpParamSize["1"], data["year"], (err, rows, fields) => {
+                        if(!err){
+                            salesStats.monthStats=rows;
+                            connection.query('CALL sp_select_search_top_clientes' +getSpParamSize["1"], data["year"], (err, rows, fields) => {
+                                if(!err){
+                                    salesStats.topClients=rows;
+                                    res.send(salesStats);
+                                }else{
+                                    console.log(err);
+                                }
+                            });
+                        }else{
+                            console.log(err);
+                        }
+                    });
+                   }else{
+                       console.log(err);
+                   }
+               })
+            }
+            else {
+                console.log(err);
+            }
+        })
+    });
 }

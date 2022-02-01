@@ -13,7 +13,6 @@ import { exportToPdf, ExportToCsv } from "../utils/exportData";
 import moment from "moment/min/moment-with-locales";
 import "../styles/Sales/shopingCar.css"
 import "../styles/Sales/orderInfo.css"
-import DeleteButton from "../components/DeleteButton";
 
 export default function Sales(){
   const [isOpenInsert, setIsOpenInsert] = useState(false);
@@ -35,6 +34,7 @@ export default function Sales(){
   const [saleInfo,setSaleInfo]=useState([]);
   const [saleInfoRef, setSaleInfoRef]=useState([]);
   const [yearFilter, setYearFilter]=useState(new Date().getFullYear());
+  const [salesStats,setsalesStats]=useState({highlights:{},productStats:[],monthStats:[],topClients:[]});
 
   const [filterType, setFilterType]=useState("hoy");
 
@@ -68,6 +68,31 @@ export default function Sales(){
     []
   )
 
+  const columnsSalesMonth = React.useMemo(
+    () => [
+        { Header: "Mes", accessor: 'MES',},
+        { Header: "Total(₡)", accessor: 'TOTAL_VENDIDO'},
+      ],
+    []
+  )
+
+  const columnsProductSales = React.useMemo(
+    () => [
+        { Header: "Producto", accessor: 'NOMBRE',},
+        { Header: "Veces vendido", accessor: 'CANTIDAD'},
+      ],
+    []
+  )
+
+  const columnsTopClients = React.useMemo(
+    () => [
+        { Header: "Cliente", accessor: 'NOMBRE',},
+        { Header: "Compras realizadas", accessor: 'VENTAS'},
+        { Header: "Total(₡)", accessor: 'TOTAL'},
+      ],
+    []
+  )
+
   const selectFilter = [{ value: 'Hoy' }, { value: 'Ayer' }, { value: 'Esta semana'}, { value: 'Todas'}];
 
   const formatDate = (e) => {
@@ -89,11 +114,19 @@ export default function Sales(){
     setProductList(response)
     })
   }
+
+  const fetchSalesStats = () => {
+    SalesDB.getSalesStats({year:yearFilter}).then(response=>{
+      setsalesStats({highlights:response.highlights[0][0],productStats:response.productStats[0],monthStats:response.monthStats[0],topClients:response.topClients[0]});
+      });
+  }
   
   useEffect(()=>{
     fetchSales();
     fetchProducts();
+    fetchSalesStats();
   },[]);
+
 
   if(!saleList) return "No se encuentran ventas aún.";
   if(!productList) return "No se encuentran productos aún."
@@ -308,6 +341,12 @@ export default function Sales(){
       setYearFilter(e.target.value);
     }
 
+    const onFilterYearStats = () => {
+      fetchSales();
+      fetchProducts();
+      fetchSalesStats();
+    }
+
     return (
         <div>
             <h1 className="text-left">Control de ventas</h1>
@@ -422,17 +461,40 @@ export default function Sales(){
             </CustomModal>
             <CustomModal 
               props={{title: 'Vista general de ventas', isOpen: isOpenGeneralView}}
-              methods={{toggleOpenModal: ()=>setIsOpenGeneralView(!isOpenGeneralView)}}
+              methods={{toggleOpenModal: ()=> setIsOpenGeneralView(!isOpenGeneralView)}}
               >
-              <div className="form-group row d-flex justify-content-center">
-                <label htmlFor="lbl_annio_sale" class="col-sm-2 col-form-label">Año: </label>
-                  <div className="col-sm-4">
-                    <input id="lbl_annio_sale" onChange={onChangeYearFilter} value={yearFilter} placeholder="filtro de año" type="number" min={2022} className="input-search"></input>
-                  </div>
-                  <button className="btn btn-dark">Filtrar</button>
+              <div>
+                <div className="form-group row d-flex justify-content-center">
+                  <label htmlFor="lbl_annio_sale" class="col-sm-4 col-form-label">Vista general de ventas según año: </label>
+                    <div className="col-sm-4">
+                      <input id="lbl_annio_sale" onChange={onChangeYearFilter} value={yearFilter} placeholder="filtro de año" type="number" min={2022} className="input-search"></input>
+                    </div>
+                    <button onClick={onFilterYearStats} className="btn btn-dark">Filtrar</button>
+                </div>
+                <hr/>
+                <h4>Highlights</h4>
+                <ul className="list-group">
+                  <li className="list-group-item list-group-item-success">Ventas totales: ₡{salesStats.highlights["@total_vendido"]??"(No se ha podido calcular.)"} </li>
+                  <li className="list-group-item list-group-item-primary">Ventas totales en mes actual: ₡{salesStats.highlights["@total_vendido_mes"]??"(No se ha podido calcular.)"} </li>
+                  <li className="list-group-item list-group-item-warning">El producto más vendido: {salesStats.highlights["@prod_mas_vendido"]??" No se ha podido calcular."} </li>
+                  <li className="list-group-item list-group-item-danger">El producto menos vendido: {salesStats.highlights["@prod_menos_vendido"]??"No se ha podido calcular."}</li>
+                </ul>
+                <h4>Ventas totales de cada mes</h4>
+                <Table
+                  columns={columnsSalesMonth}
+                  data={salesStats.monthStats??[]}
+                />
+                <h4 className="mt-2">Ventas de productos</h4>
+                <Table
+                  columns={columnsProductSales}
+                  data={salesStats.productStats??[]}
+                />
+                <h4 className="mt-2">Top 10 compradores</h4>
+                <Table
+                  columns={columnsTopClients}
+                  data={salesStats.topClients??[]}
+                />
               </div>
-              
-                
             </CustomModal>
         </div>
     );
