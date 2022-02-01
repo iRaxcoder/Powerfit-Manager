@@ -7,6 +7,8 @@ import CustomForm from "../components/CustomForm";
 import { CustomInput, SingleCustomInput, LiveCustomSelect } from "../components/CustomInput";
 import CancelButton from "../components/CancelButton"
 import commonDB from "../service/CommonDB";
+import { exportToPdf, ExportToCsv } from "../utils/exportData";
+import DownloadButton from "../components/DownloadButton";
 import moment from 'moment'
 
 
@@ -19,6 +21,8 @@ export default function Membership() {
     const [selectedClients, setSelectedClients] = useState(null);
     const dataRef = useRef();
     dataRef.current = data;
+
+    const dataHeader = [["Id Membresia","Nombre","Apellidos","Fecha Inicio","Fecha Fin","Tipo de Pago","Monto","Detalle","Estado"]];
     const [element, setElement] = useState([
         {
             ID_MEMBRESIA: '',
@@ -34,40 +38,29 @@ export default function Membership() {
     ])
     const columns = React.useMemo(
         () => [
-            {
-                Header: '#', accessor: 'ID_MEMBRESIA'
-            },
-            {
-                Header: 'Nombre', accessor: 'NOMBRE_CLIENTE'
-            },
-            {
-                Header: 'Apellido', accessor: 'APELLIDO_CLIENTE'
-            },
-
-            {
-                Header: 'Fecha inico', accessor: 'FECHA_INICIO'
-            },
-            {
-                Header: 'Fecha fin', accessor: 'FECHA_FIN'
-            },
-            {
-                Header: 'Tipo de Pago', accessor: 'TIPO_PAGO'
-            },
-            {
-                Header: 'Monto (₡)', accessor: 'MONTO'
-            },
-            {
-                Header: 'Detalles', accessor: 'DETALLE'
-            }
-            ,
-            {
-                Header: 'Estado', accessor: 'ESTADO'
-            }
-
-
+            { Header: '#', accessor: 'ID_MEMBRESIA' },
+            { Header: 'Nombre', accessor: 'NOMBRE_CLIENTE' },
+            { Header: 'Apellido', accessor: 'APELLIDO_CLIENTE' },
+            { Header: 'Fecha inico', accessor: 'FECHA_INICIO' },
+            { Header: 'Fecha fin', accessor: 'FECHA_FIN' },
+            { Header: 'Tipo de Pago', accessor: 'TIPO_PAGO' },
+            { Header: 'Monto (₡)', accessor: 'MONTO' },
+            { Header: 'Detalles', accessor: 'DETALLE' },
+            { Header: 'Estado', accessor: 'ESTADO' }
         ],
         []
     )
+    const dataHeaderCSV = [
+        { label: "ID membresía", key: 'ID_MEMBRESIA', },
+        { label: "Nombre", key: 'NOMBRE_CLIENTE' },
+        { label: "Apellidos", key: 'APELLIDO_CLIENTE' },
+        { label: "Fecha inico", key: 'FECHA_INICIO' },
+        { label: "Fecha fin", key: 'FECHA_FIN' },
+        { label: "Tipo de Pago'", key: 'TIPO_PAGO' },
+        { label: "Monto (₡)", key: 'MONTO' },
+        { label: "Detalles", key: 'DETALLE' },
+        { label: "Estado", key: 'ESTADO' }
+    ]
 
     const searchClient = (find, callback) => {
         commonDB.getSearch({ header: "cliente", find: find }).then(response => {
@@ -129,14 +122,14 @@ export default function Membership() {
             NOMBRE_CLIENTE: pago.NOMBRE_CLIENTE,
             APELLIDO_CLIENTE: pago.APELLIDO_CLIENTE,
             FECHA_INICIO: pago.FECHA_INICIO,
-            FECHA_FIN:pago.FECHA_FIN
+            FECHA_FIN: pago.FECHA_FIN
         });
         setIsOpenDelete(!isOpenDelete);
     }
 
-   
+
     const handleInsert = (e) => {
-        e.ID_CLIENTE = selectedClients.value;       
+        e.ID_CLIENTE = selectedClients.value;
         commonDB.insert({ header: "membresia", size: "6", object: e }).then(response => {
             setModalMsg(prevState => ({
                 ...prevState,
@@ -182,7 +175,12 @@ export default function Membership() {
             })
         }
     }
-
+    const exportPDF = () => {
+        const data = dataRef.current.map((membresia) =>
+            ([membresia.ID_MEMBRESIA, membresia.NOMBRE_CLIENTE, membresia.APELLIDO_CLIENTE, membresia.FECHA_INICIO, membresia.FECHA_FIN,
+                membresia.TIPO_PAGO, membresia.MONTO, membresia.DETALLE, membresia.ESTADO]));
+        exportToPdf(dataHeader, data, "Reporte de Membresia");
+    }
     return (
 
         <div>
@@ -190,7 +188,11 @@ export default function Membership() {
             <hr />
             <div className="container">
                 <div className="container-insert-search__">
-                    <AddButton text="Insertar" onClick={() => setIsOpenInsert(true)} />
+                    <div>
+                        <AddButton text="Insertar" onClick={() => setIsOpenInsert(true)} />
+                        <DownloadButton onClick={exportPDF} text="PDF" />
+                        <ExportToCsv headers={dataHeaderCSV} data={dataRef.current} fileName={"membresia_powerfit_" + moment() + ".csv"} />
+                    </div>
                     <SingleCustomInput onChange={handleSearch} errorMsg="Ingrese la palabra a buscar" placeholder="Buscar" name="input" className="form-control" />
                 </div>
                 <Table
@@ -238,7 +240,7 @@ export default function Membership() {
             </CustomModal>
 
             <CustomModal
-                props={{ title: "¿Desea eliminar membresía de " + element.NOMBRE_CLIENTE + " " + element.APELLIDO_CLIENTE + " de la fecha " + element.FECHA_INICIO +" al "+element.FECHA_FIN+ "?", isOpen: isOpenDelete }}
+                props={{ title: "¿Desea eliminar membresía de " + element.NOMBRE_CLIENTE + " " + element.APELLIDO_CLIENTE + " de la fecha " + element.FECHA_INICIO + " al " + element.FECHA_FIN + "?", isOpen: isOpenDelete }}
                 methods={{ toggleOpenModal: () => setIsOpenDelete(!isOpenDelete) }}
             >
                 <CustomForm onSubmit={HandleDelete}>

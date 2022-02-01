@@ -9,6 +9,8 @@ import CancelButton from "../components/CancelButton"
 import commonDB from "../service/CommonDB";
 import measuresDB from "../service/Measures";
 import moment, { locale } from 'moment'
+import { exportToPdf, ExportToCsv } from "../utils/exportData";
+import DownloadButton from "../components/DownloadButton";
 import { useForm } from "react-hook-form"
 
 export default function Membership() {
@@ -24,6 +26,7 @@ export default function Membership() {
 
     const { register, formState: { errors }, handleSubmit, reset } = useForm();
     const [elementSee, setElementSee] = useState([]);
+    const dataHeader = [["Id Asistencia","Nombre","Apellidos","Fecha"]];
     const [element, setElement] = useState([
         {
             ID_MEDICION: '', ID_DATOS: '', ID_CIRCUNFERENCIA: '', NOMBRE_CLIENTE: '', APELLIDO_CLIENTE: '',
@@ -46,6 +49,12 @@ export default function Membership() {
         ],
         []
     )
+    const dataHeaderCSV = [
+        { label: "ID Asistencia", key: 'ID_ASISTENCIA', },
+        { label: "Nombre", key: 'NOMBRE_CLIENTE' },
+        { label: "Apellidos", key: 'APELLIDO_CLIENTE' },
+        { label: "Fecha inico", key: 'FECHA' },
+       ]
 
     const searchClient = (find, callback) => {
         commonDB.getSearch({ header: "cliente", find: find }).then(response => {
@@ -176,8 +185,10 @@ export default function Membership() {
     }
 
     const HandleDelete = (e) => {
-        measuresDB.delete({ object: { ID_MEDICION: e.medidas_id, ID_DATOS: e.datos_id, ID_CIRCUNFERENCIA: e.circunferencia_id },
-             size: '3' }).then(response => {
+        measuresDB.delete({
+            object: { ID_MEDICION: e.medidas_id, ID_DATOS: e.datos_id, ID_CIRCUNFERENCIA: e.circunferencia_id },
+            size: '3'
+        }).then(response => {
             setModalMsg(prevState => ({
                 ...prevState,
                 msg: response,
@@ -198,7 +209,11 @@ export default function Membership() {
             })
         }
     }
-
+    const exportPDF = () => {
+        const data = dataRef.current.map((asistencia) =>
+            ([asistencia.ID_ASISTENCIA, asistencia.NOMBRE_CLIENTE, asistencia.APELLIDO_CLIENTE, asistencia.FECHA]));
+        exportToPdf(dataHeader, data, "Reporte de Asistencia");
+    }
     return (
 
         <div>
@@ -206,7 +221,11 @@ export default function Membership() {
             <hr />
             <div className="container">
                 <div className="container-insert-search__">
+                   <div>
                     <AddButton text="Insertar" onClick={() => setIsOpenInsert(true)} />
+                    <DownloadButton onClick={exportPDF} text="PDF" />
+                    <ExportToCsv headers={dataHeaderCSV} data={dataRef.current} fileName={"asistencia_powerfit_" + moment() + ".csv"} />
+                    </div> 
                     <SingleCustomInput onChange={handleSearch} errorMsg="Ingrese la palabra a buscar" placeholder="Buscar" name="input" className="form-control" />
                 </div>
                 <Table
