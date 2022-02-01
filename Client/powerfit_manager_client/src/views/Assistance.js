@@ -7,6 +7,8 @@ import CustomForm from "../components/CustomForm";
 import { CustomInput, SingleCustomInput, LiveCustomSelect, CustomSelect } from "../components/CustomInput";
 import CancelButton from "../components/CancelButton"
 import commonDB from "../service/CommonDB";
+import { exportToPdf, ExportToCsv } from "../utils/exportData";
+import DownloadButton from "../components/DownloadButton";
 import moment from 'moment'
 
 
@@ -27,25 +29,24 @@ export default function Assistance() {
             FECHA: ''
         }
     ])
+    const dataHeader = [["Id Asistencia","Nombre","Apellidos","Fecha"]];
+
     const columns = React.useMemo(
         () => [
-            {
-                Header: '#', accessor: 'ID_ASISTENCIA'
-            },
-            {
-                Header: 'Nombre', accessor: 'NOMBRE_CLIENTE'
-            },
-            {
-                Header: 'Apellido', accessor: 'APELLIDO_CLIENTE'
-            },
-
-            {
-                Header: 'Fecha', accessor: 'FECHA'
-            }
-
+            {Header: '#', accessor: 'ID_ASISTENCIA'},
+            { Header: 'Nombre', accessor: 'NOMBRE_CLIENTE'},
+            {Header: 'Apellido', accessor: 'APELLIDO_CLIENTE'},
+            {Header: 'Fecha', accessor: 'FECHA'}
         ],
         []
     )
+
+    const dataHeaderCSV = [
+        { label: "ID Asistencia", key: 'ID_ASISTENCIA', },
+        { label: "Nombre", key: 'NOMBRE_CLIENTE' },
+        { label: "Apellidos", key: 'APELLIDO_CLIENTE' },
+        { label: "Fecha inico", key: 'FECHA' },
+       ]
 
     const selectFiltro = [{ value: 'Hoy' }, { value: 'Ayer' }, { value: 'Todas las Semanas' }];
 
@@ -71,7 +72,7 @@ export default function Assistance() {
 
     const convertDate = (e) => {
         e.map((entrada) => {
-            entrada.FECHA = moment(new Date(entrada.FECHA)).format('LL')
+            entrada.FECHA = moment(new Date(entrada.FECHA)).format('LLL')
         })
     }
 
@@ -167,6 +168,11 @@ export default function Assistance() {
         }
     }
 
+    const exportPDF = () => {
+        const data = dataRef.current.map((asistencia) =>
+            ([asistencia.ID_ASISTENCIA, asistencia.NOMBRE_CLIENTE, asistencia.APELLIDO_CLIENTE, asistencia.FECHA]));
+        exportToPdf(dataHeader, data, "Reporte de Asistencia");
+    }
 
     return (
 
@@ -180,6 +186,8 @@ export default function Assistance() {
                         <CustomForm>
                             <CustomSelect focus="value" onChange={handleFiltro} errorMsg="Seleccione una opción" className='mt-2 ml-2' name='filtro' placeholder='Nombre grupo muscular' options={selectFiltro}></CustomSelect>
                         </CustomForm>
+                        <DownloadButton onClick={exportPDF} text="PDF" />
+                        <ExportToCsv headers={dataHeaderCSV} data={dataRef.current} fileName={"asistencia_powerfit_" + moment() + ".csv"} />
                     </div>
                     <SingleCustomInput onChange={handleSearch} errorMsg="Ingrese la palabra a buscar" placeholder="Buscar" name="input" className="form-control" />
                 </div>
@@ -197,7 +205,7 @@ export default function Assistance() {
             >
                 <CustomForm onSubmit={handleInsert}>
                     <LiveCustomSelect data={selectedClients} onChange={onChangeSearchClient} className='mt-2' placeHolder={"Buscar cliente..."} loadOptions={searchClient} />
-                    <CustomInput errorMsg="Ingrese la fecha" type="date" className='mt-2' name='fecha_insert' placeholder='Fecha'></CustomInput>
+                    <CustomInput errorMsg="Ingrese la fecha" type="datetime-local" className='mt-2' name='fecha_insert' placeholder='Fecha'></CustomInput>
                     <AddButton text="Insertar" type="submit" />
                     <CancelButton fun={() => setIsOpenInsert(!isOpenInsert)} />
                 </CustomForm>
@@ -210,7 +218,7 @@ export default function Assistance() {
             >
                 <CustomForm onSubmit={HandleEdit}>
                     <CustomInput className='mt-2' type="hidden" name='asistencia_id' value={element.ID_ASISTENCIA} placeholder='Id asistencia'></CustomInput>
-                    <CustomInput errorMsg="Ingrese la fecha" type="date" className='mt-2' value={moment(element.FECHA).format('YYYY-MM-DD')} onChange={(e) => setElement(prevState => ({ ...prevState, FECHA: e.target.value }))} name='fecha_insert' placeholder='Fecha'></CustomInput>
+                    <CustomInput errorMsg="Ingrese la fecha" type="datetime-local" className='mt-2' value={moment(element.FECHA).format('YYYY-MM-DDTHH:MM')} onChange={(e) => setElement(prevState => ({ ...prevState, FECHA: e.target.value }))} name='fecha_insert' placeholder='Fecha'></CustomInput>
                     <AddButton text="Guardar cambios" type="submit" />
                     <CancelButton fun={() => setIsOpenEdit(!isOpenEdit)} />
                 </CustomForm>

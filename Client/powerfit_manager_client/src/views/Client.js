@@ -129,7 +129,7 @@ export default function Client(){
             <hr/>
             <div className="container">
                 <div className="container-insert-search__">
-                  <div>
+                <div>
                     <AddButton text="Insertar" onClick={()=>setIsOpenInsert(true)} />
                     <DownloadButton onClick={exportPDF} text="PDF"/>
                     <ExportToCsv headers={dataHeaderCSV} data={clientsListRef.current} fileName={"clientes_powerfit_"+moment()+".csv"}/>
