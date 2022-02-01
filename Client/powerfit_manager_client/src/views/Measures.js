@@ -123,7 +123,6 @@ export default function Membership() {
 
     const toggleModalDelete = (e) => {
         const medida = JSON.parse(e.target.dataset.row);
-        console.log(medida);
         setElement({
             ID_MEDICION: medida.ID_MEDICION,
             ID_DATOS: medida.ID_DATOS,
@@ -177,15 +176,15 @@ export default function Membership() {
     }
 
     const HandleDelete = (e) => {
-        console.log(e);
-        // commonDB.delete({ header: "membresia", object: { id: e.medidas_id } }).then(response => {
-        //     setModalMsg(prevState => ({
-        //         ...prevState,
-        //         msg: response,
-        //         isMsgOpen: true
-        //     }));
-        //     fetchData();
-        // });
+        measuresDB.delete({ object: { ID_MEDICION: e.medidas_id, ID_DATOS: e.datos_id, ID_CIRCUNFERENCIA: e.circunferencia_id },
+             size: '3' }).then(response => {
+            setModalMsg(prevState => ({
+                ...prevState,
+                msg: response,
+                isMsgOpen: true
+            }));
+            fetchData();
+        });
         setIsOpenDelete(!isOpenDelete);
 
     }
@@ -193,7 +192,8 @@ export default function Membership() {
         if (e.target.value === undefined || e.target.value === "") {
             fetchData();
         } else {
-            commonDB.getSearch({ header: "membresia", find: e.target.value }).then(response => {
+            commonDB.getSearch({ header: "medidas", find: e.target.value }).then(response => {
+                convertDate(response)
                 setData(response);
             })
         }
@@ -431,10 +431,10 @@ export default function Membership() {
                 methods={{ toggleOpenModal: () => setIsOpenDelete(!isOpenDelete) }}
             >
                 <CustomForm onSubmit={HandleDelete}>
-                    <CustomInput className='mt-2' type="number" name='medidas_id' value={element.ID_MEDICION}></CustomInput>
-                    <CustomInput className='mt-2' type="number" name='datos_id' value={element.ID_DATOS} ></CustomInput>
-                    <CustomInput className='mt-2' type="number" name='circunferencia_id' value={element.ID_CIRCUNFERENCIA} ></CustomInput>
-                    
+                    <CustomInput className='mt-2' type="hidden" name='medidas_id' value={element.ID_MEDICION}></CustomInput>
+                    <CustomInput className='mt-2' type="hidden" name='datos_id' value={element.ID_DATOS} ></CustomInput>
+                    <CustomInput className='mt-2' type="hidden" name='circunferencia_id' value={element.ID_CIRCUNFERENCIA} ></CustomInput>
+
                     <AddButton text="Si" type="submit" />
                     <CancelButton fun={() => setIsOpenDelete(!isOpenDelete)} />
                 </CustomForm>

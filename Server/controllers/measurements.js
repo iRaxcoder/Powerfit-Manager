@@ -123,7 +123,7 @@ module.exports.set = function (app, connection) {
 
     app.put("/medidas/delete", (req, res) => {
         data = req.body.data;
-        query = 'CALL sp_update_medidas_circunferencia'+ getSpParamSize[data["size"]];
+        query = 'CALL sp_delete_medidas'+ getSpParamSize[data["size"]];
         connection.query(query, Object.values(data["object"]), (err, rows, fields) => {
             if (!err) {
                 if (rows[0][0].msg === SUCCESS) {
