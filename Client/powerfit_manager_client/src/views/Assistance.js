@@ -16,6 +16,7 @@ export default function Assistance() {
     const [isOpenInsert, setIsOpenInsert] = useState(false);
     const [isOpenEdit, setIsOpenEdit] = useState(false);
     const [isOpenDelete, setIsOpenDelete] = useState(false);
+    const [isOpenTop, setIsOpenTop] = useState(false);
     const [modalMsg, setModalMsg] = useState({ isMsgOpen: false, msg: "" });
     const [data, setData] = useState(null);
     const [selectedClients, setSelectedClients] = useState(null);
@@ -29,14 +30,14 @@ export default function Assistance() {
             FECHA: ''
         }
     ])
-    const dataHeader = [["Id Asistencia","Nombre","Apellidos","Fecha"]];
+    const dataHeader = [["Id Asistencia", "Nombre", "Apellidos", "Fecha"]];
 
     const columns = React.useMemo(
         () => [
-            {Header: '#', accessor: 'ID_ASISTENCIA'},
-            { Header: 'Nombre', accessor: 'NOMBRE_CLIENTE'},
-            {Header: 'Apellido', accessor: 'APELLIDO_CLIENTE'},
-            {Header: 'Fecha', accessor: 'FECHA'}
+            { Header: '#', accessor: 'ID_ASISTENCIA' },
+            { Header: 'Nombre', accessor: 'NOMBRE_CLIENTE' },
+            { Header: 'Apellido', accessor: 'APELLIDO_CLIENTE' },
+            { Header: 'Fecha', accessor: 'FECHA' }
         ],
         []
     )
@@ -46,7 +47,7 @@ export default function Assistance() {
         { label: "Nombre", key: 'NOMBRE_CLIENTE' },
         { label: "Apellidos", key: 'APELLIDO_CLIENTE' },
         { label: "Fecha inico", key: 'FECHA' },
-       ]
+    ]
 
     const selectFiltro = [{ value: 'Hoy' }, { value: 'Ayer' }, { value: 'Todas las Semanas' }];
 
@@ -171,7 +172,7 @@ export default function Assistance() {
     const exportPDF = () => {
         const data = dataRef.current.map((asistencia) =>
             ([asistencia.ID_ASISTENCIA, asistencia.NOMBRE_CLIENTE, asistencia.APELLIDO_CLIENTE, asistencia.FECHA]));
-        exportToPdf(dataHeader, data, "Reporte de Asistencia");
+        exportToPdf(dataHeader, data, "Reporte de Asistencia" + moment().format("DD/MM/YYYY"));
     }
 
     return (
@@ -183,13 +184,14 @@ export default function Assistance() {
                 <div className="container-insert-search__">
                     <div className="d-flex flex-row">
                         <AddButton text="Insertar" onClick={() => setIsOpenInsert(true)} />
+                        <AddButton text="TOP 10" onClick={() => setIsOpenTop(true)} />
                         <CustomForm>
                             <CustomSelect focus="value" onChange={handleFiltro} errorMsg="Seleccione una opción" className='mt-2 ml-2' name='filtro' placeholder='Nombre grupo muscular' options={selectFiltro}></CustomSelect>
                         </CustomForm>
                         <DownloadButton onClick={exportPDF} text="PDF" />
-                        <ExportToCsv headers={dataHeaderCSV} data={dataRef.current} fileName={"asistencia_powerfit_" + moment() + ".csv"} />
+                        <ExportToCsv headers={dataHeaderCSV} data={dataRef.current} fileName={"asistencia_powerfit_" + moment().format("DD/MM/YYYY") + ".csv"} />
                     </div>
-                    <SingleCustomInput onChange={handleSearch} errorMsg="Ingrese la palabra a buscar" placeholder="Buscar" name="input" className="form-control" />
+                    <SingleCustomInput onChange={handleSearch} errorMsg="Ingrese la palabra a buscar" placeholder="Buscar" name="input" className="search__" />
                 </div>
                 <Table
                     columns={columns}
@@ -242,6 +244,13 @@ export default function Assistance() {
                 methods={{ toggleOpenModal: () => setModalMsg(!modalMsg.isMsgOpen) }}
             >
                 <p>{modalMsg.msg}</p>
+            </CustomModal>
+
+            <CustomModal
+                props={{ title: 'Top 10 de Asistencias', isOpen:isOpenTop }}
+                methods={{ toggleOpenModal: () => setIsOpenTop(!isOpenTop)}}
+            >
+
             </CustomModal>
         </div>
     );
