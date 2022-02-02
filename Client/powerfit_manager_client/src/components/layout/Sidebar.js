@@ -37,7 +37,7 @@ export default function Sidebar ({children}){
     return (
         <>
             <div className='l-navbar' id='navbar'>
-                <nav class="nav">
+                <nav className="nav">
                     <div>
                         <a className='nav__logo'>
                             <img src={Logo} width='34px' height='34px' id='power_logo' className='nav__logo-icon icon'></img>

@@ -116,8 +116,7 @@ export default function Ejercicio(){
 
     return (
         <div>
-            <h1 className="text-left">Control de ejercicios</h1>
-            <hr/>
+            <h1 className="text-left module__title">Control de ejercicios</h1>
             <div className="container">
                 <div className="container-insert-search__">
                   <AddButton text="Insertar" onClick={()=>setIsOpenInsert(true)} />

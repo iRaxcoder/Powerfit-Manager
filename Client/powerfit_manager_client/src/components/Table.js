@@ -75,13 +75,13 @@ const Table = (props) => {
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th scope="col"
+                <th className="table__header" scope="col"
                   {...column.getHeaderProps()}
                 >
                   {column.render('Header')}
                 </th>
               ))}
-              <th scope="col">Acción</th>
+              <th scope="col" className="table__header">Acción</th>
             </tr>
           ))}
         </thead>

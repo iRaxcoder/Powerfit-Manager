@@ -9,7 +9,7 @@ const auth = {
         const response = axios.post(BASE_URL + '/aut/iniciar-sesion', {
                 username: user.userName,
                 password: user.secret
-            }).then(response => {
+            },{withCredentials:true}).then(response => {
                 return response.data;
             })
             .catch(error => {
@@ -21,7 +21,7 @@ const auth = {
         return response;
     },
     logOut: function () {
-        const response= axios.get(BASE_URL + '/aut/cerrar-sesion').then((response) => {
+        const response= axios.get(BASE_URL + '/aut/cerrar-sesion',{withCredentials:true}).then((response) => {
             return response.data;
         });
         return response;

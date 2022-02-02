@@ -7,6 +7,7 @@ module.exports.set = function(app,connection){
                 if (results[0][0]!=null) {
                     request.session.loggedin = true;
                     request.session.username = username;
+                    request.session.save(()=>{});
                     response.send("1");
                 } else {
                     response.send("Los datos de inicio no coinciden");
@@ -21,14 +22,13 @@ module.exports.set = function(app,connection){
 
     app.get('/aut/cerrar-sesion', function (req, res) {
         if (req.session.loggedin===true) {
+            console.log("sesion cerrada");
             req.session.destroy(function() {
-                delete req.session.username;
-                req.session.loggedin = false;
-                res.clearCookie('connect.sid', { path: '/' });           
+                req.session=null;
+                res.clearCookie('PowerFit-server-cookie', { path: '/' });           
             });
         } else {
-            console.log("no cerró");
-            res.status(500).send('No se ha podido cerrar la sesión'); // public sessions don't containt sensible information so we leave them
+            res.status(500).send('No se ha podido cerrar la sesión');
         }
     });
 

@@ -125,8 +125,7 @@ export default function Client(){
 
     return (
         <div>
-            <h1 className="text-left">Control de clientes</h1>
-            <hr/>
+            <h1 className="text-left module__title">Control de clientes</h1>
             <div className="container">
                 <div className="container-insert-search__">
                 <div>

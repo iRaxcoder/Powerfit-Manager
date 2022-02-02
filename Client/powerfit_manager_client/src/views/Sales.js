@@ -349,8 +349,7 @@ export default function Sales(){
 
     return (
         <div>
-            <h1 className="text-left">Control de ventas</h1>
-            <hr/>
+            <h1 className="text-left module__title">Control de ventas</h1>
             <div className="container">
                 <div className="container-insert-search__">
                   <div className="d-flex flex-row">
@@ -472,7 +471,7 @@ export default function Sales(){
                     <button onClick={onFilterYearStats} className="btn btn-dark">Filtrar</button>
                 </div>
                 <hr/>
-                <h4>Highlights</h4>
+                <h4>Datos generales</h4>
                 <ul className="list-group">
                   <li className="list-group-item list-group-item-success">Ventas totales: ₡{salesStats.highlights["@total_vendido"]??"(No se ha podido calcular.)"} </li>
                   <li className="list-group-item list-group-item-primary">Ventas totales en mes actual: ₡{salesStats.highlights["@total_vendido_mes"]??"(No se ha podido calcular.)"} </li>

@@ -5,11 +5,24 @@ const { restart } = require('nodemon');
 const { response } = require('express');
 const controllers = require('./controllers/index')
 const session= require('express-session');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const port = process.env.port
 
 const app = express()
+app.use(cookieParser());
+app.use(session({
+    name:"PowerFit-server-cookie",
+	secret: '123abcuuid',
+	resave: true,
+	saveUninitialized: true,
+    cookie: {
+    path: '/',
+    //   httpOnly: true,
+      secure: false,
+    }
+}));
 
 const cors = require('cors');
 const corsOptions = {
@@ -18,19 +31,6 @@ const corsOptions = {
     optionSuccessStatus:200
 }
 app.use(cors(corsOptions));
-
-app.use(session({
-    key: 'sid',
-	secret: 'secret',
-	resave: false,
-	saveUninitialized: false,
-    cookie: {
-        path: '/',
-      sameSite: 'none',
-      httpOnly: true,
-      secure: false,
-    }
-}));
 
 app.use(bodyParser.urlencoded({extended : true}));
 

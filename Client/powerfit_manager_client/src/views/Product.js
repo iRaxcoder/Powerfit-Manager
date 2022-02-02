@@ -130,8 +130,7 @@ export default function Product(){
 
     return (
         <div>
-            <h1 className="text-left">Control de inventario</h1>
-            <hr/>
+            <h1 className="text-left module__title">Control de inventario</h1>
             <div className="container">
                 <div className="container-insert-search__">
                   <div>
