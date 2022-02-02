@@ -179,7 +179,7 @@ export default function Membership() {
         const data = dataRef.current.map((membresia) =>
             ([membresia.ID_MEMBRESIA, membresia.NOMBRE_CLIENTE, membresia.APELLIDO_CLIENTE, membresia.FECHA_INICIO, membresia.FECHA_FIN,
                 membresia.TIPO_PAGO, membresia.MONTO, membresia.DETALLE, membresia.ESTADO]));
-        exportToPdf(dataHeader, data, "Reporte de Membresia");
+        exportToPdf(dataHeader, data, "Reporte de Membresia"+moment().format("DD/MM/YYYY"));
     }
     return (
 
@@ -191,9 +191,9 @@ export default function Membership() {
                     <div>
                         <AddButton text="Insertar" onClick={() => setIsOpenInsert(true)} />
                         <DownloadButton onClick={exportPDF} text="PDF" />
-                        <ExportToCsv headers={dataHeaderCSV} data={dataRef.current} fileName={"membresia_powerfit_" + moment() + ".csv"} />
+                        <ExportToCsv headers={dataHeaderCSV} data={dataRef.current} fileName={"membresia_powerfit_" + moment().format("DD/MM/YYYY") + ".csv"} />
                     </div>
-                    <SingleCustomInput onChange={handleSearch} errorMsg="Ingrese la palabra a buscar" placeholder="Buscar" name="input" className="form-control" />
+                    <SingleCustomInput onChange={handleSearch} errorMsg="Ingrese la palabra a buscar" placeholder="Buscar" name="input" className="search__"/>
                 </div>
                 <Table
                     columns={columns}

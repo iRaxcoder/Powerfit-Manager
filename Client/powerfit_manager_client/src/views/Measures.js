@@ -9,7 +9,7 @@ import CancelButton from "../components/CancelButton"
 import commonDB from "../service/CommonDB";
 import measuresDB from "../service/Measures";
 import moment, { locale } from 'moment'
-import { exportToPdf, ExportToCsv } from "../utils/exportData";
+import { exportToPdf } from "../utils/exportData";
 import DownloadButton from "../components/DownloadButton";
 import { useForm } from "react-hook-form"
 
@@ -26,7 +26,7 @@ export default function Membership() {
 
     const { register, formState: { errors }, handleSubmit, reset } = useForm();
     const [elementSee, setElementSee] = useState([]);
-    const dataHeader = [["Id Asistencia","Nombre","Apellidos","Fecha"]];
+    const dataHeader = [["Id Asistencia", "Nombre", "Apellidos", "Fecha"]];
     const [element, setElement] = useState([
         {
             ID_MEDICION: '', ID_DATOS: '', ID_CIRCUNFERENCIA: '', NOMBRE_CLIENTE: '', APELLIDO_CLIENTE: '',
@@ -49,12 +49,6 @@ export default function Membership() {
         ],
         []
     )
-    const dataHeaderCSV = [
-        { label: "ID Asistencia", key: 'ID_ASISTENCIA', },
-        { label: "Nombre", key: 'NOMBRE_CLIENTE' },
-        { label: "Apellidos", key: 'APELLIDO_CLIENTE' },
-        { label: "Fecha inico", key: 'FECHA' },
-       ]
 
     const searchClient = (find, callback) => {
         commonDB.getSearch({ header: "cliente", find: find }).then(response => {
@@ -210,9 +204,15 @@ export default function Membership() {
         }
     }
     const exportPDF = () => {
-        const data = dataRef.current.map((asistencia) =>
-            ([asistencia.ID_ASISTENCIA, asistencia.NOMBRE_CLIENTE, asistencia.APELLIDO_CLIENTE, asistencia.FECHA]));
-        exportToPdf(dataHeader, data, "Reporte de Asistencia");
+        const Info = ["Evaluación física de " + elementSee.NOMBRE_CLIENTE + ' ' + elementSee.APELLIDO_CLIENTE + " ----- Fecha: " + elementSee.FECHA,
+            "-------DATOS-------", "Edad: " + elementSee.EDAD, "Altura: " + elementSee.ALTURA, "Peso: " + elementSee.PESO,
+        "Grasa Corporal: " + elementSee.GRASA_CORPORAL, "Agua Corporal:" + elementSee.AGUA_CORPORAL, "Masa Muscular: " + elementSee.MASA_MUSCULAR,
+        "Valoración Física: " + elementSee.VALORACION_FISICA, "Metabolismo Basal: " + elementSee.METABOLISMO_BASAL, "Edad Metabolica: " + elementSee.EDAD_METABOLICA,
+        "Masa Oséa: " + elementSee.MASA_OSEA, "Grasa Visceral: " + elementSee.GRASA_VISCERAL, "--------CIRCUNFERENCIA---------",
+        "BD: " + elementSee.BRAZO_DERECHO, "BI: " + elementSee.BRAZO_IZQUIERDO, "Pecho: " + elementSee.PECHO, "ABD: " + elementSee.ABDOMEN,
+        "Cadera: " + elementSee.CADERA, "MD: " + elementSee.MUSLO_DERECHO, "MI: " + elementSee.MUSLO_IZQUIERDO, "PD: " + elementSee.PIERNA_DERECHA,
+        "PI: " + elementSee.PIERNA_IZQUIERDA];
+        exportToPdf("","","Reporte de Medida "+ moment().format("DD/MM/YYYY"),Info);
     }
     return (
 
@@ -221,12 +221,8 @@ export default function Membership() {
             <hr />
             <div className="container">
                 <div className="container-insert-search__">
-                   <div>
                     <AddButton text="Insertar" onClick={() => setIsOpenInsert(true)} />
-                    <DownloadButton onClick={exportPDF} text="PDF" />
-                    <ExportToCsv headers={dataHeaderCSV} data={dataRef.current} fileName={"asistencia_powerfit_" + moment() + ".csv"} />
-                    </div> 
-                    <SingleCustomInput onChange={handleSearch} errorMsg="Ingrese la palabra a buscar" placeholder="Buscar" name="input" className="form-control" />
+                    <SingleCustomInput onChange={handleSearch} errorMsg="Ingrese la palabra a buscar" placeholder="Buscar" name="input" className="search__" />
                 </div>
                 <Table
                     columns={columns}
@@ -464,6 +460,9 @@ export default function Membership() {
                 methods={{ toggleOpenModal: () => setIsOpenSee(!isOpenSee) }}
             >
                 <div className="row">
+                    <div className="col col-md-2">
+                        <DownloadButton onClick={exportPDF} text="PDF" />
+                    </div>
                     <div className="col">
                         <h5>{elementSee.NOMBRE_CLIENTE + ' ' + elementSee.APELLIDO_CLIENTE}</h5>
                         <h6>Edad: {elementSee.EDAD}</h6>
