@@ -18,8 +18,10 @@ export default function Assistance() {
     const [isOpenDelete, setIsOpenDelete] = useState(false);
     const [isOpenTop, setIsOpenTop] = useState(false);
     const [modalMsg, setModalMsg] = useState({ isMsgOpen: false, msg: "" });
-    const [data, setData] = useState(null);
+    const [data, setData] = useState(null); 
+    const [dataTop, setDataTop] = useState(null);
     const [selectedClients, setSelectedClients] = useState(null);
+    const [yearFilter, setYearFilter] = useState(new Date().getFullYear());
     const dataRef = useRef();
     dataRef.current = data;
     const [element, setElement] = useState([
@@ -31,7 +33,13 @@ export default function Assistance() {
         }
     ])
     const dataHeader = [["Id Asistencia", "Nombre", "Apellidos", "Fecha"]];
-
+    const columnsTop = React.useMemo(
+        () => [
+            { Header: 'Nombre', accessor: 'NOMBRE' },
+            { Header: 'Telefono', accessor: 'TELEFONO' },
+            { Header: 'Cantidad de Asistencias', accessor: 'ASISTENCIAS' }
+        ]
+    ) 
     const columns = React.useMemo(
         () => [
             { Header: '#', accessor: 'ID_ASISTENCIA' },
@@ -71,6 +79,12 @@ export default function Assistance() {
         })
     }
 
+    const fetchTop = () => {
+        commonDB.getSearch({ header: "top_asistencia", find: yearFilter }).then(response => {
+            convertDate(response)
+            setDataTop(response);
+        });
+    }
     const convertDate = (e) => {
         e.map((entrada) => {
             entrada.FECHA = moment(new Date(entrada.FECHA)).format('LLL')
@@ -79,6 +93,7 @@ export default function Assistance() {
 
     useEffect(() => {
         fetchData();
+        fetchTop();
     }, []);
     if (!data) return "No se encuentran datos";
 
@@ -175,6 +190,10 @@ export default function Assistance() {
         exportToPdf(dataHeader, data, "Reporte de Asistencia" + moment().format("DD/MM/YYYY"));
     }
 
+    const onChangeYearFilter = (e) => {
+        setYearFilter(e.target.value);
+      }
+
     return (
 
         <div>
@@ -247,10 +266,22 @@ export default function Assistance() {
             </CustomModal>
 
             <CustomModal
-                props={{ title: 'Top 10 de Asistencias', isOpen:isOpenTop }}
-                methods={{ toggleOpenModal: () => setIsOpenTop(!isOpenTop)}}
+                props={{ title: 'Top 10 de Asistencias', isOpen: isOpenTop }}
+                methods={{ toggleOpenModal: () => setIsOpenTop(!isOpenTop) }}
             >
-
+                <div className="form-group row d-flex justify-content-center">
+                    <label htmlFor="lbl_annio_sale" class="col-sm-4 col-form-label">Top 10 de asistencia según año: </label>
+                    <div className="col-sm-4">
+                        <input id="lbl_annio_sale" onChange={onChangeYearFilter} value={yearFilter} placeholder="filtro de año" type="number" min={2022} className="input-search"></input>
+                    </div>
+                    <button onClick={fetchTop} className="btn btn-dark">Filtrar</button>
+                </div>
+                <Table
+                    columns={columnsTop}
+                    data={dataTop??[]}
+                 
+                />
+                <hr />
             </CustomModal>
         </div>
     );
