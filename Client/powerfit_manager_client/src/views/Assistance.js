@@ -16,9 +16,12 @@ export default function Assistance() {
     const [isOpenInsert, setIsOpenInsert] = useState(false);
     const [isOpenEdit, setIsOpenEdit] = useState(false);
     const [isOpenDelete, setIsOpenDelete] = useState(false);
+    const [isOpenTop, setIsOpenTop] = useState(false);
     const [modalMsg, setModalMsg] = useState({ isMsgOpen: false, msg: "" });
-    const [data, setData] = useState(null);
+    const [data, setData] = useState(null); 
+    const [dataTop, setDataTop] = useState(null);
     const [selectedClients, setSelectedClients] = useState(null);
+    const [yearFilter, setYearFilter] = useState(new Date().getFullYear());
     const dataRef = useRef();
     dataRef.current = data;
     const [element, setElement] = useState([
@@ -29,14 +32,20 @@ export default function Assistance() {
             FECHA: ''
         }
     ])
-    const dataHeader = [["Id Asistencia","Nombre","Apellidos","Fecha"]];
-
+    const dataHeader = [["Id Asistencia", "Nombre", "Apellidos", "Fecha"]];
+    const columnsTop = React.useMemo(
+        () => [
+            { Header: 'Nombre', accessor: 'NOMBRE' },
+            { Header: 'Telefono', accessor: 'TELEFONO' },
+            { Header: 'Cantidad de Asistencias', accessor: 'ASISTENCIAS' }
+        ]
+    ) 
     const columns = React.useMemo(
         () => [
-            {Header: '#', accessor: 'ID_ASISTENCIA'},
-            { Header: 'Nombre', accessor: 'NOMBRE_CLIENTE'},
-            {Header: 'Apellido', accessor: 'APELLIDO_CLIENTE'},
-            {Header: 'Fecha', accessor: 'FECHA'}
+            { Header: '#', accessor: 'ID_ASISTENCIA' },
+            { Header: 'Nombre', accessor: 'NOMBRE_CLIENTE' },
+            { Header: 'Apellido', accessor: 'APELLIDO_CLIENTE' },
+            { Header: 'Fecha', accessor: 'FECHA' }
         ],
         []
     )
@@ -46,7 +55,7 @@ export default function Assistance() {
         { label: "Nombre", key: 'NOMBRE_CLIENTE' },
         { label: "Apellidos", key: 'APELLIDO_CLIENTE' },
         { label: "Fecha inico", key: 'FECHA' },
-       ]
+    ]
 
     const selectFiltro = [{ value: 'Hoy' }, { value: 'Ayer' }, { value: 'Todas las Semanas' }];
 
@@ -70,6 +79,12 @@ export default function Assistance() {
         })
     }
 
+    const fetchTop = () => {
+        commonDB.getSearch({ header: "top_asistencia", find: yearFilter }).then(response => {
+            convertDate(response)
+            setDataTop(response);
+        });
+    }
     const convertDate = (e) => {
         e.map((entrada) => {
             entrada.FECHA = moment(new Date(entrada.FECHA)).format('LLL')
@@ -78,6 +93,7 @@ export default function Assistance() {
 
     useEffect(() => {
         fetchData();
+        fetchTop();
     }, []);
     if (!data) return "No se encuentran datos";
 
@@ -171,8 +187,12 @@ export default function Assistance() {
     const exportPDF = () => {
         const data = dataRef.current.map((asistencia) =>
             ([asistencia.ID_ASISTENCIA, asistencia.NOMBRE_CLIENTE, asistencia.APELLIDO_CLIENTE, asistencia.FECHA]));
-        exportToPdf(dataHeader, data, "Reporte de Asistencia");
+        exportToPdf(dataHeader, data, "Reporte de Asistencia" + moment().format("DD/MM/YYYY"));
     }
+
+    const onChangeYearFilter = (e) => {
+        setYearFilter(e.target.value);
+      }
 
     return (
 
@@ -183,13 +203,14 @@ export default function Assistance() {
                 <div className="container-insert-search__">
                     <div className="d-flex flex-row">
                         <AddButton text="Insertar" onClick={() => setIsOpenInsert(true)} />
+                        <AddButton text="TOP 10" onClick={() => setIsOpenTop(true)} />
                         <CustomForm>
                             <CustomSelect focus="value" onChange={handleFiltro} errorMsg="Seleccione una opción" className='mt-2 ml-2' name='filtro' placeholder='Nombre grupo muscular' options={selectFiltro}></CustomSelect>
                         </CustomForm>
                         <DownloadButton onClick={exportPDF} text="PDF" />
-                        <ExportToCsv headers={dataHeaderCSV} data={dataRef.current} fileName={"asistencia_powerfit_" + moment() + ".csv"} />
+                        <ExportToCsv headers={dataHeaderCSV} data={dataRef.current} fileName={"asistencia_powerfit_" + moment().format("DD/MM/YYYY") + ".csv"} />
                     </div>
-                    <SingleCustomInput onChange={handleSearch} errorMsg="Ingrese la palabra a buscar" placeholder="Buscar" name="input" className="form-control" />
+                    <SingleCustomInput onChange={handleSearch} errorMsg="Ingrese la palabra a buscar" placeholder="Buscar" name="input" className="search__" />
                 </div>
                 <Table
                     columns={columns}
@@ -242,6 +263,25 @@ export default function Assistance() {
                 methods={{ toggleOpenModal: () => setModalMsg(!modalMsg.isMsgOpen) }}
             >
                 <p>{modalMsg.msg}</p>
+            </CustomModal>
+
+            <CustomModal
+                props={{ title: 'Top 10 de Asistencias', isOpen: isOpenTop }}
+                methods={{ toggleOpenModal: () => setIsOpenTop(!isOpenTop) }}
+            >
+                <div className="form-group row d-flex justify-content-center">
+                    <label htmlFor="lbl_annio_sale" class="col-sm-4 col-form-label">Top 10 de asistencia según año: </label>
+                    <div className="col-sm-4">
+                        <input id="lbl_annio_sale" onChange={onChangeYearFilter} value={yearFilter} placeholder="filtro de año" type="number" min={2022} className="input-search"></input>
+                    </div>
+                    <button onClick={fetchTop} className="btn btn-dark">Filtrar</button>
+                </div>
+                <Table
+                    columns={columnsTop}
+                    data={dataTop??[]}
+                 
+                />
+                <hr />
             </CustomModal>
         </div>
     );
