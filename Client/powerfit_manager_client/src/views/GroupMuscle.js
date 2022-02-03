@@ -127,7 +127,7 @@ export default function GrupoMuscular() {
   return (
 
     <div>
-      <h1 className="text-left">Control Grupo Muscular</h1>
+      <h1 className="text-left">Control de grupo muscular</h1>
       <hr />
       <div className="container">
         <div className="container-insert-search__">

@@ -195,9 +195,8 @@ export default function Assistance() {
       }
 
     return (
-
         <div>
-            <h1 className="text-left">Control Asistencia</h1>
+            <h1 className="text-left">Control de asistencia</h1>
             <hr />
             <div className="container">
                 <div className="container-insert-search__">

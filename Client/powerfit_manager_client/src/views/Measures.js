@@ -217,7 +217,7 @@ export default function Membership() {
     return (
 
         <div>
-            <h1 className="text-left">Control de Medidas</h1>
+            <h1 className="text-left">Control de medidas</h1>
             <hr />
             <div className="container">
                 <div className="container-insert-search__">
@@ -235,7 +235,7 @@ export default function Membership() {
                 />
             </div>
             <CustomModal
-                props={{ title: 'Insertar Medidas', isOpen: isOpenInsert }}
+                props={{ title: 'Insertar medidas', isOpen: isOpenInsert }}
                 methods={{ toggleOpenModal: () => setIsOpenInsert(!isOpenInsert) }}
             >
                 <form noValidate onSubmit={handleSubmit(handleInsert)}>

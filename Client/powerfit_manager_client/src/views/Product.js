@@ -46,7 +46,7 @@ export default function Product(){
     e.map(entrada => (
         entrada.ULT_INGRESO = moment(entrada.ULT_INGRESO).format('LL')
     ))
-}
+  }
 
   const fetchProducts = () => {
       commonDB.getAll({header:"producto"}).then(response=>{
