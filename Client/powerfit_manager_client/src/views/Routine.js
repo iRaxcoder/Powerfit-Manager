@@ -11,6 +11,7 @@ import { exportToPdf, ExportToCsv } from "../utils/exportData";
 import moment from "moment/min/moment-with-locales";
 import { useForm } from "react-hook-form"
 import '../styles/Routine/routine.css'
+import RoutineDay from "../components/RoutineDay";
 
 export default function Routine(){
   const [isOpenInsert, setIsOpenInsert] = useState(false);
@@ -157,7 +158,6 @@ export default function Routine(){
             label: client.NOMBRE_CLIENTE + " " + client.APELLIDOS,
             value: client.ID_CLIENTE
           })))
-          setRoutineClient({id:selectedClients[0].ID_CLIENTE,name:selectedClients[0].NOMBRE_CLIENTE+' '+selectedClients[0].APELLIDOS});
         }
       };
 
@@ -191,6 +191,7 @@ export default function Routine(){
 
       const onChangeSearchClient = (selected) => {
         setSelectedClients(selected);
+        setRoutineClient({id:selectedClients[0].ID_CLIENTE,name:selectedClients[0].NOMBRE_CLIENTE+' '+selectedClients[0].APELLIDOS});
       };
       const onChangeSearchMuscleGroup = (selected) => {
         setSelectedClients(selected.value);
@@ -291,6 +292,17 @@ export default function Routine(){
                             <AddButton onClick={addExercise} text="Agregar ejercicio"/>
                        </div>
                     </div>
+                </div>
+                <h5 className="mt-2">Semana</h5>
+                <hr/>
+                <div className="routine__days">
+                    <RoutineDay DayName={"Lunes"} ExerciseName={"Nombre de ejercicio"}/>
+                    <RoutineDay DayName={"Martes"} ExerciseName={"Nombre de ejercicio"}/>
+                    <RoutineDay DayName={"Miércoles"} ExerciseName={"Nombre de ejercicio"}/>
+                    <RoutineDay DayName={"Jueves"} ExerciseName={"Nombre de ejercicio"}/>
+                    <RoutineDay DayName={"Viernes"} ExerciseName={"Nombre de ejercicio"}/>
+                    <RoutineDay DayName={"Sábado"} ExerciseName={"Nombre de ejercicio"}/>
+                    <RoutineDay DayName={"Domingo"} ExerciseName={"Nombre de ejercicio"}/>
                 </div>
             </CustomModal>
             <CustomModal
