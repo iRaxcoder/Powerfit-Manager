@@ -26,13 +26,14 @@ export default function Routine(){
   const [selectedClients, setSelectedClients] = useState([]);
   const [selectedExercise, setSelectedExercise] = useState([]);
   const [selectedGroupMuscle, setSelectedGroupMuscle] = useState([]);
-  const [routineClient, setRoutineClient]= useState({id:"def", name:''});
+  const [routineClient, setRoutineClient]= useState({id:undefined, name:''});
   const { register, formState: { errors }, handleSubmit, reset } = useForm();
   const [selectedDay,setSelectedDay]=useState(1);
   const [addExerciseSection, setAddExerciseSection]=useState(false);
   const [generalDataSection, setGeneralDataSection]=useState(true);
   const [daysExercises,setDaysExercises]=useState({1:[],2:[],3:[],4:[],5:[],6:[],7:[]});
-  const [exerciseDetails, setExerciseDetails]=useState("ref");
+  const [exerciseDetails, setExerciseDetails]=useState("sin detalles");
+  const  [isOpenConfirmRoutine, setIsOpenConfirmRoutine]=useState(false);
 
 //   const dataHeader = [["Nombre","Apellidos","Edad","Teléfono","Correo","Enfermedades"]];
 
@@ -78,19 +79,19 @@ export default function Routine(){
     fetchMuscleGroup();
   },[]);
 
-  if(!routineList) return "No se encuentran clientes aún.";
+  if(!routineList) return "No se encuentran rutinas aún.";
     
-    const handleInsert = (e) => {
-    //   commonDB.insert({header:"rutina",size:"6", object: e}).then(response=>{   
-    //       setModalMsg(prevState =>({
-    //         ...prevState,
-    //         msg: response,
-    //         isMsgOpen: true
-    //       }));
-    //     fetchRoutines();
-    //   })
-      setGeneralDataSection(!generalDataSection);
-      setAddExerciseSection(!addExerciseSection);
+    const handleInsertGeneralData = (e) => {
+      if(routineClient.id===undefined){
+        setModalMsg(prevState =>({
+          ...prevState,
+          msg: "Debe seleccionar un  cliente",
+          isMsgOpen: true
+          }));
+      }else{
+        setGeneralDataSection(!generalDataSection);
+        setAddExerciseSection(!addExerciseSection);
+      }
     }
 
     // const HandleOpenEdit = (e) => {
@@ -211,13 +212,21 @@ export default function Routine(){
       };
 
       const addExercise = () => {
-        const exerciseItem = {exerciseId: selectedExercise.value.id, exerciseName:selectedExercise.value.name, details: exerciseDetails};
-        const day = daysExercises[selectedDay+""];
-        day.push(exerciseItem);
-        setDaysExercises({
-          ...daysExercises,
-          [selectedDay+""]:day
-        })
+        if(selectedExercise.value==undefined){
+          setModalMsg(prevState =>({
+            ...prevState,
+            msg: "Debe seleccionar un ejercicio primero",
+            isMsgOpen: true
+          }));
+        }else{
+          const exerciseItem = {exerciseId: selectedExercise.value.id, exerciseName:selectedExercise.value.name, details: exerciseDetails};
+          const day = daysExercises[selectedDay+""];
+          day.push(exerciseItem);
+          setDaysExercises({
+            ...daysExercises,
+            [selectedDay+""]:day
+          })
+        }
       }
 
       const onSelectDay = (e) => {
@@ -272,26 +281,26 @@ export default function Routine(){
                 <LiveCustomSelect data={selectedClients} onChange={onChangeSearchClient} className='mt-2' placeHolder={"Seleccionar cliente"} loadOptions={searchClient} />
                 <h5 className="text-left mt-3">1. Datos generales</h5>
                 <div className="general__data">
-                    <form noValidate onSubmit={handleSubmit(handleInsert)}>
+                    <form noValidate onSubmit={handleSubmit(handleInsertGeneralData)}>
                         <div className="row">
                             <input type="hidden" register={register} name="client_id" value={routineClient.ID_CLIENTE}></input>
                             <div className="col">
-                                <CustomInput register={register} errors={errors} readonly name="client_name"  errorMsg="Ingrese el cliente" type="text" placeholder='Cliente' value={routineClient.name}></CustomInput>
+                                <input register={register} readOnly name="client_name" type="text" placeholder='Cliente' value={routineClient.name}></input>
                             </div>
                             <div className="col">
-                                <CustomInput register={register} errors={errors} name="level-insert" errorMsg="Ingrese el nivel de rutina"  placeholder='Nivel'></CustomInput>
+                                <CustomInput register={register} name="level-insert" placeholder='Nivel'/>
                             </div>
                             <div className="col">
-                                <CustomInput name="type_routine" errors={errors} register={register} errorMsg="Ingrese el tipo" placeholder='Tipo'></CustomInput>
+                                <CustomInput name="type_routine" register={register} placeholder='Tipo'/>
                             </div>
                             <div className="col">
-                                <CustomInput name="objetive" register={register} errors={errors} errorMsg="Ingrese el objetivo" placeholder='Objetivo'></CustomInput>
+                                <CustomInput name="objetive" register={register} placeholder='Objetivo'/>
                             </div>
                             <div className="col">
-                                <CustomInput name="percent" register={register} errors={errors} errorMsg="Ingrese el porcentaje" placeholder='Porcentaje'></CustomInput>
+                                <CustomInput name="percent" register={register} placeholder='Porcentaje'/>
                             </div>
                             <div className="col">
-                                <CustomInput name={"pause"} register={register} errors={errors} errorMsg="Ingrese la pausa" placeholder='Pausa'></CustomInput>
+                                <CustomInput name={"pause"} register={register} placeholder='Pausa'/>
                             </div>
                         </div>
                         <AddButton text="Guardar datos generales"/>
@@ -376,6 +385,16 @@ export default function Routine(){
               methods={{toggleOpenModal: ()=>setModalMsg(!modalMsg.isMsgOpen)}}
               >
               <p>{modalMsg.msg}</p>
+            </CustomModal>
+            <CustomModal
+              props={{title: "¿Guardar rutina?"}}
+              methods={{toggleOpenModal: ()=>setIsOpenDelete(!isOpenConfirmRoutine)}}
+                >
+              <CustomForm onSubmit={HandleDelete}>
+                <CustomInput type="hidden" value={routineEdited.id} className='form-control mt-2' name='routineIdDelete'/>
+                <AddButton text="Sí"/>
+                <CancelButton fun={()=>setIsOpenConfirmRoutine(false)}/>
+              </CustomForm>
             </CustomModal>
         </div>
     );
