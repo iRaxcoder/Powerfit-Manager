@@ -478,16 +478,19 @@ export default function Sales(){
                   <li className="list-group-item list-group-item-warning">El producto más vendido: {salesStats.highlights["@prod_mas_vendido"]??" No se ha podido calcular."} </li>
                   <li className="list-group-item list-group-item-danger">El producto menos vendido: {salesStats.highlights["@prod_menos_vendido"]??"No se ha podido calcular."}</li>
                 </ul>
+                <br/>
                 <h4>Ventas totales de cada mes</h4>
                 <Table
                   columns={columnsSalesMonth}
                   data={salesStats.monthStats??[]}
                 />
+                 <br/>
                 <h4 className="mt-2">Ventas de productos</h4>
                 <Table
                   columns={columnsProductSales}
                   data={salesStats.productStats??[]}
                 />
+                 <br/>
                 <h4 className="mt-2">Top 10 compradores</h4>
                 <Table
                   columns={columnsTopClients}

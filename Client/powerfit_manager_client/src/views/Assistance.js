@@ -18,7 +18,7 @@ export default function Assistance() {
     const [isOpenDelete, setIsOpenDelete] = useState(false);
     const [isOpenTop, setIsOpenTop] = useState(false);
     const [modalMsg, setModalMsg] = useState({ isMsgOpen: false, msg: "" });
-    const [data, setData] = useState(null); 
+    const [data, setData] = useState(null);
     const [dataTop, setDataTop] = useState(null);
     const [selectedClients, setSelectedClients] = useState(null);
     const [yearFilter, setYearFilter] = useState(new Date().getFullYear());
@@ -39,7 +39,7 @@ export default function Assistance() {
             { Header: 'Telefono', accessor: 'TELEFONO' },
             { Header: 'Cantidad de Asistencias', accessor: 'ASISTENCIAS' }
         ]
-    ) 
+    )
     const columns = React.useMemo(
         () => [
             { Header: '#', accessor: 'ID_ASISTENCIA' },
@@ -192,7 +192,7 @@ export default function Assistance() {
 
     const onChangeYearFilter = (e) => {
         setYearFilter(e.target.value);
-      }
+    }
 
     return (
         <div>
@@ -268,18 +268,20 @@ export default function Assistance() {
                 props={{ title: 'Top 10 de Asistencias', isOpen: isOpenTop }}
                 methods={{ toggleOpenModal: () => setIsOpenTop(!isOpenTop) }}
             >
-                <div className="form-group row d-flex justify-content-center">
-                    <label htmlFor="lbl_annio_sale" class="col-sm-4 col-form-label">Top 10 de asistencia según año: </label>
-                    <div className="col-sm-4">
-                        <input id="lbl_annio_sale" onChange={onChangeYearFilter} value={yearFilter} placeholder="filtro de año" type="number" min={2022} className="input-search"></input>
+         
+                    <div className="form-group row d-flex justify-content-center">
+                        <label htmlFor="lbl_annio_sale" class="col-sm-4 col-form-label">Top 10 de asistencia según año: </label>
+                        <div className="col-sm-4">
+                            <input id="lbl_annio_sale" onChange={onChangeYearFilter} value={yearFilter} placeholder="filtro de año" type="number" min={2022} className="input-search"></input>
+                        </div>
+                        <button onClick={fetchTop} className="btn btn-dark">Filtrar</button>
                     </div>
-                    <button onClick={fetchTop} className="btn btn-dark">Filtrar</button>
-                </div>
-                <Table
-                    columns={columnsTop}
-                    data={dataTop??[]}
-                 
-                />
+                    <Table
+                        columns={columnsTop}
+                        data={dataTop ?? []}
+
+                    />
+              
                 <hr />
             </CustomModal>
         </div>
