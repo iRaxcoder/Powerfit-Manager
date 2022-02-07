@@ -39,7 +39,7 @@ export const LiveCustomSelect = ({options,data, onChange, placeHolder, loadOptio
   return (
     <AsyncSelect
       value={data}
-      onInputChange={onChange}
+      onChange={onChange}
       placeholder={placeHolder}
       loadOptions={loadOptions}
       components={animatedComponent}

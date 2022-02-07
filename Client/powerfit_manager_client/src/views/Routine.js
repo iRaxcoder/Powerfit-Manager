@@ -32,6 +32,7 @@ export default function Routine(){
   const [addExerciseSection, setAddExerciseSection]=useState(false);
   const [generalDataSection, setGeneralDataSection]=useState(true);
   const [daysExercises,setDaysExercises]=useState([]);
+  const [exerciseDetails, setExerciseDetails]=useState("ref");
 
 //   const dataHeader = [["Nombre","Apellidos","Edad","Teléfono","Correo","Enfermedades"]];
 
@@ -164,10 +165,6 @@ export default function Routine(){
           commonDB.getSearch({ header: "cliente", find: find }).then(response => {
             setSelectedClients(response);
           })
-        }else{
-          commonDB.getAll({ header: "cliente"}).then(response => {
-            setSelectedClients(response);
-          })
         }
         if(Array.isArray(selectedClients)){
           callback(selectedClients.map(client => ({
@@ -178,13 +175,12 @@ export default function Routine(){
       };
 
       const searchExercise = (find, callback) => {
+        var filteredExercises=[];
         if(find!==undefined){
-          commonDB.getSearch({ header: "ejercicio", find: find}).then(response => {
-            setSelectedExercise(response);
-          })
+          filteredExercises= selectedExercise.filter(e =>e.NOMBRE_EJERCICIO.toUpperCase().includes(find.toUpperCase()));
         }
-        if(Array.isArray(selectedExercise)){
-          callback(selectedExercise.map(exercise => ({
+        if(Array.isArray(filteredExercises)){
+          callback(filteredExercises.map(exercise => ({
             label: exercise.NOMBRE_EJERCICIO,
             value: exercise.ID_EJERCICIO
           })))
@@ -210,20 +206,29 @@ export default function Routine(){
         setSelectedClients(selected);
         setRoutineClient({id:selectedClients[0].ID_CLIENTE,name:selectedClients[0].NOMBRE_CLIENTE+' '+selectedClients[0].APELLIDOS});
       };
-      const onChangeSearchMuscleGroup = (selected) => {
-        setSelectedClients(selected.value);
-      }; 
       const onChangeSearchExercise = (selected) => {
-        setSelectedClients(selected.value);
+        setSelectedExercise(selected);
       };
 
       const addExercise = () => {
-
+        const ExerciseItem = {exerciseId: selectedExercise.value, details: exerciseDetails};
+        setDaysExercises([])
       }
 
       const onSelectDay = (e) => {
         setSelectedDay(e.target.value);
       }
+
+      const onSelectMuscleGroup = (e) => {
+        commonDB.getSearch({ header: "ejercicio_grupo", find: e.target.value }).then(response => {
+          setSelectedExercise(response);
+        })
+      }
+
+      const onChangeExerciseDetails = (e) => {
+        setExerciseDetails(e.target.value);
+      }
+
     return (
         <div>
             <h1 className="text-left module__title">Control de rutinas</h1>
@@ -292,7 +297,7 @@ export default function Routine(){
                  <div className="general__data">
                      <div className="row">
                          <div className="col">
-                         <select defaultValue={selectedGroupMuscle?selectedGroupMuscle[0].ID_MUSCULAR:null} onChange={onSelectDay} placeholder="Seleccione el dia">
+                         <select onChange={onSelectMuscleGroup} placeholder="Seleccione el dia">
                                   <option>Seleccionar grupo muscular</option>
                                   {selectedGroupMuscle.map((value)=>(
                                      <option value={value.ID_MUSCULAR}>{value.NOMBRE_GRUPO_MUSCULAR}</option>
@@ -300,7 +305,7 @@ export default function Routine(){
                              </select>
                          </div>
                          <div className="col">
-                             <LiveCustomSelect onChange={onChangeSearchExercise} className='mt-2' placeHolder={"Seleccionar ejercicio"} loadOptions={searchExercise} />
+                             <LiveCustomSelect data={selectedExercise} onChange={onChangeSearchExercise} className='mt-2' placeHolder={"Seleccionar ejercicio"} loadOptions={searchExercise} />
                          </div>
                          <div className="col">
                              <select defaultValue={1} onChange={onSelectDay} placeholder="Seleccione el dia">
@@ -316,7 +321,7 @@ export default function Routine(){
                      </div>
                      <div className="row">
                         <div className="col col-md-3">
-                             <textarea className="mt-2" placeholder="detalles (peso,ejecucion,repeticiones)" rows="3"></textarea>
+                             <textarea className="mt-2" onChange={onChangeExerciseDetails} placeholder="detalles (peso,ejecucion,repeticiones)" rows="3"></textarea>
                         </div>
                         <div className="col d-flex">
                              <AddButton onClick={addExercise} text="Agregar ejercicio"/>
