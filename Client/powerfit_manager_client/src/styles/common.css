@@ -1,12 +1,19 @@
 thead{
     background-color: #558b23  ;
 }
+.color-text__{
+    color: #558b23  ;
+}
 
 .btn-delete{
     background-color:  #6c765f ;
 }
 
-.btn-edit,.btn-cancel,.btn-insert{
+.btn-table{
+    background-color:  #6c765f ;
+}
+
+.btn-edit,.btn-cancel,.btn-insert,.btn-table{
     border-color: black !important;
     border-width: 2px !important;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
@@ -17,7 +24,7 @@ thead{
     background-color:  #6c765f ;
 }
 
-.btn-delete:hover, .btn-edit:hover{
+.btn-delete:hover, .btn-edit:hover, .btn-table:hover{
     opacity: 0.7;
 }
 
@@ -43,7 +50,9 @@ thead{
     margin-bottom: 5px;
 }
 
-
+.search__{
+    margin-top: 5px;
+}
 
 .container-insert-search__>input{
     width: 20%;
