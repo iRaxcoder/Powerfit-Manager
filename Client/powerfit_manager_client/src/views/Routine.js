@@ -6,6 +6,7 @@ import CustomForm from "../components/CustomForm";
 import DownloadButton from "../components/DownloadButton";
 import {CustomInput, SingleCustomInput, LiveCustomSelect} from "../components/CustomInput";
 import commonDB from "../service/CommonDB";
+import RoutineDB from "../service/Routine";
 import CancelButton from "../components/CancelButton";
 import { exportToPdf, ExportToCsv } from "../utils/exportData";
 import moment from "moment/min/moment-with-locales";
@@ -33,7 +34,10 @@ export default function Routine(){
   const [generalDataSection, setGeneralDataSection]=useState(true);
   const [daysExercises,setDaysExercises]=useState({1:[],2:[],3:[],4:[],5:[],6:[],7:[]});
   const [exerciseDetails, setExerciseDetails]=useState("sin detalles");
-  const  [isOpenConfirmRoutine, setIsOpenConfirmRoutine]=useState(false);
+  const [isOpenConfirmRoutine, setIsOpenConfirmRoutine]=useState(false);
+  const [isOpenConfirmClearRoutine, setIsOpenConfirmClearRoutine]=useState(false);
+  const [generalExerciseList, setGeneralExerciseList]=useState({counter:0,list:[]});
+  const[routineGeneralInfo,setRoutineGeneralInfo]=useState({level:'',type:'',objetive:'',percent:'',pause:''});
 
 //   const dataHeader = [["Nombre","Apellidos","Edad","Teléfono","Correo","Enfermedades"]];
 
@@ -89,6 +93,7 @@ export default function Routine(){
           isMsgOpen: true
           }));
       }else{
+        setRoutineGeneralInfo(e);
         setGeneralDataSection(!generalDataSection);
         setAddExerciseSection(!addExerciseSection);
       }
@@ -132,7 +137,6 @@ export default function Routine(){
     }
 
     const handleSearch = (e) => {
-      console.log(e.target.value);
       if(e.target.value===undefined || e.target.value ===""){
         fetchRoutines();
       }else{
@@ -212,45 +216,92 @@ export default function Routine(){
       };
 
       const addExercise = () => {
-        if(selectedExercise.value==undefined){
+        if(selectedExercise.value===undefined){
           setModalMsg(prevState =>({
             ...prevState,
             msg: "Debe seleccionar un ejercicio primero",
             isMsgOpen: true
           }));
         }else{
-          const exerciseItem = {exerciseId: selectedExercise.value.id, exerciseName:selectedExercise.value.name, details: exerciseDetails};
+          const exerciseItem = {generalId: generalExerciseList.counter,exerciseId: selectedExercise.value.id, exerciseName:selectedExercise.value.name, details: exerciseDetails};
           const day = daysExercises[selectedDay+""];
           day.push(exerciseItem);
           setDaysExercises({
             ...daysExercises,
             [selectedDay+""]:day
           })
+          const generalDayExercises=generalExerciseList.list;
+          const counter = generalExerciseList.counter;
+          generalDayExercises.push({idExercise: selectedExercise.value.id,day:selectedDay,details:exerciseDetails});
+          setGeneralExerciseList({
+            ...generalExerciseList,
+            counter:counter+1,
+            list:generalDayExercises
+          });
         }
-      }
+      };
 
       const onSelectDay = (e) => {
-        setSelectedDay(e.target.value);
-      }
+        setSelectedDay(Number(e.target.value));
+      };
 
       const onSelectMuscleGroup = (e) => {
-        commonDB.getSearch({ header: "ejercicio_grupo", find: e.target.value }).then(response => {
-          setSelectedExercise(response);
-        })
-      }
+        if(e.target.value!==-1){
+          commonDB.getSearch({ header: "ejercicio_grupo", find: e.target.value }).then(response => {
+            setSelectedExercise(response);
+          })
+        }
+      };
 
       const onChangeExerciseDetails = (e) => {
         setExerciseDetails(e.target.value);
-      }
+      };
 
-      const onDeleteExerciseDay = (day,index) => {
+      const onDeleteDayExercise = (day,index) => {
         const dayExercise = daysExercises[day+""];
+        const newGeneralExerciseList= generalExerciseList.list.filter((_,i)=>i!==dayExercise.generalId);
         const newExerciseList = dayExercise.filter((_,i)=>i!==index);
         setDaysExercises({
           ...daysExercises,
           [day+""]:newExerciseList
+        });
+        setGeneralExerciseList({
+          ...generalExerciseList,
+          counter:generalExerciseList.counter-1,
+          list:newGeneralExerciseList
+        });
+        console.log(generalExerciseList.counter);
+      };
+
+      const clearRoutineDays = () => {
+        setDaysExercises({1:[],2:[],3:[],4:[],5:[],6:[],7:[]});
+        setGeneralExerciseList({counter:0,list:[]});
+        setIsOpenConfirmClearRoutine(false);
+      };
+
+      const saveRoutine = () => {
+        if(generalExerciseList.length===0){
+          setModalMsg(prevState =>({
+            ...prevState,
+            msg: "No se ha podido guardar la rutina porque no se han agregado ejercicios.",
+            isMsgOpen: true
+          }));
+        }else{
+          RoutineDB.insert({size:"6", generalInfo:{clientId: routineClient.id,
+            level:routineGeneralInfo.level,type:routineGeneralInfo.type,obj:routineGeneralInfo.objetive,porc:routineGeneralInfo.percent,pause:routineGeneralInfo.pause},
+            exerciseList:generalExerciseList.list}).then(response=>{
+            setIsOpenConfirmRoutine(false);
+            clearRoutineDays();
+            setRoutineGeneralInfo({level:'',type:'',objetive:'',percent:'',pause:''});
+            setRoutineClient({id:undefined, name:''});
+            setModalMsg(prevState =>({
+              ...prevState,
+              msg: response,
+              isMsgOpen: true
+            }));
         })
-      }
+        }
+      };
 
     return (
         <div>
@@ -288,10 +339,10 @@ export default function Routine(){
                                 <input register={register} readOnly name="client_name" type="text" placeholder='Cliente' value={routineClient.name}></input>
                             </div>
                             <div className="col">
-                                <CustomInput register={register} name="level-insert" placeholder='Nivel'/>
+                                <CustomInput register={register} name="level" placeholder='Nivel'/>
                             </div>
                             <div className="col">
-                                <CustomInput name="type_routine" register={register} placeholder='Tipo'/>
+                                <CustomInput name="type" register={register} placeholder='Tipo'/>
                             </div>
                             <div className="col">
                                 <CustomInput name="objetive" register={register} placeholder='Objetivo'/>
@@ -300,7 +351,7 @@ export default function Routine(){
                                 <CustomInput name="percent" register={register} placeholder='Porcentaje'/>
                             </div>
                             <div className="col">
-                                <CustomInput name={"pause"} register={register} placeholder='Pausa'/>
+                                <CustomInput name="pause" register={register} placeholder='Pausa'/>
                             </div>
                         </div>
                         <AddButton text="Guardar datos generales"/>
@@ -321,9 +372,9 @@ export default function Routine(){
                      <div className="row">
                          <div className="col">
                          <select onChange={onSelectMuscleGroup} placeholder="Seleccione el dia">
-                                  <option>Seleccionar grupo muscular</option>
+                                  <option key={-1} value={-1}>Seleccionar grupo muscular</option>
                                   {selectedGroupMuscle.map((value)=>(
-                                     <option value={value.ID_MUSCULAR}>{value.NOMBRE_GRUPO_MUSCULAR}</option>
+                                     <option key={value.ID_MUSCULAR} value={value.ID_MUSCULAR}>{value.NOMBRE_GRUPO_MUSCULAR}</option>
                                   ))}
                              </select>
                          </div>
@@ -352,18 +403,20 @@ export default function Routine(){
                      </div>
                  </div>
                  <hr/>
-                 <div className="d-flex justify-content-between">
-                 <h5 className="mt-2">Semana</h5>
-                    <button className="btn btn-dark mb-2">Reiniciar rutina</button>
-                </div>
+                 <div className="container d-flex justify-content-between">
+                    <div>
+                    <AddButton onClick={()=>setIsOpenConfirmRoutine(!isOpenConfirmRoutine)} text="Guardar rutina"/>
+                    </div>
+                    <button onClick={()=>setIsOpenConfirmClearRoutine(!isOpenConfirmClearRoutine)} className="btn btn-dark mb-2">Reiniciar rutina</button>
+                  </div>
                  <div className="routine__days">
-                   <RoutineDay DayName={"Lunes"}>{daysExercises["1"].map((value,index)=><RoutineExercise exercise={value} onDelete={()=>onDeleteExerciseDay(1,index)}/>)}</RoutineDay>
-                   <RoutineDay DayName={"Martes"}>{daysExercises["2"].map((value,index)=><RoutineExercise exercise={value}onDelete={()=>onDeleteExerciseDay(2,index)}/>)}</RoutineDay>
-                   <RoutineDay DayName={"Miércoles"}>{daysExercises["3"].map((value,index)=><RoutineExercise exercise={value}onDelete={()=>onDeleteExerciseDay(3,index)}/>)}</RoutineDay>
-                   <RoutineDay DayName={"Jueves"}>{daysExercises["4"].map((value,index)=><RoutineExercise exercise={value}onDelete={()=>onDeleteExerciseDay(4,index)}/>)}</RoutineDay>
-                   <RoutineDay DayName={"Viernes"}>{daysExercises["5"].map((value,index)=><RoutineExercise exercise={value}onDelete={()=>onDeleteExerciseDay(5,index)}/>)}</RoutineDay>
-                   <RoutineDay DayName={"Sábado"}>{daysExercises["6"].map((value,index)=><RoutineExercise exercise={value}onDelete={()=>onDeleteExerciseDay(6,index)}/>)}</RoutineDay>
-                   <RoutineDay DayName={"Domingo"}>{daysExercises["7"].map((value,index)=><RoutineExercise exercise={value}onDelete={()=>onDeleteExerciseDay(7,index)}/>)}</RoutineDay>
+                   <RoutineDay DayName={"Lunes"}>{daysExercises["1"].map((value,index)=><RoutineExercise exercise={value} onDelete={()=>onDeleteDayExercise(1,index)}/>)}</RoutineDay>
+                   <RoutineDay DayName={"Martes"}>{daysExercises["2"].map((value,index)=><RoutineExercise exercise={value}onDelete={()=>onDeleteDayExercise(2,index)}/>)}</RoutineDay>
+                   <RoutineDay DayName={"Miércoles"}>{daysExercises["3"].map((value,index)=><RoutineExercise exercise={value}onDelete={()=>onDeleteDayExercise(3,index)}/>)}</RoutineDay>
+                   <RoutineDay DayName={"Jueves"}>{daysExercises["4"].map((value,index)=><RoutineExercise exercise={value}onDelete={()=>onDeleteDayExercise(4,index)}/>)}</RoutineDay>
+                   <RoutineDay DayName={"Viernes"}>{daysExercises["5"].map((value,index)=><RoutineExercise exercise={value}onDelete={()=>onDeleteDayExercise(5,index)}/>)}</RoutineDay>
+                   <RoutineDay DayName={"Sábado"}>{daysExercises["6"].map((value,index)=><RoutineExercise exercise={value}onDelete={()=>onDeleteDayExercise(6,index)}/>)}</RoutineDay>
+                   <RoutineDay DayName={"Domingo"}>{daysExercises["7"].map((value,index)=><RoutineExercise exercise={value}onDelete={()=>onDeleteDayExercise(7,index)}/>)}</RoutineDay>
                  </div>
                  </>
                  :
@@ -387,13 +440,21 @@ export default function Routine(){
               <p>{modalMsg.msg}</p>
             </CustomModal>
             <CustomModal
-              props={{title: "¿Guardar rutina?"}}
-              methods={{toggleOpenModal: ()=>setIsOpenDelete(!isOpenConfirmRoutine)}}
+              props={{title: "¿Guardar rutina?",isOpen:isOpenConfirmRoutine}}
+              methods={{toggleOpenModal: ()=>setIsOpenConfirmRoutine(!isOpenConfirmRoutine)}}
                 >
-              <CustomForm onSubmit={HandleDelete}>
-                <CustomInput type="hidden" value={routineEdited.id} className='form-control mt-2' name='routineIdDelete'/>
+              <CustomForm onSubmit={saveRoutine}>
                 <AddButton text="Sí"/>
                 <CancelButton fun={()=>setIsOpenConfirmRoutine(false)}/>
+              </CustomForm>
+            </CustomModal>
+            <CustomModal
+              props={{title: "¿Reiniciar rutina?",isOpen:isOpenConfirmClearRoutine}}
+              methods={{toggleOpenModal: ()=>setIsOpenConfirmClearRoutine(!isOpenConfirmClearRoutine)}}
+                >
+              <CustomForm onSubmit={clearRoutineDays}>
+                <AddButton text="Sí"/>
+                <CancelButton fun={()=>setIsOpenConfirmClearRoutine(false)}/>
               </CustomForm>
             </CustomModal>
         </div>

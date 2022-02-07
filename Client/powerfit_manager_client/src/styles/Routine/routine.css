@@ -51,7 +51,7 @@ textarea:focus{
 .routine__day{
     display: inline-block;
     border-radius: 10px;
-    width: 32%;
+    width: 32.5%;
     height: max-content;
     border: 1px solid #000;
     margin: 10px 3px;
