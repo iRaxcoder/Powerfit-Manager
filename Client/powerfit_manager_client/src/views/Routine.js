@@ -31,7 +31,7 @@ export default function Routine(){
   const [selectedDay,setSelectedDay]=useState(1);
   const [addExerciseSection, setAddExerciseSection]=useState(false);
   const [generalDataSection, setGeneralDataSection]=useState(true);
-  const [daysExercises,setDaysExercises]=useState([]);
+  const [daysExercises,setDaysExercises]=useState({1:[],2:[],3:[],4:[],5:[],6:[],7:[]});
   const [exerciseDetails, setExerciseDetails]=useState("ref");
 
 //   const dataHeader = [["Nombre","Apellidos","Edad","Teléfono","Correo","Enfermedades"]];
@@ -182,7 +182,7 @@ export default function Routine(){
         if(Array.isArray(filteredExercises)){
           callback(filteredExercises.map(exercise => ({
             label: exercise.NOMBRE_EJERCICIO,
-            value: exercise.ID_EJERCICIO
+            value: {id:exercise.ID_EJERCICIO,name:exercise.NOMBRE_EJERCICIO}
           })))
         }
       };
@@ -211,8 +211,13 @@ export default function Routine(){
       };
 
       const addExercise = () => {
-        const ExerciseItem = {exerciseId: selectedExercise.value, details: exerciseDetails};
-        setDaysExercises([])
+        const exerciseItem = {exerciseId: selectedExercise.value.id, exerciseName:selectedExercise.value.name, details: exerciseDetails};
+        const day = daysExercises[selectedDay+""];
+        day.push(exerciseItem);
+        setDaysExercises({
+          ...daysExercises,
+          [selectedDay+""]:day
+        })
       }
 
       const onSelectDay = (e) => {
@@ -227,6 +232,15 @@ export default function Routine(){
 
       const onChangeExerciseDetails = (e) => {
         setExerciseDetails(e.target.value);
+      }
+
+      const onDeleteExerciseDay = (day,index) => {
+        const dayExercise = daysExercises[day+""];
+        const newExerciseList = dayExercise.filter((_,i)=>i!==index);
+        setDaysExercises({
+          ...daysExercises,
+          [day+""]:newExerciseList
+        })
       }
 
     return (
@@ -252,9 +266,6 @@ export default function Routine(){
               props={{title: 'Insertar rutina', isOpen: isOpenInsert}}
               methods={{toggleOpenModal: ()=>setIsOpenInsert(!isOpenInsert)}}
                 >
-                <div className="d-flex flex-row-reverse">
-                    <button className="btn btn-dark mb-2">Reiniciar formulario</button>
-                </div>
                 {generalDataSection?
                 <>
                 <h5>Cliente</h5>
@@ -288,7 +299,10 @@ export default function Routine(){
                 </div>
                 </>
                 :
-                <AddButton onClick={()=>{setGeneralDataSection(true);setAddExerciseSection(false)}} text="<<-- Volver a la información general"/>
+                <>
+                  <AddButton onClick={()=>{setGeneralDataSection(true);setAddExerciseSection(false)}} text="<<-- Volver a la información general"/>
+                  <hr/>
+                </>
                 }
                {
                  addExerciseSection?
@@ -328,16 +342,19 @@ export default function Routine(){
                         </div>
                      </div>
                  </div>
-                 <h5 className="mt-2">Semana</h5>
                  <hr/>
+                 <div className="d-flex justify-content-between">
+                 <h5 className="mt-2">Semana</h5>
+                    <button className="btn btn-dark mb-2">Reiniciar rutina</button>
+                </div>
                  <div className="routine__days">
-                   <RoutineDay DayName={"Lunes"} ExerciseName={"Nombre de ejercicio"}/>
-                   <RoutineDay DayName={"Martes"} ExerciseName={"Nombre de ejercicio"}/>
-                   <RoutineDay DayName={"Miércoles"} ExerciseName={"Nombre de ejercicio"}/>
-                   <RoutineDay DayName={"Jueves"} ExerciseName={"Nombre de ejercicio"}/>
-                   <RoutineDay DayName={"Viernes"} ExerciseName={"Nombre de ejercicio"}/>
-                   <RoutineDay DayName={"Sábado"} ExerciseName={"Nombre de ejercicio"}/>
-                   <RoutineDay DayName={"Domingo"} ExerciseName={"Nombre de ejercicio"}/>
+                   <RoutineDay DayName={"Lunes"}>{daysExercises["1"].map((value,index)=><RoutineExercise exercise={value} onDelete={()=>onDeleteExerciseDay(1,index)}/>)}</RoutineDay>
+                   <RoutineDay DayName={"Martes"}>{daysExercises["2"].map((value,index)=><RoutineExercise exercise={value}onDelete={()=>onDeleteExerciseDay(2,index)}/>)}</RoutineDay>
+                   <RoutineDay DayName={"Miércoles"}>{daysExercises["3"].map((value,index)=><RoutineExercise exercise={value}onDelete={()=>onDeleteExerciseDay(3,index)}/>)}</RoutineDay>
+                   <RoutineDay DayName={"Jueves"}>{daysExercises["4"].map((value,index)=><RoutineExercise exercise={value}onDelete={()=>onDeleteExerciseDay(4,index)}/>)}</RoutineDay>
+                   <RoutineDay DayName={"Viernes"}>{daysExercises["5"].map((value,index)=><RoutineExercise exercise={value}onDelete={()=>onDeleteExerciseDay(5,index)}/>)}</RoutineDay>
+                   <RoutineDay DayName={"Sábado"}>{daysExercises["6"].map((value,index)=><RoutineExercise exercise={value}onDelete={()=>onDeleteExerciseDay(6,index)}/>)}</RoutineDay>
+                   <RoutineDay DayName={"Domingo"}>{daysExercises["7"].map((value,index)=><RoutineExercise exercise={value}onDelete={()=>onDeleteExerciseDay(7,index)}/>)}</RoutineDay>
                  </div>
                  </>
                  :
