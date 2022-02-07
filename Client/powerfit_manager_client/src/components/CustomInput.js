@@ -35,11 +35,11 @@ export const CustomSelect = ({ register, options, focus, name, ...rest }) => {
   );
 }
 
-export const LiveCustomSelect = ({data, onChange, placeHolder, loadOptions}) => {
+export const LiveCustomSelect = ({options,data, onChange, placeHolder, loadOptions}) => {
   return (
     <AsyncSelect
       value={data}
-      onChange={onChange}
+      onInputChange={onChange}
       placeholder={placeHolder}
       loadOptions={loadOptions}
       components={animatedComponent}

@@ -12,6 +12,7 @@ import moment from "moment/min/moment-with-locales";
 import { useForm } from "react-hook-form"
 import '../styles/Routine/routine.css'
 import RoutineDay from "../components/RoutineDay";
+import RoutineExercise from '../components/RoutineExercise';
 
 export default function Routine(){
   const [isOpenInsert, setIsOpenInsert] = useState(false);
@@ -25,9 +26,12 @@ export default function Routine(){
   const [selectedClients, setSelectedClients] = useState([]);
   const [selectedExercise, setSelectedExercise] = useState([]);
   const [selectedGroupMuscle, setSelectedGroupMuscle] = useState([]);
-  const [routineClient, setRoutineClient]= useState({id:"def", name:'def'});
+  const [routineClient, setRoutineClient]= useState({id:"def", name:''});
   const { register, formState: { errors }, handleSubmit, reset } = useForm();
   const [selectedDay,setSelectedDay]=useState(1);
+  const [addExerciseSection, setAddExerciseSection]=useState(false);
+  const [generalDataSection, setGeneralDataSection]=useState(true);
+  const [daysExercises,setDaysExercises]=useState([]);
 
 //   const dataHeader = [["Nombre","Apellidos","Edad","Teléfono","Correo","Enfermedades"]];
 
@@ -61,9 +65,16 @@ export default function Routine(){
       setRoutineList(response)
     })
   }
+
+  const fetchMuscleGroup = () => {
+    commonDB.getAll({ header: "grupo_muscular" }).then(response => {
+      setSelectedGroupMuscle(response)
+    })
+  }
   
   useEffect(()=>{
     fetchRoutines();
+    fetchMuscleGroup();
   },[]);
 
   if(!routineList) return "No se encuentran clientes aún.";
@@ -77,7 +88,8 @@ export default function Routine(){
     //       }));
     //     fetchRoutines();
     //   })
-      setIsOpenInsert(false);
+      setGeneralDataSection(!generalDataSection);
+      setAddExerciseSection(!addExerciseSection);
     }
 
     // const HandleOpenEdit = (e) => {
@@ -152,6 +164,10 @@ export default function Routine(){
           commonDB.getSearch({ header: "cliente", find: find }).then(response => {
             setSelectedClients(response);
           })
+        }else{
+          commonDB.getAll({ header: "cliente"}).then(response => {
+            setSelectedClients(response);
+          })
         }
         if(Array.isArray(selectedClients)){
           callback(selectedClients.map(client => ({
@@ -175,20 +191,21 @@ export default function Routine(){
         }
       };
 
-      const searchMuscleGroup = (find, callback) => {
-        if(find!==undefined){
-          commonDB.getSearch({ header: "grupo_muscular", find: find }).then(response => {
-            setSelectedGroupMuscle(response);
-          })
-        }
-        if(Array.isArray(selectedClients)){
-          callback(selectedClients.map(client => ({
-            label: client.NOMBRE_GRUPO_MUSCULAR,
-            value: client.ID_MUSCULAR
-          })))
-        }
-      };
-
+      // const searchMuscleGroup = (find, callback) => {
+      //   if(find!==undefined){
+      //     commonDB.getSearch({ header: "grupo_muscular", find: find }).then(response => {
+      //       setSelectedGroupMuscle(response);
+      //     })
+      //   }else{
+      //     fetchMuscleGroup();
+      //   }
+      //   if(Array.isArray(selectedGroupMuscle)){
+      //     callback(selectedGroupMuscle.map(client => ({
+      //       label: client.NOMBRE_GRUPO_MUSCULAR,
+      //       value: client.ID_MUSCULAR
+      //     })))
+      //   }
+      // };
       const onChangeSearchClient = (selected) => {
         setSelectedClients(selected);
         setRoutineClient({id:selectedClients[0].ID_CLIENTE,name:selectedClients[0].NOMBRE_CLIENTE+' '+selectedClients[0].APELLIDOS});
@@ -198,7 +215,7 @@ export default function Routine(){
       }; 
       const onChangeSearchExercise = (selected) => {
         setSelectedClients(selected.value);
-      }; 
+      };
 
       const addExercise = () => {
 
@@ -207,7 +224,6 @@ export default function Routine(){
       const onSelectDay = (e) => {
         setSelectedDay(e.target.value);
       }
-
     return (
         <div>
             <h1 className="text-left module__title">Control de rutinas</h1>
@@ -234,76 +250,94 @@ export default function Routine(){
                 <div className="d-flex flex-row-reverse">
                     <button className="btn btn-dark mb-2">Reiniciar formulario</button>
                 </div>
+                {generalDataSection?
+                <>
                 <h5>Cliente</h5>
                 <LiveCustomSelect data={selectedClients} onChange={onChangeSearchClient} className='mt-2' placeHolder={"Seleccionar cliente"} loadOptions={searchClient} />
-                <h5 className="text-left mt-3">Datos generales</h5>
+                <h5 className="text-left mt-3">1. Datos generales</h5>
                 <div className="general__data">
                     <form noValidate onSubmit={handleSubmit(handleInsert)}>
                         <div className="row">
                             <input type="hidden" register={register} name="client_id" value={routineClient.ID_CLIENTE}></input>
                             <div className="col">
-                                <input disabled errorMsg="Ingrese el cliente" type="text" placeholder='Cliente' value={routineClient.name}></input>
+                                <CustomInput register={register} errors={errors} readonly name="client_name"  errorMsg="Ingrese el cliente" type="text" placeholder='Cliente' value={routineClient.name}></CustomInput>
                             </div>
                             <div className="col">
-                                <input register={register} name="level-insert" errorMsg="Ingrese el nivel de rutina"  placeholder='Nivel'></input>
+                                <CustomInput register={register} errors={errors} name="level-insert" errorMsg="Ingrese el nivel de rutina"  placeholder='Nivel'></CustomInput>
                             </div>
                             <div className="col">
-                                <input register={register} errorMsg="Ingrese el tipo" placeholder='Tipo'></input>
+                                <CustomInput name="type_routine" errors={errors} register={register} errorMsg="Ingrese el tipo" placeholder='Tipo'></CustomInput>
                             </div>
                             <div className="col">
-                                <input register={register} errorMsg="Ingrese el objetivo" placeholder='Objetivo'></input>
+                                <CustomInput name="objetive" register={register} errors={errors} errorMsg="Ingrese el objetivo" placeholder='Objetivo'></CustomInput>
                             </div>
                             <div className="col">
-                                <input register={register} errorMsg="Ingrese el porcentaje" placeholder='Porcentaje'></input>
+                                <CustomInput name="percent" register={register} errors={errors} errorMsg="Ingrese el porcentaje" placeholder='Porcentaje'></CustomInput>
                             </div>
                             <div className="col">
-                                <input register={register} errorMsg="Ingrese la pausa" placeholder='Pausa'></input>
+                                <CustomInput name={"pause"} register={register} errors={errors} errorMsg="Ingrese la pausa" placeholder='Pausa'></CustomInput>
                             </div>
                         </div>
                         <AddButton text="Guardar datos generales"/>
                     </form>
                 </div>
-                <h5 className="text-left mt-3">Agregar ejercicios</h5>
-                <div className="general__data">
-                    <div className="row">
-                        <div className="col">
-                            <LiveCustomSelect  data={selectedGroupMuscle} onChange={onChangeSearchMuscleGroup} className='mt-2' placeHolder={"Seleccionar grupo muscular"} loadOptions={searchMuscleGroup} />
+                </>
+                :
+                <AddButton onClick={()=>{setGeneralDataSection(true);setAddExerciseSection(false)}} text="<<-- Volver a la información general"/>
+                }
+               {
+                 addExerciseSection?
+                 <>
+                 <h5 className="text-left mt-3">2. Agregar ejercicios</h5>
+                 <div className="general__data">
+                     <div className="row">
+                         <div className="col">
+                         <select defaultValue={selectedGroupMuscle?selectedGroupMuscle[0].ID_MUSCULAR:null} onChange={onSelectDay} placeholder="Seleccione el dia">
+                                  <option>Seleccionar grupo muscular</option>
+                                  {selectedGroupMuscle.map((value)=>(
+                                     <option value={value.ID_MUSCULAR}>{value.NOMBRE_GRUPO_MUSCULAR}</option>
+                                  ))}
+                             </select>
+                         </div>
+                         <div className="col">
+                             <LiveCustomSelect onChange={onChangeSearchExercise} className='mt-2' placeHolder={"Seleccionar ejercicio"} loadOptions={searchExercise} />
+                         </div>
+                         <div className="col">
+                             <select defaultValue={1} onChange={onSelectDay} placeholder="Seleccione el dia">
+                                 <option value={1}>Lunes</option>
+                                 <option value={2}>Martes</option>
+                                 <option value={3}>Miércoles</option>
+                                 <option value={4}>Jueves</option>
+                                 <option value={5}>Viernes</option>
+                                 <option value={6}>Sábado</option>
+                                 <option value={7}>Domingo</option>
+                             </select>
+                         </div>
+                     </div>
+                     <div className="row">
+                        <div className="col col-md-3">
+                             <textarea className="mt-2" placeholder="detalles (peso,ejecucion,repeticiones)" rows="3"></textarea>
                         </div>
-                        <div className="col">
-                            <LiveCustomSelect data={selectedExercise} onChange={onChangeSearchExercise} className='mt-2' placeHolder={"Seleccionar ejercicio"} loadOptions={searchExercise} />
+                        <div className="col d-flex">
+                             <AddButton onClick={addExercise} text="Agregar ejercicio"/>
                         </div>
-                        <div className="col">
-                            <select defaultValue={1} onChange={onSelectDay} placeholder="Seleccione el dia">
-                                <option value={1}>Lunes</option>
-                                <option value={2}>Martes</option>
-                                <option value={3}>Miércoles</option>
-                                <option value={4}>Jueves</option>
-                                <option value={5}>Viernes</option>
-                                <option value={6}>Sábado</option>
-                                <option value={7}>Domingo</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div className="row">
-                       <div className="col col-md-3">
-                            <textarea className="mt-2" placeholder="detalles (peso,ejecucion,repeticiones)" rows="3"></textarea>
-                       </div>
-                       <div className="col d-flex">
-                            <AddButton onClick={addExercise} text="Agregar ejercicio"/>
-                       </div>
-                    </div>
-                </div>
-                <h5 className="mt-2">Semana</h5>
-                <hr/>
-                <div className="routine__days">
-                    <RoutineDay DayName={"Lunes"} ExerciseName={"Nombre de ejercicio"}/>
-                    <RoutineDay DayName={"Martes"} ExerciseName={"Nombre de ejercicio"}/>
-                    <RoutineDay DayName={"Miércoles"} ExerciseName={"Nombre de ejercicio"}/>
-                    <RoutineDay DayName={"Jueves"} ExerciseName={"Nombre de ejercicio"}/>
-                    <RoutineDay DayName={"Viernes"} ExerciseName={"Nombre de ejercicio"}/>
-                    <RoutineDay DayName={"Sábado"} ExerciseName={"Nombre de ejercicio"}/>
-                    <RoutineDay DayName={"Domingo"} ExerciseName={"Nombre de ejercicio"}/>
-                </div>
+                     </div>
+                 </div>
+                 <h5 className="mt-2">Semana</h5>
+                 <hr/>
+                 <div className="routine__days">
+                   <RoutineDay DayName={"Lunes"} ExerciseName={"Nombre de ejercicio"}/>
+                   <RoutineDay DayName={"Martes"} ExerciseName={"Nombre de ejercicio"}/>
+                   <RoutineDay DayName={"Miércoles"} ExerciseName={"Nombre de ejercicio"}/>
+                   <RoutineDay DayName={"Jueves"} ExerciseName={"Nombre de ejercicio"}/>
+                   <RoutineDay DayName={"Viernes"} ExerciseName={"Nombre de ejercicio"}/>
+                   <RoutineDay DayName={"Sábado"} ExerciseName={"Nombre de ejercicio"}/>
+                   <RoutineDay DayName={"Domingo"} ExerciseName={"Nombre de ejercicio"}/>
+                 </div>
+                 </>
+                 :
+                 <h5>Esperando datos generales...</h5>
+                }  
             </CustomModal>
             <CustomModal
               props={{title: "¿Está seguro que desea eliminar la rutina #'"+ routineEdited.id+" de "+ routineEdited.name+"'?", isOpen: isOpenDelete}}
