@@ -4,7 +4,9 @@ thead{
 .color-text__{
     color: #558b23  ;
 }
-
+.background__{
+    background-color: #9c9c9c3a;
+}
 .btn-delete{
     background-color:  #6c765f ;
 }
