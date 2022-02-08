@@ -70,7 +70,7 @@ const Table = (props) => {
 
   useEffect(() => {
     if (isNaN(mostrar)) {
-      setPageSize(6);
+      setPageSize(5);
     } else {
       setPageSize(mostrar);
     }
@@ -78,7 +78,7 @@ const Table = (props) => {
   }, []);
   return (
     <div className="table-responsive">
-      <table {...getTableProps()} className="table table-striped table-dark">
+      <table {...getTableProps()} className="table table-striped table-dark text-center">
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -115,22 +115,22 @@ const Table = (props) => {
           })}
         </tbody>
       </table>
-      <div>
-        <span>
+      <div className="text-center">
+        <span className="color-text__" >
           Página{' '}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
+          <span>
+            {pageIndex + 1} de {pageOptions.length}
+          </span>{' '}
         </span>
-        <span>
+        <span className="ml-2 color-text__"> 
           Pag :{' '}
-          <input type='number' defaultValue={pageIndex + 1}
+          <input type='number' min="1" className="btn-table" defaultValue={pageIndex + 1}
             onChange={e => {
               const pageNumber = e.target.value ? Number(e.target.value) - 1 : 0
               gotoPage(pageNumber)
-            }} style={{ width: '40px', height: '35px' }} />
+            }} style={{ width: '40px', height: '40px' }} />
         </span>
-        <select value={pageSize} onChange={e => setPageSize(Number(e.target.value))} style={{ width: '100px', height: '35px' }}>
+        <select value={pageSize} className="btn-table ml-2" onChange={e => setPageSize(Number(e.target.value))} style={{ width: '100px', height: '40px' }}>
           <option key={1} value={1}>
             Cantidad a ver
           </option>
@@ -142,10 +142,10 @@ const Table = (props) => {
             ))
           }
         </select>
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>{'<<'}</button>
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>Anterior</button>
-        <button onClick={() => nextPage()} disabled={!canNextPage}>Siguiente</button>
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>{'>>'}</button>
+        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage} className="btn btn-table ml-2">{'<<'}</button>
+        <button onClick={() => previousPage()} disabled={!canPreviousPage} className="btn btn-table">Anterior</button>
+        <button onClick={() => nextPage()} disabled={!canNextPage} className="btn btn-table ml-2">Siguiente</button>
+        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage} className="btn btn-table">{'>>'}</button>
       </div>
     </div>
   );

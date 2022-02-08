@@ -132,7 +132,7 @@ export default function GrupoMuscular() {
       <div className="container">
         <div className="container-insert-search__">
           <AddButton text="Insertar" onClick={() => setIsOpenInsert(true)} />
-          <SingleCustomInput onChange={handleSearch} errorMsg="Nombre grupo muscular" placeholder="Buscar" name="input" className="form-control" />
+          <SingleCustomInput onChange={handleSearch} errorMsg="Nombre grupo muscular" placeholder="Buscar" name="input" className="search__"/>
         </div>
         <Table
           columns={columns}
