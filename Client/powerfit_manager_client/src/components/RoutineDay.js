@@ -1,9 +1,9 @@
 import React from 'react'
 
-const RoutineDay= ({children,DayName}) =>{
+const RoutineDay= ({children,DayName,className="routine__day"}) =>{
     return (
         <>
-            <div className="routine__day">
+            <div className={className}>
                 <h5 className="day__name">{DayName}</h5>
                 <main>
                     {children}

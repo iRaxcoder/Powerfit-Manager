@@ -26,7 +26,6 @@ module.exports.set = function(app,connection){
             connection.query(query, Object.values(data["generalInfo"]), (err, rows, fields) => {
                 if (!err) {
                     routineId = rows[0][0].ID_RUTINA;
-                    console.log("ID_RUTINA: "+routineId)
                 } else {
                     connection.rollback(() => {
                         res.send("No se ha registrar la rutina");
@@ -58,6 +57,17 @@ module.exports.set = function(app,connection){
                     })
                 });
             });
+        })
+    });
+    app.post("/routine/get-search", (req, res) => {
+        data = req.body.data;
+        connection.query('CALL sp_select_search_rutina_fecha'+getSpParamSize["2"], [data["find"],data["filter"]], (err, rows, fields) => {
+            if (!err) {
+                res.send(rows);
+            }
+            else {
+                console.log(err);
+            }
         })
     })
 }

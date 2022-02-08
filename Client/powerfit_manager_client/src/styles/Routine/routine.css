@@ -1,3 +1,7 @@
+:root{
+    --primaryColor:#73be22;
+}
+
 .general__data{
     border: 1px solid #000;
     padding: 10px;
@@ -13,7 +17,7 @@ textarea{
 
 textarea:focus{
     border-width: 2px;
-    border-color: #73be22;
+    border-color: var(--primaryColor);
     outline-style: groove;
 }
 
@@ -34,7 +38,7 @@ textarea:focus{
     padding: 5px;
     border-radius: 10px;
     height: 50px;
-    border: 1px solid #73be22;
+    border: 1px solid var(--primaryColor);
 }
 
  .delete__btn{
@@ -55,4 +59,57 @@ textarea:focus{
     height: max-content;
     border: 1px solid #000;
     margin: 10px 3px;
+}
+
+/*          --------------------           VISUALIZACION DE RUTINA        -------------                */
+
+.routine__list{
+    padding: 10px;
+    background: #9c9c9c3a;
+    width: 40%;
+    height: 30%;
+    max-width: fit-content;
+    max-height: fit-content;
+    border: 1px solid #000;
+}
+
+.routine__list_title{
+    font-size: 20px;
+    text-align: center;
+    margin: 10px 10px 10px 10px;
+}
+
+.routine__item{
+    display: flex;
+    border: 1px solid var(--primaryColor);
+    padding: 10px;
+    margin: 10px;
+    justify-content: space-between;
+}
+
+.routine__container{
+    width: 100%;
+    display: inline-flex;
+    height: fit-content;
+}
+
+.routine__view{
+    margin-left: 10px;
+    width: 70%;
+    height: 500px;
+    border: 1px solid #000;
+    background: #9c9c9c3a;
+}
+
+.view__day{
+    margin: 5px;
+    display: inline-block;
+    border: 1px solid #000;
+    width: 31%;
+}
+
+.routine__export{
+    margin-top: 50px;
+    margin-right: 30px;
+    text-align: right;
 }

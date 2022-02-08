@@ -11,8 +11,16 @@ const Table = (props) => {
   const mostrar = props.mostrar;
   const editRestricted = props.editRestricted;
   const allOptionsRestricted = props.allAction;
+  const onlyView = props.onlyView;
 
   const manageTableButtons = (index) => {
+    if(onlyView){
+      return (
+        <>
+          <InfoButton fun={props.funSee} rowObject={JSON.stringify(aux[index])}/>
+        </>
+      );
+    }
     if (editRestricted) {
       return (
         <>
