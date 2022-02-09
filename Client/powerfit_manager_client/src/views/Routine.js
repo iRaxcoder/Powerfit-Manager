@@ -15,6 +15,7 @@ import '../styles/Routine/routine.css'
 import RoutineDay from "../components/RoutineDay";
 import RoutineExercise from '../components/RoutineExercise';
 import RoutineItem from "../components/RoutineItem";
+import ListRoutineDay from "../components/ListRoutineDay";
 
 export default function Routine(){
   const [isOpenInsert, setIsOpenInsert] = useState(false);
@@ -24,7 +25,7 @@ export default function Routine(){
   const routineListRef= useRef();
   const [modalMsg, setModalMsg]= useState({isMsgOpen: false, msg: ""});
   routineListRef.current=routineList;
-  const [routineHeader,setRoutineHeader]=useState({routineId:0,client:"def",date:"def"});
+  const [routineHeader,setRoutineHeader]=useState({routineId:0,clientId:0,client:"def",date:"def"});
   const [selectedClients, setSelectedClients] = useState([]);
   const [selectedExercise, setSelectedExercise] = useState([]);
   const [selectedGroupMuscle, setSelectedGroupMuscle] = useState([]);
@@ -34,6 +35,8 @@ export default function Routine(){
   const [addExerciseSection, setAddExerciseSection]=useState(false);
   const [generalDataSection, setGeneralDataSection]=useState(true);
   const [daysExercises,setDaysExercises]=useState({1:[],2:[],3:[],4:[],5:[],6:[],7:[]});
+  const [daysExercisesRoutine,setDaysExercisesRoutine]=useState({1:[],2:[],3:[],4:[],5:[],6:[],7:[]});
+  const [daysDominantGroup,setDaysDominantGroup]=useState({1:"",2:"",3:"",4:"",5:"",6:"",7:""});
   const [exerciseDetails, setExerciseDetails]=useState("sin detalles");
   const [isOpenConfirmRoutine, setIsOpenConfirmRoutine]=useState(false);
   const [isOpenConfirmClearRoutine, setIsOpenConfirmClearRoutine]=useState(false);
@@ -65,7 +68,7 @@ export default function Routine(){
 //                       ]
    const formatDate = (e) => {
     e.map(entrada => (
-        entrada.FECHA = moment(entrada.FECHA).locale('es').format('LL')
+        entrada.FECHA = moment(entrada.FECHA).locale('es').format('L')
     ))
   }
 
@@ -128,16 +131,13 @@ export default function Routine(){
       setIsOpenDelete(true);
     }
 
-    const HandleDelete = () => {
-      commonDB.delete({header:"rutina", object: {id:routineEdited.id}}).then(response=>{   
-        setModalMsg(prevState =>({
-          ...prevState,
-          msg: response,
-          isMsgOpen: true
-        }));
-        fetchRoutines();
+    const HandleDeleteFetch = (id) => {
+      commonDB.delete({header:"rutina", object: {id:id}}).then(response=>{
+        RoutineDB.getSearch({find: routineHeader.clientId , filter:routineListSize}).then(response=>{
+          formatDate(response);
+          setClientRoutineList(response);
+          });
       })
-    setIsOpenDelete(false);
     }
 
     const handleSearch = (e) => {
@@ -157,9 +157,11 @@ export default function Routine(){
     //   exportToPdf(dataHeader,data, "Reporte de rutina");
     // }
 
-    const filterRoutineList = async (routineId,size) => {
+    const filterRoutineList = async (clientId,size) => {
+      setDaysExercisesRoutine({1:[],2:[],3:[],4:[],5:[],6:[],7:[]});
+      setRoutineGeneralInfo({date: '',level:'',type:'',objetive:'',percent:'',pause:''});
       await(new Promise((resolve,reject)=>{
-        RoutineDB.getSearch({find: routineId, filter:size}).then(response=>{
+        RoutineDB.getSearch({find: clientId, filter:size}).then(response=>{
           formatDate(response);
           setClientRoutineList(response);
           resolve();
@@ -168,10 +170,12 @@ export default function Routine(){
     }
 
     const handleOpenViewRoutine = async (e) => {
+        setDaysExercisesRoutine({1:[],2:[],3:[],4:[],5:[],6:[],7:[]});
+        setRoutineGeneralInfo({date: '',level:'',type:'',objetive:'',percent:'',pause:''});
         const row= JSON.parse(e.target.dataset.row);
-        setRoutineHeader({routineId:row.ID_RUTINA,client:row.NOMBRE_CLIENTE,date:row.FECHA});
+        setRoutineHeader({routineId:row.ID_RUTINA,clientId: row.ID_CLIENTE,client:row.NOMBRE_CLIENTE,date:row.FECHA});
         setIsOpenVisualRoutine(true);
-        filterRoutineList(row.ID_RUTINA,routineListSize);  
+        filterRoutineList(row.ID_CLIENTE,routineListSize);  
       };
 
       const searchClient = (find, callback) => {
@@ -335,16 +339,23 @@ export default function Routine(){
       };
 
       const onFilterRoutines = (e) => {
-        filterRoutineList(routineHeader.routineId,e.target.value);
+        filterRoutineList(routineHeader.clientId,e.target.value);
       }
 
       const onViewRoutine = (routineId) => {
-          commonDB.getSearch({header: "rutina_id",find: routineId }).then(response=>{
-            formatDate(response);
-            setRoutineGeneralInfo({date:response[0].FECHA,level:response[0].NIVEL,pause:response[0].PAUSA,objetive:response[0].OBJETIVO,percent:response[0].PORCENTAJE, type:response[0].TIPO});
+        var dayList={1:[],2:[],3:[],4:[],5:[],6:[],7:[]};
+        commonDB.getSearch({header: "rutina_id",find: routineId }).then(response=>{
+          formatDate(response);
+          setRoutineGeneralInfo({date:response[0].FECHA,level:response[0].NIVEL,pause:response[0].PAUSA,objetive:response[0].OBJETIVO,percent:response[0].PORCENTAJE, type:response[0].TIPO});
+          commonDB.getSearch({header:"rutina_ejercicio_id",find:routineId}).then(response=>{
+            response.forEach((e)=>{
+              const day= dayList[e.DIA+""];
+              day.push({exerciseName:e.NOMBRE_EJERCICIO,details:e.INDICACIONES});
             });
+            setDaysExercisesRoutine(dayList);
+          });
+        });
       }
-
     return (
         <div>
             <h1 className="text-left module__title">Control de rutinas</h1>
@@ -465,16 +476,6 @@ export default function Routine(){
                  <h5>Esperando datos generales...</h5>
                 }  
             </CustomModal>
-            <CustomModal
-              props={{title: "¿Está seguro que desea eliminar la rutina #'"+ routineEdited.id+" de "+ routineEdited.name+"'?", isOpen: isOpenDelete}}
-              methods={{toggleOpenModal: ()=>setIsOpenDelete(!isOpenDelete)}}
-                >
-              <CustomForm onSubmit={HandleDelete}>
-                <CustomInput type="hidden" value={routineEdited.id} className='form-control mt-2' name='routineIdDelete'/>
-                <AddButton text="Sí, estoy seguro."/>
-                <CancelButton fun={()=>setIsOpenDelete(false)}/>
-              </CustomForm>
-            </CustomModal>
             <CustomModal 
               props={{title: 'Mensaje del sistema', isOpen: modalMsg.isMsgOpen}}
               methods={{toggleOpenModal: ()=>setModalMsg(!modalMsg.isMsgOpen)}}
@@ -510,10 +511,10 @@ export default function Routine(){
                   <hr/>
                   <select onChange={onFilterRoutines} defaultValue={5} placeholder="Mostrar">
                       <option value={5}>últimas 5</option>
-                      <option value={10}>últimas 10</option>
-                      <option value={20}>últimas 20</option>
+                      <option value={10}>Últimas 10</option>
+                      <option value={20}>Últimas 20</option>
                   </select>
-                  {clientRoutineList.map((item,index)=><RoutineItem onViewRoutine={()=>onViewRoutine(item.ID_RUTINA)} date={item.FECHA}/>)}
+                  {clientRoutineList.map((item)=><RoutineItem onFetch={()=>filterRoutineList(routineHeader.clientId,routineListSize)} onDelete={()=>HandleDeleteFetch(item.ID_RUTINA)} Routine={item} client={routineHeader.client} onViewRoutine={()=>onViewRoutine(item.ID_RUTINA)}/>)}
                 </div>
                 <div className="routine__view">
                     <h4 className="routine__list_title">Semana</h4>
@@ -534,14 +535,17 @@ export default function Routine(){
                     <div className="col">
                       <p>Porcentaje: {routineGeneralInfo.percent} </p>
                     </div>
-                  </div> 
-                   <RoutineDay className="view__day" DayName={"Lunes"}></RoutineDay>
-                   <RoutineDay className="view__day" DayName={"Martes"}></RoutineDay>
-                   <RoutineDay className="view__day" DayName={"Miércoles"}></RoutineDay>
-                   <RoutineDay className="view__day"DayName={"Jueves"}></RoutineDay>
-                   <RoutineDay className="view__day" DayName={"Viernes"}></RoutineDay>
-                   <RoutineDay className="view__day"DayName={"Sábado"}></RoutineDay>
-                   <RoutineDay className="view__day"DayName={"Domingo"}></RoutineDay>
+                    <div className="col">
+                      <p>Pausa: {routineGeneralInfo.pause} </p>
+                    </div>
+                  </div>
+                   <RoutineDay className="view__day" DayName={"Lunes"}><p className="gm__day">{daysDominantGroup["1"]}</p>{daysExercisesRoutine["1"].map((e)=><ListRoutineDay ExerciseName={e.exerciseName} Details={e.details}/>)}</RoutineDay>
+                   <RoutineDay className="view__day" DayName={"Martes"}><p className="gm__day">{daysDominantGroup["2"]}</p>{daysExercisesRoutine["2"].map((e)=><ListRoutineDay ExerciseName={e.exerciseName} Details={e.details}/>)}</RoutineDay>
+                   <RoutineDay className="view__day" DayName={"Miércoles"}><p className="gm__day">{daysDominantGroup["3"]}</p>{daysExercisesRoutine["3"].map((e)=><ListRoutineDay ExerciseName={e.exerciseName} Details={e.details}/>)}</RoutineDay>
+                   <RoutineDay className="view__day" DayName={"Jueves"}><p className="gm__day">{daysDominantGroup["4"]}</p>{daysExercisesRoutine["4"].map((e)=><ListRoutineDay ExerciseName={e.exerciseName} Details={e.details}/>)}</RoutineDay>
+                   <RoutineDay className="view__day" DayName={"Viernes"}><p className="gm__day">{daysDominantGroup["5"]}</p>{daysExercisesRoutine["5"].map((e)=><ListRoutineDay ExerciseName={e.exerciseName} Details={e.details}/>)}</RoutineDay>
+                   <RoutineDay className="view__day" DayName={"Sábado"}><p className="gm__day">{daysDominantGroup["6"]}</p>{daysExercisesRoutine["6"].map((e)=><ListRoutineDay ExerciseName={e.exerciseName} Details={e.details}/>)}</RoutineDay>
+                   <RoutineDay className="view__day last__day" DayName={"Domingo"}><p className="gm__day">{daysDominantGroup["7"]}</p>{daysExercisesRoutine["7"].map((e)=><ListRoutineDay ExerciseName={e.exerciseName} Details={e.details}/>)}</RoutineDay>
                    <div className="routine__export">
                     <DownloadButton text="PDF"/>
                   </div>                
