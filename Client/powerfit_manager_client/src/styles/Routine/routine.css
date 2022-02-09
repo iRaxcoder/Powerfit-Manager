@@ -96,7 +96,7 @@ textarea:focus{
 .routine__view{
     margin-left: 10px;
     width: 70%;
-    height: 500px;
+    max-height: max-content;
     border: 1px solid #000;
     background: #9c9c9c3a;
 }
@@ -112,4 +112,31 @@ textarea:focus{
     margin-top: 50px;
     margin-right: 30px;
     text-align: right;
+}
+
+.routine__list_exercise{
+    display: flex;
+    justify-content: space-between;
+    background: #558b23;
+    height: 30px;
+    padding: 5px;
+    margin: 3px;
+    color: rgba(255, 255, 255, 0.911);
+    border: 1px solid #000;
+}
+
+.routine__list_exercise:hover{
+    filter: contrast(70%);
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.gm__day{
+    font-size: 10px;
+    height: 3px;
+    margin-left: 3px;
+}
+
+.last__day{
+    margin: auto 265px;
 }
