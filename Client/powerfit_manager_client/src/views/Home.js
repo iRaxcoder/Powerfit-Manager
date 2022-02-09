@@ -40,9 +40,6 @@ export default function Home() {
         () => [
             { Header: "Cliente", accessor: 'NOMBRE', },
             { Header: "Vencimiento", accessor: 'FECHA' },
-            { Header: "Tipo de pago", accessor: 'TIPO_PAGO' },
-            { Header: "Monto(₡)", accessor: 'MONTO' },
-            { Header: "Detalles", accessor: 'DETALLE' },
             { Header: "Estado", accessor: 'ESTADO' }
         ],
         []
@@ -87,6 +84,34 @@ export default function Home() {
                 <div className="col mt-5">
                     <div className="card">
                         <div className="card-body background__">
+                            <h4 className="car-title">Top de pendientes de pago</h4>
+                            <Table
+                                columns={columnsDiscontinued}
+                                data={dataDiscontinued ?? []}
+
+                            />
+                        </div>
+                    </div>
+                </div>
+
+
+                <div className="col mt-5">
+                    <div className="card">
+                        <div className="card-body background__">
+                            <h4 className="car-title">Top de asistencia</h4>
+                            <Table
+                                columns={columnsTopAssistance}
+                                data={dataTopAssistance ?? []}
+
+                            />
+
+                        </div>
+                    </div>
+                </div>
+
+                <div className="col mt-5">
+                    <div className="card">
+                        <div className="card-body background__">
                             <h4 className="car-title">Top de compradores</h4>
                             <Table
                                 columns={columnsTopClients}
@@ -110,34 +135,6 @@ export default function Home() {
 
                     </div>
                 </div>
-
-                <div className="col mt-5">
-                    <div className="card">
-                        <div className="card-body background__">
-                            <h4 className="car-title">Top de asistencia</h4>
-                            <Table
-                                columns={columnsTopAssistance}
-                                data={dataTopAssistance ?? []}
-
-                            />
-
-                        </div>
-                    </div>
-                </div>
-
-                <div className="col mt-5">
-                    <div className="card">
-                        <div className="card-body background__">
-                            <h4 className="car-title">Top de suspendidos</h4>
-                            <Table
-                                columns={columnsDiscontinued}
-                                data={dataDiscontinued ?? []}
-
-                            />
-                        </div>
-                    </div>
-                </div>
-
 
             </div>
         </div>
