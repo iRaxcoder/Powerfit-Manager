@@ -49,31 +49,31 @@ export default function Home() {
         SalesDB.getSalesStats({ year: yearFilter }).then(response => {
             setsalesStats({ productStats: response.productStats[0], topClients: response.topClients[0] });
         });
-    }
+    };
 
 
     const fetchTopAssistance = () => {
         commonDB.getSearch({ header: "top_asistencia", find: yearFilter }).then(response => {
             setDataTopAssistance(response);
         });
-    }
+    };
 
     const fetchDiscontinued = () => {
         commonDB.getSearch({ header: "membresia_suspendidos", find: yearFilter }).then(response => {
             convertDate(response);
             setDataDiscontinued(response);
         });
-    }
+    };
     const convertDate = (e) => {
         e.map((entrada) => {
             entrada.FECHA = moment(new Date(entrada.FECHA)).format('LL')
         })
-    }
+    };
     useEffect(() => {
         fetchSalesStats();
         fetchTopAssistance();
         fetchDiscontinued();
-    }, []);
+    },[]);
     if (!dataTopAssistance) return "No se encuentran datos";
 
     return (
