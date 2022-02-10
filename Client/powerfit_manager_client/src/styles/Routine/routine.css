@@ -95,7 +95,7 @@ textarea:focus{
 
 .routine__view{
     margin-left: 10px;
-    width: 75%;
+    width: 71%;
     max-height: max-content;
     border: 1px solid #000;
     background: #9c9c9c3a;
@@ -105,7 +105,7 @@ textarea:focus{
     margin: 5px;
     display: inline-block;
     border: 1px solid #000;
-    width: 32%;
+    width: 31%;
 }
 
 .routine__export{
@@ -137,5 +137,5 @@ textarea:focus{
 }
 
 .last__day{
-    margin: auto 274px;
+    margin: auto 33.1%;
 }
