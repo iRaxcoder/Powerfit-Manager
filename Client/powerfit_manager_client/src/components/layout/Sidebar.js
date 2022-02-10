@@ -1,11 +1,12 @@
-import React, {useState } from 'react'
+import React, {useState, useContext } from 'react'
 import Logo from '../../assets/img/logo.png'
 import '../../styles/Menu/Sidebar.css'
 import {Link} from 'react-router-dom'
-import auth from '../../service/Authentication.js'
+import AuthContext from '../hooks/Authentication/AuthContext'
 
 export default function Sidebar ({children}){
     const [state, setState]=useState(false);
+    const {logoutUser} = useContext(AuthContext);
     const toggle =()=>{
         setState(!state);
         if(state){
@@ -32,16 +33,16 @@ export default function Sidebar ({children}){
             }   
     }
     const exit = async () =>{
-        const ApiResponse = await auth.logOut();
+        logoutUser();
     }
     return (
         <>
             <div className='l-navbar' id='navbar'>
                 <nav className="nav">
                     <div>
-                        <a className='nav__logo'>
-                            <img src={Logo} width='34px' height='34px' id='power_logo' className='nav__logo-icon icon'></img>
-                        </a>
+                        <Link to="/inicio" className='nav__logo'>
+                            <img alt='PowerFit Logo' src={Logo} width='34px' height='34px' id='power_logo' className='nav__logo-icon icon'></img>
+                        </Link>
                         <div onClick={toggle} className='nav__toggle' id='nav-toggle'>
                             <i class='bx bxs-chevron-right'></i>
                         </div>
@@ -90,9 +91,9 @@ export default function Sidebar ({children}){
                         
                     </div>
                     <Link onClick={exit} to="/" className='nav__link'>
-                            <i class='bx bx-log-out nav__icon' aria-hidden="true"></i>
-                            <span className='nav__text'>Salir</span>    
-                            </Link>
+                        <i class='bx bx-log-out nav__icon' aria-hidden="true"></i>
+                        <span className='nav__text'>Salir</span>    
+                        </Link>
                 </nav>
             </div>
             <main>{children}</main>

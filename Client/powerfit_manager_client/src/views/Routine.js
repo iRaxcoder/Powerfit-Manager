@@ -8,7 +8,6 @@ import { CustomInput, SingleCustomInput, LiveCustomSelect } from "../components/
 import commonDB from "../service/CommonDB";
 import RoutineDB from "../service/Routine";
 import CancelButton from "../components/CancelButton";
-import { exportToPdf } from "../utils/exportData";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import moment from "moment/min/moment-with-locales";
@@ -18,12 +17,9 @@ import RoutineDay from "../components/RoutineDay";
 import RoutineExercise from '../components/RoutineExercise';
 import RoutineItem from "../components/RoutineItem";
 import ListRoutineDay from "../components/ListRoutineDay";
-import ReactDOMServer from "react-dom/server";
 
 export default function Routine() {
   const [isOpenInsert, setIsOpenInsert] = useState(false);
-  const [routineEdited, setRoutineEdited] = useState({ id: 0, name: "def", lastName: "def", age: 0, number: "def", email: "def", illness: "def" });
-  const [isOpenDelete, setIsOpenDelete] = useState(false);
   const [routineList, setRoutineList] = useState(null);
   const routineListRef = useRef();
   const [modalMsg, setModalMsg] = useState({ isMsgOpen: false, msg: "" });
@@ -33,7 +29,7 @@ export default function Routine() {
   const [selectedExercise, setSelectedExercise] = useState([]);
   const [selectedGroupMuscle, setSelectedGroupMuscle] = useState([]);
   const [routineClient, setRoutineClient] = useState({ id: undefined, name: '' });
-  const { register, formState: { errors }, handleSubmit, reset } = useForm();
+  const { register, handleSubmit } = useForm();
   const [selectedDay, setSelectedDay] = useState(1);
   const [addExerciseSection, setAddExerciseSection] = useState(false);
   const [generalDataSection, setGeneralDataSection] = useState(true);
@@ -49,8 +45,6 @@ export default function Routine() {
   const [clientRoutineList, setClientRoutineList] = useState([]);
   const [routineListSize, setRoutineListSize] = useState(5);
 
-  //   const dataHeader = [["Nombre","Apellidos","Edad","Teléfono","Correo","Enfermedades"]];
-
   const columns = React.useMemo(
     () => [
       { Header: "ID rutina", accessor: 'ID_RUTINA', },
@@ -58,35 +52,26 @@ export default function Routine() {
       { Header: "Ult. registrada", accessor: 'FECHA' },
     ],
     []
-  )
+  );
 
-  //   const dataHeaderCSV = [ 
-  //     { label: "ID cliente", key: 'ID_CLIENTE',},
-  //     { label: "Nombre", key: 'NOMBRE_CLIENTE'},
-  //     { label: "Apellidos", key: 'APELLIDOS'},
-  //     { label: "Edad", key: 'EDAD'},
-  //     { label: "Teléfono", key: 'TELEFONO'},
-  //     { label: "Email", key: 'EMAIL'},
-  //     { label: "Enfermedad", key: 'ENFERMEDAD'},
-  //                       ]
   const formatDate = (e) => {
     e.map(entrada => (
       entrada.FECHA = moment(entrada.FECHA).locale('es').format('L')
     ))
-  }
+  };
 
   const fetchRoutines = () => {
     commonDB.getAll({ header: "rutina" }).then(response => {
       formatDate(response)
       setRoutineList(response)
     })
-  }
+  };
 
   const fetchMuscleGroup = () => {
     commonDB.getAll({ header: "grupo_muscular" }).then(response => {
       setSelectedGroupMuscle(response)
     })
-  }
+  };
 
   useEffect(() => {
     fetchRoutines();
@@ -107,32 +92,7 @@ export default function Routine() {
       setGeneralDataSection(!generalDataSection);
       setAddExerciseSection(!addExerciseSection);
     }
-  }
-
-  // const HandleOpenEdit = (e) => {
-  //   const client = JSON.parse(e.target.dataset.row);
-  //   setClientEdited(
-  //   {name:client.NOMBRE_CLIENTE, lastName: client.APELLIDOS, age: client.EDAD, number: client.TELEFONO, email: client.EMAIL, illness: client.ENFERMEDAD})
-  //   setIsOpenEdit(true);
-  // }
-
-  // const HandleEdit = () => {
-  //     commonDB.update({header:"cliente",size:"7", object: clientEdited}).then(response=>{   
-  //       setModalMsg(prevState =>({
-  //         ...prevState,
-  //         msg: response,
-  //         isMsgOpen: true
-  //       }));
-  //       fetchRoutines();
-  //     })
-  //   setIsOpenEdit(false);
-  // }
-
-  const HandleOpenDelete = (e) => {
-    const routine = JSON.parse(e.target.dataset.row);
-    setRoutineEdited({ id: routine.ID_RUTINA, name: routine.NOMBRE_CLIENTE });
-    setIsOpenDelete(true);
-  }
+  };
 
   const HandleDeleteFetch = (id) => {
     commonDB.delete({ header: "rutina", object: { id: id } }).then(response => {
@@ -141,7 +101,7 @@ export default function Routine() {
         setClientRoutineList(response);
       });
     })
-  }
+  };
 
   const handleSearch = (e) => {
     if (e.target.value === undefined || e.target.value === "") {
@@ -152,13 +112,7 @@ export default function Routine() {
         setRoutineList(response);
       })
     }
-  }
-
-  // const exportPDF=()=>{
-  //   const data = routineListRef.current.map((cliente)=>
-  //   ([cliente.ID_CLIENTE,cliente.NOMBRE_CLIENTE,cliente.APELLIDOS,cliente.EDAD,cliente.TELEFONO,cliente.EMAIL,cliente.ENFERMEDAD]));
-  //   exportToPdf(dataHeader,data, "Reporte de rutina");
-  // }
+  };
 
   const filterRoutineList = async (clientId, size) => {
     setDaysExercisesRoutine({ 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [] });
@@ -170,7 +124,7 @@ export default function Routine() {
         resolve();
       });
     }));
-  }
+  };
 
   const handleOpenViewRoutine = async (e) => {
     setDaysExercisesRoutine({ 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [] });
@@ -208,21 +162,6 @@ export default function Routine() {
     }
   };
 
-  // const searchMuscleGroup = (find, callback) => {
-  //   if(find!==undefined){
-  //     commonDB.getSearch({ header: "grupo_muscular", find: find }).then(response => {
-  //       setSelectedGroupMuscle(response);
-  //     })
-  //   }else{
-  //     fetchMuscleGroup();
-  //   }
-  //   if(Array.isArray(selectedGroupMuscle)){
-  //     callback(selectedGroupMuscle.map(client => ({
-  //       label: client.NOMBRE_GRUPO_MUSCULAR,
-  //       value: client.ID_MUSCULAR
-  //     })))
-  //   }
-  // };
   const onChangeSearchClient = (selected) => {
     setSelectedClients(selected);
     setRoutineClient({ id: selectedClients[0].ID_CLIENTE, name: selectedClients[0].NOMBRE_CLIENTE + ' ' + selectedClients[0].APELLIDOS });
@@ -347,7 +286,7 @@ export default function Routine() {
 
   const onFilterRoutines = (e) => {
     filterRoutineList(routineHeader.clientId, e.target.value);
-  }
+  };
 
   const onViewRoutine = (routineId) => {
     var dayList = { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [] };
@@ -362,18 +301,16 @@ export default function Routine() {
         setDaysExercisesRoutine(dayList);
       });
     });
-  }
+  };
 
   const exportPdf = () => {
     html2canvas(document.querySelector("#rountine")).then(canvas => {
-      // document.body.appendChild(canvas);  // if you want see your screenshot in body.
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF();
       pdf.addImage(imgData, 'PNG', 10, 10);
       pdf.save("rountine.pdf");
     });
-
-  }
+  };
 
   return (
     <div>
@@ -390,7 +327,6 @@ export default function Routine() {
           onlyView
           data={routineList}
           aux={routineListRef.current}
-          funDelete={HandleOpenDelete}
           funSee={handleOpenViewRoutine}
         />
       </div>

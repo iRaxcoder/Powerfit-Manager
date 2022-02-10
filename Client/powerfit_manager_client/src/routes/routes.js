@@ -11,12 +11,11 @@ import Sales from '../views/Sales.js'
 import Measures from '../views/Measures.js'
 import Routine from '../views/Routine.js'
 
-
 const homeView = {
     element: <Sidebar><Home/></Sidebar>,
     path: '/inicio'
 }
-const LoginView = {
+export const LoginView = {
     element: <Login/>,
     path: '/'
 }
@@ -63,4 +62,6 @@ const routineView = {
     path: '/rutinas'
 }
 
-export default [homeView,LoginView,groupMuscleView, ExerciseView, ClientView,membershipView,productView,assistanceView,salesView,measuresView,routineView];
+const viewList= [homeView,groupMuscleView, ExerciseView, ClientView,membershipView,productView,assistanceView,salesView,measuresView,routineView];
+
+export default viewList;

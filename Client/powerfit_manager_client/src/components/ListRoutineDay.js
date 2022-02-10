@@ -1,7 +1,3 @@
-import React, { useState } from 'react'
-import CustomModal from "../components/CustomModal";
-import InfoButton from "./InfoButton";
-
 const RoutineItem= (props) =>{
     return (
         <>

@@ -12,7 +12,7 @@ import commonDB from '../service/CommonDB';
 const RoutineItem= (props) =>{
     const [isOpenEditRoutine, setIsOpenEditRoutine]=useState(false);
     const [isOpenDeleteRoutine, setIsOpenDeleteRoutine]=useState(false);
-    const { register, formState: { errors }, handleSubmit } = useForm();
+    const { register, handleSubmit } = useForm();
     const [modalMsg, setModalMsg]= useState({isMsgOpen: false, msg: ""});
 
     const onSubmitEdit = (info) => {

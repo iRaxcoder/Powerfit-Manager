@@ -1,4 +1,4 @@
-import { useState, useContext,useEffect } from 'react';
+import { useState, useContext } from 'react';
 import logo from '../assets/img/logo.png'
 import '../styles/Login/login.css'
 import { useNavigate } from 'react-router-dom'
@@ -8,6 +8,7 @@ import CustomModal from "../components/CustomModal";
 import AuthContext from "../components/hooks/Authentication/AuthContext.js";
 
 const SUCCESSFUL = 1;
+const INVALID_USER = 2;
 
 
 export default function Login() {
@@ -19,12 +20,6 @@ export default function Login() {
         secret: ''
     })
 
-    useEffect(()=>{
-        if(userAuth){
-            history('/inicio');
-        }
-    },[userAuth,history]);
-
     const handleInputChange = (event) => {
         setUser({
             ...user,
@@ -33,6 +28,16 @@ export default function Login() {
     }
     const handleSubmit = async () => {
         loginUser(user);
+        if(userAuth===SUCCESSFUL){
+            history('/inicio');
+        }
+        if(userAuth===INVALID_USER){
+            setModalMsg(prevState => ({
+                ...prevState,
+                msg: "Los datos de inicio de sesión no coinciden",
+                isMsgOpen: true
+            }));
+        }
     }
 
     const enterAction = (event) => {

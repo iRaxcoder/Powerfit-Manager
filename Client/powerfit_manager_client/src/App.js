@@ -1,25 +1,29 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
-import routes from './routes/routes';
+import routes,{LoginView} from './routes/routes';
 import AuthContext from './components/hooks/Authentication/AuthContext';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 function App() {
   const {userAuth}=useContext(AuthContext);
+  const [isLog,setIsLog]=useState(null);
+  useEffect(()=>{
+    if(userAuth===1){
+      setIsLog(1);
+    }else{
+      setIsLog(null);
+    }
+  },[userAuth]);
   return (
     <div className="App">
       <Router>
             <Routes>
               <Route path='/'
-              element={routes[1].element}/>
+              element={LoginView.element}/>
                 {routes.map(route=>(
                     <Route
                         path={route.path}
-                        element={userAuth?route.element:(
-                          <>
-                          {routes[1].element}
-                          </>
-                        )}
+                        element={isLog?route.element:LoginView.element}
                     />
                 ))}
             </Routes>

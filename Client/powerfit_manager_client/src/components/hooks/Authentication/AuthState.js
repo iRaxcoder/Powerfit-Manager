@@ -11,8 +11,19 @@ const AuthState = ({children}) => {
     const [state, dispatch] = useReducer(AuthReducer, initialState);
     const loginUser = async (user)=>{
         const ApiResponse = await auth.logIn(user);
+        var action=1;
+        if(ApiResponse!==1){
+            action=2
+        }
         dispatch({
-            type:ApiResponse
+            type:action
+        });
+    }
+
+    const logoutUser = async ()=>{
+        await auth.logOut();
+        dispatch({
+            type: 3
         });
     }
 
@@ -21,7 +32,8 @@ const AuthState = ({children}) => {
             value={{
                 userAuth:state.userAuth,
                 errors:state.errors,
-                loginUser
+                loginUser,
+                logoutUser
             }}
         >
             {children}
