@@ -8,10 +8,10 @@ import { CustomInput, SingleCustomInput, LiveCustomSelect } from "../components/
 import CancelButton from "../components/CancelButton"
 import commonDB from "../service/CommonDB";
 import measuresDB from "../service/Measures";
-import moment, { locale } from 'moment'
 import { exportToPdf } from "../utils/exportData";
 import DownloadButton from "../components/DownloadButton";
 import { useForm } from "react-hook-form"
+import moment from 'moment'
 
 export default function Membership() {
     const [isOpenInsert, setIsOpenInsert] = useState(false);
@@ -24,9 +24,8 @@ export default function Membership() {
     const dataRef = useRef();
     dataRef.current = data;
 
-    const { register, formState: { errors }, handleSubmit, reset} = useForm();
+    const { register, formState: { errors }, handleSubmit, reset } = useForm();
     const [elementSee, setElementSee] = useState([]);
-    const dataHeader = [["Id Asistencia", "Nombre", "Apellidos", "Fecha"]];
     const [element, setElement] = useState([
         {
             ID_MEDICION: '', ID_DATOS: '', ID_CIRCUNFERENCIA: '', NOMBRE_CLIENTE: '', APELLIDO_CLIENTE: '',
@@ -59,22 +58,22 @@ export default function Membership() {
             label: client.NOMBRE_CLIENTE + " " + client.APELLIDOS,
             value: client.ID_CLIENTE
         })))
-    }
+    };
     const onChangeSearchClient = (selected) => {
         setSelectedClients(selected);
-    }
+    };
     const fetchData = () => {
         commonDB.getAll({ header: "medicion_cliente" }).then(response => {
             convertDate(response)
             setData(response)
         })
-    }
+    };
 
     const convertDate = (e) => {
         e.map((entrada) => {
             entrada.FECHA = moment(new Date(entrada.FECHA)).format('LL')
         })
-    }
+    };
 
     useEffect(() => {
         fetchData();
@@ -84,7 +83,7 @@ export default function Membership() {
     const toggleModalInsert = () => {
         setIsOpenInsert(!isOpenInsert);
 
-    }
+    };
 
     const toggleModalSee = async (e) => {
         const row = JSON.parse(e.target.dataset.row);
@@ -96,7 +95,7 @@ export default function Membership() {
                 resolve();
             });
         }));
-    }
+    };
 
     const toggleModalEdit = async (e) => {
         const row = JSON.parse(e.target.dataset.row);
@@ -122,7 +121,7 @@ export default function Membership() {
 
         }));
 
-    }
+    };
 
     const toggleModalDelete = (e) => {
         const medida = JSON.parse(e.target.dataset.row);
@@ -135,7 +134,7 @@ export default function Membership() {
             FECHA: medida.FECHA
         });
         setIsOpenDelete(!isOpenDelete);
-    }
+    };
 
 
     const handleInsert = (e) => {
@@ -168,7 +167,7 @@ export default function Membership() {
                 isMsgOpen: true
             }));
         }
-    }
+    };
 
     const HandleEdit = (e) => {
         const datos = [element.ID_DATOS, element.PESO, element.ALTURA, element.GRASA_CORPORAL, element.AGUA_CORPORAL,
@@ -187,7 +186,7 @@ export default function Membership() {
         });
         setIsOpenEdit(!isOpenEdit);
 
-    }
+    };
 
     const HandleDelete = (e) => {
         measuresDB.delete({
@@ -203,7 +202,7 @@ export default function Membership() {
         });
         setIsOpenDelete(!isOpenDelete);
 
-    }
+    };
     const handleSearch = (e) => {
         if (e.target.value === undefined || e.target.value === "") {
             fetchData();
@@ -213,7 +212,7 @@ export default function Membership() {
                 setData(response);
             })
         }
-    }
+    };
     const exportPDF = () => {
         const Info = ["Evaluación física de " + elementSee.NOMBRE_CLIENTE + ' ' + elementSee.APELLIDO_CLIENTE + " ----- Fecha: " + elementSee.FECHA,
             "-------DATOS-------", "Edad: " + elementSee.EDAD, "Altura: " + elementSee.ALTURA, "Peso: " + elementSee.PESO,
@@ -224,7 +223,7 @@ export default function Membership() {
         "Cadera: " + elementSee.CADERA, "MD: " + elementSee.MUSLO_DERECHO, "MI: " + elementSee.MUSLO_IZQUIERDO, "PD: " + elementSee.PIERNA_DERECHA,
         "PI: " + elementSee.PIERNA_IZQUIERDA];
         exportToPdf("", "", "Reporte de Medida " + moment().format("DD/MM/YYYY"), Info);
-    }
+    };
     return (
 
         <div>
@@ -256,7 +255,7 @@ export default function Membership() {
 
                     <div className="row">
                         <div className="col">
-                            <LiveCustomSelect data={selectedClients} onChange={onChangeSearchClient} className='mt-2' placeHolder={"Buscar cliente..."} loadOptions={searchClient}/>
+                            <LiveCustomSelect data={selectedClients} onChange={onChangeSearchClient} className='mt-2' placeHolder={"Buscar cliente..."} loadOptions={searchClient} />
                         </div>
                         <div className="col">
                             <input {...register('peso_insert')} errorMsg="Ingrese el peso" type="number" step="0.01" min="0" className='mt-2' placeholder='Peso'></input>
