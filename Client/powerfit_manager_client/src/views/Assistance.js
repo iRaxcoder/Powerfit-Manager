@@ -68,28 +68,28 @@ export default function Assistance() {
             label: client.NOMBRE_CLIENTE + " " + client.APELLIDOS,
             value: client.ID_CLIENTE
         })))
-    }
+    };
     const onChangeSearchClient = (selected) => {
         setSelectedClients(selected);
-    }
+    };
     const fetchData = () => {
         commonDB.getSearch({ header: "asistencia_filtro", find: 'Hoy' }).then(response => {
             convertDate(response)
             setData(response);
         })
-    }
+    };
 
     const fetchTop = () => {
         commonDB.getSearch({ header: "top_asistencia", find: yearFilter }).then(response => {
             convertDate(response)
             setDataTop(response);
         });
-    }
+    };
     const convertDate = (e) => {
         e.map((entrada) => {
             entrada.FECHA = moment(new Date(entrada.FECHA)).format('LLL')
         })
-    }
+    };
 
     useEffect(() => {
         fetchData();
@@ -100,7 +100,7 @@ export default function Assistance() {
     const toggleModalInsert = () => {
         setIsOpenInsert(!isOpenInsert);
 
-    }
+    };
 
     const toggleModalEdit = (e) => {
         const asistencia = JSON.parse(e.target.dataset.row);
@@ -111,7 +111,7 @@ export default function Assistance() {
             FECHA: asistencia.FECHA
         });
         setIsOpenEdit(!isOpenEdit);
-    }
+    };
 
     const toggleModalDelete = (e) => {
         const asistencia = JSON.parse(e.target.dataset.row);
@@ -122,7 +122,7 @@ export default function Assistance() {
             FECHA: asistencia.FECHA
         });
         setIsOpenDelete(!isOpenDelete);
-    }
+    };
 
     const handleInsert = (e) => {
         e.ID_CLIENTE = selectedClients.value;
@@ -136,7 +136,7 @@ export default function Assistance() {
             fetchData();
         });
         toggleModalInsert();
-    }
+    };
 
     const HandleEdit = (e) => {
         commonDB.update({ header: "asistencia", size: "2", object: e }).then(response => {
@@ -149,7 +149,7 @@ export default function Assistance() {
         });
         setIsOpenEdit(!isOpenEdit);
 
-    }
+    };
 
     const HandleDelete = (e) => {
         commonDB.delete({ header: "asistencia", object: { id: e.asistencia_id } }).then(response => {
@@ -162,7 +162,7 @@ export default function Assistance() {
         });
         setIsOpenDelete(!isOpenDelete);
 
-    }
+    };
     const handleSearch = (e) => {
         if (e.target.value === undefined || e.target.value === "") {
             fetchData();
@@ -172,7 +172,7 @@ export default function Assistance() {
                 setData(response);
             })
         }
-    }
+    };
     const handleFiltro = (e) => {
         if (e.target.value === undefined || e.target.value === "") {
             fetchData();
@@ -182,17 +182,17 @@ export default function Assistance() {
                 setData(response);
             })
         }
-    }
+    };
 
     const exportPDF = () => {
         const data = dataRef.current.map((asistencia) =>
             ([asistencia.ID_ASISTENCIA, asistencia.NOMBRE_CLIENTE, asistencia.APELLIDO_CLIENTE, asistencia.FECHA]));
         exportToPdf(dataHeader, data, "Reporte de Asistencia" + moment().format("DD/MM/YYYY"));
-    }
+    };
 
     const onChangeYearFilter = (e) => {
         setYearFilter(e.target.value);
-    }
+    };
 
     return (
         <div>

@@ -71,24 +71,24 @@ export default function Membership() {
             label: client.NOMBRE_CLIENTE + " " + client.APELLIDOS,
             value: client.ID_CLIENTE
         })))
-    }
+    };
     const onChangeSearchClient = (selected) => {
         setSelectedClients(selected);
-    }
+    };
     const fetchData = () => {
         commonDB.getAll({ header: "membresia" }).then(response => {
             convertDate(response)
 
             setData(response)
         })
-    }
+    };
 
     const convertDate = (e) => {
         e.map((entrada) => {
             entrada.FECHA_INICIO = moment(new Date(entrada.FECHA_INICIO)).format('LL')
             entrada.FECHA_FIN = moment(new Date(entrada.FECHA_FIN)).format('LL')
         })
-    }
+    };
 
     useEffect(() => {
         fetchData();
@@ -97,7 +97,7 @@ export default function Membership() {
 
     const toggleModalInsert = () => {
         setIsOpenInsert(!isOpenInsert);
-    }
+    };
 
     const toggleModalEdit = (e) => {
         const pago = JSON.parse(e.target.dataset.row);
@@ -113,7 +113,7 @@ export default function Membership() {
 
         });
         setIsOpenEdit(!isOpenEdit);
-    }
+    };
 
     const toggleModalDelete = (e) => {
         const pago = JSON.parse(e.target.dataset.row);
@@ -125,7 +125,7 @@ export default function Membership() {
             FECHA_FIN: pago.FECHA_FIN
         });
         setIsOpenDelete(!isOpenDelete);
-    }
+    };
 
 
     const handleInsert = (e) => {
@@ -139,7 +139,7 @@ export default function Membership() {
             fetchData();
         });
         toggleModalInsert();
-    }
+    };
 
     const HandleEdit = (e) => {
         commonDB.update({ header: "membresia", size: "6", object: e }).then(response => {
@@ -152,7 +152,7 @@ export default function Membership() {
         });
         setIsOpenEdit(!isOpenEdit);
 
-    }
+    };
 
     const HandleDelete = (e) => {
         commonDB.delete({ header: "membresia", object: { id: e.membresia_id } }).then(response => {
@@ -165,7 +165,7 @@ export default function Membership() {
         });
         setIsOpenDelete(!isOpenDelete);
 
-    }
+    };
     const handleSearch = (e) => {
         if (e.target.value === undefined || e.target.value === "") {
             fetchData();
@@ -174,13 +174,13 @@ export default function Membership() {
                 setData(response);
             })
         }
-    }
+    };
     const exportPDF = () => {
         const data = dataRef.current.map((membresia) =>
             ([membresia.ID_MEMBRESIA, membresia.NOMBRE_CLIENTE, membresia.APELLIDO_CLIENTE, membresia.FECHA_INICIO, membresia.FECHA_FIN,
                 membresia.TIPO_PAGO, membresia.MONTO, membresia.DETALLE, membresia.ESTADO]));
         exportToPdf(dataHeader, data, "Reporte de Membresia"+moment().format("DD/MM/YYYY"));
-    }
+    };
     return (
 
         <div>

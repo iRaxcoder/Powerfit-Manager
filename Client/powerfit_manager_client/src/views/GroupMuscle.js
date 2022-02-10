@@ -53,7 +53,7 @@ export default function GrupoMuscular() {
   const toggleModalInsert = () => {
     setIsOpenInsert(!isOpenInsert);
 
-  }
+  };
 
   const toggleModalEdit = (e) => {
     const groupMuscle = JSON.parse(e.target.dataset.row);
@@ -62,7 +62,7 @@ export default function GrupoMuscular() {
       NOMBRE_GRUPO_MUSCULAR: groupMuscle.NOMBRE_GRUPO_MUSCULAR
     });
     setIsOpenEdit(!isOpenEdit);
-  }
+  };
 
   const toggleModalDelete = (e) => {
     const groupMuscle = JSON.parse(e.target.dataset.row);
@@ -71,7 +71,7 @@ export default function GrupoMuscular() {
       NOMBRE_GRUPO_MUSCULAR: groupMuscle.NOMBRE_GRUPO_MUSCULAR
     });
     setIsOpenDelete(!isOpenDelete);
-  }
+  };
 
   const handleChange = (e) => {
     setElement({ NOMBRE_GRUPO_MUSCULAR: e.muscule_group_name })
@@ -87,7 +87,7 @@ export default function GrupoMuscular() {
       fetchData();
     });
     toggleModalInsert();
-  }
+  };
 
   const HandleEdit = (e) => {
     commonDB.update({ header: "grupo_muscular", size: "2", object: e }).then(response => {
@@ -100,7 +100,7 @@ export default function GrupoMuscular() {
     });
     setIsOpenEdit(!isOpenEdit);
 
-  }
+  };
 
   const HandleDelete = (e) => {
     commonDB.delete({ header: "grupo_muscular", object: { id: e.muscule_group_id } }).then(response => {
@@ -113,7 +113,8 @@ export default function GrupoMuscular() {
     });
     setIsOpenDelete(!isOpenDelete);
 
-  }
+  };
+
   const handleSearch = (e) => {
     console.log(e.target.value);
     if (e.target.value === undefined || e.target.value === "") {
@@ -123,7 +124,7 @@ export default function GrupoMuscular() {
         setData(response);
       })
     }
-  }
+  };
   return (
 
     <div>
