@@ -1,22 +1,30 @@
-import { useState } from 'react';
+import { useState, useContext,useEffect } from 'react';
 import logo from '../assets/img/logo.png'
 import '../styles/Login/login.css'
 import { useNavigate } from 'react-router-dom'
-import auth from '../service/Authentication.js'
 import CustomForm from '../components/CustomForm.js'
 import { CustomInput } from '../components/CustomInput';
 import CustomModal from "../components/CustomModal";
+import AuthContext from "../components/hooks/Authentication/AuthContext.js";
 
 const SUCCESSFUL = 1;
 
 
 export default function Login() {
+    const { loginUser, userAuth } = useContext(AuthContext);
     const [modalMsg, setModalMsg] = useState({ isMsgOpen: false, msg: "" });
     const history = useNavigate();
     const [user, setUser] = useState({
         userName: '',
         secret: ''
     })
+
+    useEffect(()=>{
+        if(userAuth){
+            history('/inicio');
+        }
+    },[userAuth,history]);
+
     const handleInputChange = (event) => {
         setUser({
             ...user,
@@ -24,17 +32,7 @@ export default function Login() {
         })
     }
     const handleSubmit = async () => {
-        //
-        const ApiResponse = await auth.logIn(user);
-        if (ApiResponse === SUCCESSFUL) {
-            history('/inicio');
-        } else {
-            setModalMsg(prevState => ({
-                ...prevState,
-                msg: ApiResponse,
-                isMsgOpen: true
-              }));
-         }
+        loginUser(user);
     }
 
     const enterAction = (event) => {

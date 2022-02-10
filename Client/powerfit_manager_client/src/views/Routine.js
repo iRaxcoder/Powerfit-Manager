@@ -520,6 +520,9 @@ export default function Routine(){
                     <h4 className="routine__list_title">Semana</h4>
                   <hr/>
                   <div className="row">
+                  <div className="col ml-2">
+                      <p>Cliente: {routineHeader.client} </p>
+                    </div>
                     <div className="col ml-2">
                       <p>Fecha: {routineGeneralInfo.date} </p>
                     </div>

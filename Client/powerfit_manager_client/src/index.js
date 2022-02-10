@@ -5,9 +5,11 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './styles/common.css'
+import AuthState from "./components/hooks/Authentication/AuthState";
 
 ReactDOM.render(
   <React.StrictMode>
+    <AuthState/>
     <App/>
   </React.StrictMode>,
   document.getElementById('root')
