@@ -365,18 +365,15 @@ export default function Routine() {
   }
 
   const exportPdf = () => {
-    console.log("Estoy");
     html2canvas(document.querySelector("#rountine")).then(canvas => {
-     // document.body.appendChild(canvas);  // if you want see your screenshot in body.
+      // document.body.appendChild(canvas);  // if you want see your screenshot in body.
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF();
       pdf.addImage(imgData, 'PNG', 10, 10);
-     // pdf.fromHTML(ReactDOMServer.renderToStaticMarkup(this.render()));
-      pdf.save("download.pdf");
+      pdf.save("rountine.pdf");
     });
 
   }
-
 
   return (
     <div>
