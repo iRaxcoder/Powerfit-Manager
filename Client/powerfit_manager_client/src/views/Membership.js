@@ -186,7 +186,7 @@ export default function Membership() {
     return (
 
         <div>
-            <h1 className="text-left">Control Membresía</h1>
+            <h1 className="text-left">Control membresía</h1>
             <hr />
             <div className="container">
                 <div className="container-insert-search__">

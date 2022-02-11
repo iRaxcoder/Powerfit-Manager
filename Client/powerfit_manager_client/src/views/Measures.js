@@ -258,41 +258,41 @@ export default function Membership() {
                             <LiveCustomSelect data={selectedClients} onChange={onChangeSearchClient} className='mt-2' placeHolder={"Buscar cliente..."} loadOptions={searchClient} />
                         </div>
                         <div className="col">
-                            <input {...register('peso_insert')} errorMsg="Ingrese el peso" type="number" step="0.01" min="0" className='mt-2' placeholder='Peso'></input>
+                            <input {...register('peso_insert')} type="number" step="0.01" min="0" className='mt-2' placeholder='Peso'></input>
                         </div>
                     </div>
                     <div className="row">
 
                         <div className="col">
-                            <input {...register('altura_insert')} errorMsg="Ingrese la altura" type="number" step="0.01" min="0" className='mt-2' placeholder='Altura'></input>
+                            <input {...register('altura_insert')} type="number" step="0.01" min="0" className='mt-2' placeholder='Altura'></input>
                         </div>
                         <div className="col">
-                            <input {...register('grasa_corporal_insert')} errorMsg="Ingrese la grasa corporal" type="number" step="0.01" min="0" className='mt-2' placeholder='Grasa Corporal'></input>
+                            <input {...register('grasa_corporal_insert')} type="number" step="0.01" min="0" className='mt-2' placeholder='Grasa Corporal'></input>
                         </div>
                         <div className="col">
-                            <input {...register('agua_corporal_insert')} errorMsg="Ingrese la agua corporal" type="number" step="0.01" min="0" className='mt-2' placeholder='Agua Corporal'></input>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col">
-                            <input {...register('masa_muscular_insert')} errorMsg="Ingrese la masa muscular" type="number" step="0.01" min="0" className='mt-2' placeholder='Masa Múscular'></input>
-                        </div>
-                        <div className="col">
-                            <input {...register('valora_fisica_insert')} errorMsg="Ingrese la valorción física" type="number" step="0.01" min="0" className='mt-2' placeholder='Valoración Física'></input>
-                        </div>
-                        <div className="col">
-                            <input {...register('metab_basal_insert')} errorMsg="Ingrese el Metab. basal" type="number" step="0.01" min="0" className='mt-2' placeholder='Metab. Basal'></input>
+                            <input {...register('agua_corporal_insert')} type="number" step="0.01" min="0" className='mt-2' placeholder='Agua Corporal'></input>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col">
-                            <input {...register('edad_metab_insert')} errorMsg="Ingrese la edad metabolica" type="number" step="0.01" min="0" className='mt-2' placeholder='Edad Metab.'></input>
+                            <input {...register('masa_muscular_insert')} type="number" step="0.01" min="0" className='mt-2' placeholder='Masa Múscular'></input>
                         </div>
                         <div className="col">
-                            <input {...register('masa_osea_insert')} errorMsg="Ingrese la masa ósea" type="number" step="0.01" min="0" className='mt-2' placeholder='Masa Ósea'></input>
+                            <input {...register('valora_fisica_insert')} type="number" step="0.01" min="0" className='mt-2' placeholder='Valoración Física'></input>
                         </div>
                         <div className="col">
-                            <input {...register('grasa_visceral_insert')} errorMsg="Ingrese la grasa visceral" type="number" min="0" step="0.01" className='mt-2' placeholder='Grasa Visceral'></input>
+                            <input {...register('metab_basal_insert')} type="number" step="0.01" min="0" className='mt-2' placeholder='Metab. Basal'></input>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            <input {...register('edad_metab_insert')} type="number" step="0.01" min="0" className='mt-2' placeholder='Edad Metab.'></input>
+                        </div>
+                        <div className="col">
+                            <input {...register('masa_osea_insert')} type="number" step="0.01" min="0" className='mt-2' placeholder='Masa Ósea'></input>
+                        </div>
+                        <div className="col">
+                            <input {...register('grasa_visceral_insert')} type="number" min="0" step="0.01" className='mt-2' placeholder='Grasa Visceral'></input>
                         </div>
                     </div>
 
@@ -301,31 +301,31 @@ export default function Membership() {
                     <div className="row">
 
                         <div className="col">
-                            <input {...register('bd_insert')} errorMsg="Ingrese B.D" type="number" step="0.01" min="0" className='mt-2' placeholder='B.D'></input>
+                            <input {...register('bd_insert')} type="number" step="0.01" min="0" className='mt-2' placeholder='B.D'></input>
                         </div>
                         <div className="col">
-                            <input {...register('bi_insert')} errorMsg="Ingrese B.I" type="number" step="0.01" min="0" className='mt-2' placeholder='B.I'></input>
+                            <input {...register('bi_insert')} type="number" step="0.01" min="0" className='mt-2' placeholder='B.I'></input>
                         </div>
                         <div className="col">
-                            <input {...register('pecho_insert')} errorMsg="Ingrese el pecho" type="number" step="0.01" min="0" className='mt-2' placeholder='Pecho'></input>
+                            <input {...register('pecho_insert')} type="number" step="0.01" min="0" className='mt-2' placeholder='Pecho'></input>
                         </div>
                         <div className="col">
                             <input {...register('abd_insert')} errorMsg="Ingrese el ABD." type="number" step="0.01" min="0" className='mt-2' placeholder='ABD'></input>
                         </div>
                         <div className="col">
-                            <input {...register('cadera_insert')} errorMsg="Ingrese la cadera" type="number" step="0.01" min="0" className='mt-2' placeholder='Cadera'></input>
+                            <input {...register('cadera_insert')} type="number" step="0.01" min="0" className='mt-2' placeholder='Cadera'></input>
                         </div>
                         <div className="col">
-                            <input {...register('md_insert')} errorMsg="Ingrese M.D" type="number" step="0.01" min="0" className='mt-2' placeholder='M.D'></input>
+                            <input {...register('md_insert')} type="number" step="0.01" min="0" className='mt-2' placeholder='M.D'></input>
                         </div>
                         <div className="col">
-                            <input {...register('mi_insert')} errorMsg="Ingrese M.I" type="number" step="0.01" min="0" className='mt-2' placeholder='M.I'></input>
+                            <input {...register('mi_insert')} type="number" step="0.01" min="0" className='mt-2' placeholder='M.I'></input>
                         </div>
                         <div className="col">
-                            <input {...register('pd_insert')} errorMsg="Ingrese P.D" type="number" step="0.01" min="0" className='mt-2' placeholder='P.D'></input>
+                            <input {...register('pd_insert')} type="number" step="0.01" min="0" className='mt-2' placeholder='P.D'></input>
                         </div>
                         <div className="col">
-                            <input {...register('pi_insert')} errorMsg="Ingrese P.I" type="number" step="0.01" min="0" className='mt-2' placeholder='P.I'></input>
+                            <input {...register('pi_insert')} type="number" step="0.01" min="0" className='mt-2' placeholder='P.I'></input>
                         </div>
                     </div>
 
@@ -349,53 +349,53 @@ export default function Membership() {
                     <div className="row">
                         <div className="col">
                             <input {...register('peso_insert')} value={element.PESO} onChange={(e) => setElement(prevState => ({ ...prevState, PESO: e.target.value }))}
-                                errorMsg="Ingrese el peso" type="number" step="0.01" min="0" className='mt-2' placeholder='Peso'></input>
+                             type="number" step="0.01" min="0" className='mt-2' placeholder='Peso'></input>
                         </div>
 
                         <div className="col">
                             <input {...register('altura_insert')} value={element.ALTURA} onChange={(e) => setElement(prevState => ({ ...prevState, ALTURA: e.target.value }))}
-                                errorMsg="Ingrese la altura" type="number" step="0.01" min="0" className='mt-2' placeholder='Altura'></input>
+                               type="number" step="0.01" min="0" className='mt-2' placeholder='Altura'></input>
                         </div>
                         <div className="col">
                             <input {...register('grasa_corporal_insert')} value={element.GRASA_CORPORAL} onChange={(e) => setElement(prevState => ({ ...prevState, GRASA_CORPORAL: e.target.value }))}
-                                errorMsg="Ingrese la grasa corporal" type="number" step="0.01" min="0" className='mt-2' placeholder='Grasa Corporal'></input>
+                                type="number" step="0.01" min="0" className='mt-2' placeholder='Grasa Corporal'></input>
                         </div>
                     </div>
                     <div className="row">
 
                         <div className="col">
                             <input {...register('agua_corporal_insert')} value={element.AGUA_CORPORAL} onChange={(e) => setElement(prevState => ({ ...prevState, AGUA_CORPORAL: e.target.value }))}
-                                errorMsg="Ingrese la agua corporal" type="number" step="0.01" min="0" className='mt-2' placeholder='Agua Corporal'></input>
+                                type="number" step="0.01" min="0" className='mt-2' placeholder='Agua Corporal'></input>
                         </div>
                         <div className="col">
                             <input {...register('masa_muscular_insert')} value={element.MASA_MUSCULAR} onChange={(e) => setElement(prevState => ({ ...prevState, MASA_MUSCULAR: e.target.value }))}
-                                errorMsg="Ingrese la masa muscular" type="number" step="0.01" min="0" className='mt-2' placeholder='Masa Múscular'></input>
+                             type="number" step="0.01" min="0" className='mt-2' placeholder='Masa Múscular'></input>
                         </div>
                         <div className="col">
                             <input {...register('valora_fisica_insert')} value={element.VALORACION_FISICA} onChange={(e) => setElement(prevState => ({ ...prevState, VALORACION_FISICA: e.target.value }))}
-                                errorMsg="Ingrese la valorción física" type="number" step="0.01" min="0" className='mt-2' placeholder='Valoración Física'></input>
+                               type="number" step="0.01" min="0" className='mt-2' placeholder='Valoración Física'></input>
                         </div>
                     </div>
                     <div className="row">
 
                         <div className="col">
                             <input {...register('metab_basal_insert')} value={element.METABOLISMO_BASAL} onChange={(e) => setElement(prevState => ({ ...prevState, METABOLISMO_BASAL: e.target.value }))}
-                                errorMsg="Ingrese el Metab. basal" type="number" step="0.01" min="0" className='mt-2' placeholder='Metab. Basal'></input>
+                              type="number" step="0.01" min="0" className='mt-2' placeholder='Metab. Basal'></input>
                         </div>
                         <div className="col">
                             <input {...register('edad_metab_insert')} value={element.EDAD_METABOLICA} onChange={(e) => setElement(prevState => ({ ...prevState, EDAD_METABOLICA: e.target.value }))}
-                                errorMsg="Ingrese la edad metabolica" type="number" step="0.01" min="0" className='mt-2' placeholder='Edad Metab.'></input>
+                             type="number" step="0.01" min="0" className='mt-2' placeholder='Edad Metab.'></input>
                         </div>
                         <div className="col">
                             <input {...register('masa_osea_insert')} value={element.MASA_OSEA} onChange={(e) => setElement(prevState => ({ ...prevState, MASA_OSEA: e.target.value }))}
-                                errorMsg="Ingrese la masa ósea" type="number" step="0.01" min="0" className='mt-2' placeholder='Masa Ósea'></input>
+                             type="number" step="0.01" min="0" className='mt-2' placeholder='Masa Ósea'></input>
                         </div>
                     </div>
                     <div className="row">
 
                         <div className="col">
                             <input {...register('grasa_visceral_insert')} value={element.GRASA_VISCERAL} onChange={(e) => setElement(prevState => ({ ...prevState, GRASA_VISCERAL: e.target.value }))}
-                                errorMsg="Ingrese la grasa visceral" type="number" step="0.01" min="0" className='mt-2' placeholder='Grasa Visceral'></input>
+                                 type="number" step="0.01" min="0" className='mt-2' placeholder='Grasa Visceral'></input>
                         </div>
 
                         <div className="col"></div>
