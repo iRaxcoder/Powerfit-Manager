@@ -20,7 +20,7 @@ export default function Client(){
   const [modalMsg, setModalMsg]= useState({isMsgOpen: false, msg: ""});
   clientsListRef.current=clientList;
 
-  const dataHeader = [["Nombre","Apellidos","Edad","Teléfono","Correo","Enfermedades"]];
+  const dataHeader = [["ID","Nombre","Apellidos","Edad","Teléfono","Correo","Enfermedades"]];
 
   const columns = React.useMemo(
       () => [
@@ -72,7 +72,7 @@ export default function Client(){
     const HandleOpenEdit = (e) => {
       const client = JSON.parse(e.target.dataset.row);
       setClientEdited(
-      {name:client.NOMBRE_CLIENTE, lastName: client.APELLIDOS, age: client.EDAD, number: client.TELEFONO, email: client.EMAIL, illness: client.ENFERMEDAD})
+      {id:client.ID_CLIENTE,name:client.NOMBRE_CLIENTE, lastName: client.APELLIDOS, age: client.EDAD, number: client.TELEFONO, email: client.EMAIL, illness: client.ENFERMEDAD})
       setIsOpenEdit(true);
     }
 
@@ -170,7 +170,7 @@ export default function Client(){
                 <CustomInput errorMsg="Teléfono requerido" onChange={(e)=>setClientEdited(prevState =>({...prevState,number:e.target.value}))}value={clientEdited.number} className='form-control mt-2' name='number_edit' placeholder='Teléfono'></CustomInput>
                 <CustomInput errorMsg="Correo requerido"onChange={(e)=>setClientEdited(prevState =>({...prevState,email:e.target.value}))} value={clientEdited.email} className='form-control mt-2' name='email_edit' placeholder='Email'></CustomInput>
                 <CustomInput errorMsg="Este campo es requerido"onChange={(e)=>setClientEdited(prevState =>({...prevState,illness:e.target.value}))} value={clientEdited.illness} className='form-control mt-2' name='illness_edit' placeholder='Enfermedad'></CustomInput>
-                <AddButton type="submit" text="Guardar cambios"/>
+                <AddButton text="Guardar cambios"/> 
                 <CancelButton fun={()=>setIsOpenEdit(false)}/>
               </CustomForm>
             </CustomModal>

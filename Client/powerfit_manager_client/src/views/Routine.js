@@ -290,6 +290,7 @@ export default function Routine() {
 
   const onViewRoutine = (routineId) => {
     var dayList = { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [] };
+    var dominantGroup={ 1: "", 2: "", 3: "", 4: "", 5: "", 6: "", 7: "" };
     commonDB.getSearch({ header: "rutina_id", find: routineId }).then(response => {
       formatDate(response);
       setRoutineGeneralInfo({ date: response[0].FECHA, level: response[0].NIVEL, pause: response[0].PAUSA, objetive: response[0].OBJETIVO, percent: response[0].PORCENTAJE, type: response[0].TIPO });
@@ -299,6 +300,12 @@ export default function Routine() {
           day.push({ exerciseName: e.NOMBRE_EJERCICIO, details: e.INDICACIONES });
         });
         setDaysExercisesRoutine(dayList);
+        commonDB.getSearch({ header: "rutina_musculo_id", find: routineId }).then(response => {
+           response.forEach((day)=>{
+             dominantGroup[day.DIA]="MD: "+day.NOMBRE_GRUPO_MUSCULAR.toLowerCase();
+           });
+           setDaysDominantGroup(dominantGroup);
+        });
       });
     });
   };
@@ -308,7 +315,7 @@ export default function Routine() {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF();
       pdf.addImage(imgData, 'PNG', 10, 10);
-      pdf.save("rountine.pdf");
+      pdf.save("Entrenamiento Powerfit-"+routineHeader.client+"-"+routineGeneralInfo.date+".pdf");
     });
   };
 

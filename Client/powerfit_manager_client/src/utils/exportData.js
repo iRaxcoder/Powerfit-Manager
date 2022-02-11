@@ -3,26 +3,6 @@ import "jspdf-autotable";
 import {CSVLink} from 'react-csv';
 import DownloadButton from './../components/DownloadButton';
 
-let base64String = "";
-let imageBase64Stringsep="";
-
-// const convertToBase64File = (callback) =>{
-//     var reader = new FileReader();
-
-//     var aFileParts = ['<img src="../assets/img/logoreport.jpg"></img>'];
-//     var oMyBlob = new Blob(aFileParts, {type : 'img/jpeg'}); // the blob
-      
-//     reader.onload = function () {
-//          base64String = reader.result;
-//         callback(base64String);
-//         // imageBase64Stringsep = base64String;
-//         // console.log(base64String);
-//     }
-//     reader.readAsDataURL(oMyBlob);
-// }
-
-
-
 export const exportToPdf = (headers,data, title,info) => {
    
     const unit = "pt";
