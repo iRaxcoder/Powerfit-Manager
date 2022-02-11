@@ -147,17 +147,6 @@ export default function Sales(){
     };  
     const onChangeSearchClient = (selected) => {
       setSelectedClients(selected);
-    }; 
-    const handleInsert = (e) => {
-      commonDB.insert({header:"venta",size:"5", object: e}).then(response=>{   
-          setModalMsg(prevState =>({
-            ...prevState,
-            msg: response,
-            isMsgOpen: true
-          }));
-        fetchSales();
-      })
-      setIsOpenInsert(false);
     };
     const HandleOpenDelete = (e) => {
       const sale = JSON.parse(e.target.dataset.row);
@@ -200,14 +189,14 @@ export default function Sales(){
     const exportPDF=()=>{
       const data = saleListRef.current.map((sale)=>
       ([sale.ID_VENTA,sale.ID_CLIENTE,sale.NOMBRE_CLIENTE,sale.FECHA,sale.TOTAL]));
-      exportToPdf(dataHeaderPDF,data, "Reporte de ventas "+ moment());
+      exportToPdf(dataHeaderPDF,data, "Reporte de ventas PowerFit de "+ filterType + " al corte "+ moment().locale("es-mx").format("LL"));
     };
     const exportPDFSaleInfo=()=>{
       const saleInfo = ["Compra de "+saleHeader.client,"Realizada el "+saleHeader.date
       ,"Monto: "+saleHeader.total+" colones (sin impuestos aplicables)","Lista de productos: "];
       const data = saleInfoRef.map((sale)=>
       ([sale.NOMBRE,sale.CANTIDAD,sale.SUBTOTAL]));
-      exportToPdf(dataHeaderSalePDF,data, "Información de la venta "+ moment().format("DD/MM/YYYY"),saleInfo);
+      exportToPdf(dataHeaderSalePDF,data, "venta #"+saleHeader.saleId+"_"+ moment().format("DD/MM/YYYY"),saleInfo);
     };
     const onQueueProduct = (e) =>{
       const selectedProduct= productList[e.productId];
@@ -284,7 +273,6 @@ export default function Sales(){
     const onFinishSell = () => {
       if (selectedClients!==null && selectedClients.label !==undefined){
           if(carProducts.length>=1){
-            console.log(selectedClients);
             setIsOpenOrder(true);
           }else{
             setModalMsg(prevState =>({
@@ -359,7 +347,7 @@ export default function Sales(){
                         <CustomSelect focus="value" onChange={handleFiltro} errorMsg="Seleccione una opción" className='mt-2 ml-2' name='filtro' placeholder='seleccione una opcion' options={selectFilter}></CustomSelect>
                     </CustomForm>
                     <DownloadButton onClick={exportPDF} text="PDF"/>
-                    <ExportToCsv headers={dataHeaderCSV} data={saleList} fileName={"ventas_powerfit_"+moment()+".csv"}/>
+                    <ExportToCsv headers={dataHeaderCSV} data={saleList} fileName={"ventas_powerfit de "+filterType+" corte:"+moment().locale("es-mx").format("LL")+".csv"}/>
                   </div>
                   <SingleCustomInput onChange={handleSearch} placeholder="Buscar" name="input-search" className="search__"/>
                 </div>

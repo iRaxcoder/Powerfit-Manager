@@ -1,8 +1,6 @@
 import React from 'react'
 import '../styles/Sales/productItem.css'
-import Form from './CustomForm'
 import {useForm} from "react-hook-form"
-import { CustomInput } from './CustomInput'
 
 const ProductItem= (props) =>{
     const { register, formState: { errors }, handleSubmit } = useForm();
