@@ -17,7 +17,7 @@ export default function Home() {
             { Header: 'Nombre', accessor: 'NOMBRE' },
             { Header: 'Telefono', accessor: 'TELEFONO' },
             { Header: 'Cantidad de Asistencias', accessor: 'ASISTENCIAS' }
-        ]
+        ],[]
     )
 
     const columnsProductSales = React.useMemo(
@@ -65,9 +65,9 @@ export default function Home() {
         });
     };
     const convertDate = (e) => {
-        e.map((entrada) => {
+        e.map((entrada) => (
             entrada.FECHA = moment(new Date(entrada.FECHA)).format('LL')
-        })
+        ))
     };
     useEffect(() => {
         fetchSalesStats();
