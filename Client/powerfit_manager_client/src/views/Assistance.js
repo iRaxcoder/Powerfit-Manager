@@ -31,15 +31,16 @@ export default function Assistance() {
             APELLIDO_CLIENTE: '',
             FECHA: ''
         }
-    ])
+    ]);
     const dataHeader = [["Id Asistencia", "Nombre", "Apellidos", "Fecha"]];
+
     const columnsTop = React.useMemo(
         () => [
             { Header: 'Nombre', accessor: 'NOMBRE' },
             { Header: 'Telefono', accessor: 'TELEFONO' },
             { Header: 'Cantidad de Asistencias', accessor: 'ASISTENCIAS' }
-        ]
-    )
+        ],[]
+    );
     const columns = React.useMemo(
         () => [
             { Header: '#', accessor: 'ID_ASISTENCIA' },
@@ -48,14 +49,14 @@ export default function Assistance() {
             { Header: 'Fecha', accessor: 'FECHA' }
         ],
         []
-    )
+    );
 
     const dataHeaderCSV = [
         { label: "ID Asistencia", key: 'ID_ASISTENCIA', },
         { label: "Nombre", key: 'NOMBRE_CLIENTE' },
         { label: "Apellidos", key: 'APELLIDO_CLIENTE' },
         { label: "Fecha inico", key: 'FECHA' },
-    ]
+    ];
 
     const selectFiltro = [{ value: 'Hoy' }, { value: 'Ayer' }, { value: 'Todas las Semanas' }];
 
@@ -86,9 +87,9 @@ export default function Assistance() {
         });
     };
     const convertDate = (e) => {
-        e.map((entrada) => {
+        e.map((entrada) => (
             entrada.FECHA = moment(new Date(entrada.FECHA)).format('LLL')
-        })
+        ))
     };
 
     useEffect(() => {

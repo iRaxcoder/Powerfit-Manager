@@ -22,7 +22,7 @@ export default function Membership() {
     const dataRef = useRef();
     dataRef.current = data;
 
-    const dataHeader = [["Id Membresia","Nombre","Apellidos","Fecha Inicio","Fecha Fin","Tipo de Pago","Monto","Detalle","Estado"]];
+    const dataHeader = [["Id Membresia", "Nombre", "Apellidos", "Fecha Inicio", "Fecha Fin", "Tipo de Pago", "Monto", "Detalle", "Estado"]];
     const [element, setElement] = useState([
         {
             ID_MEMBRESIA: '',
@@ -84,10 +84,12 @@ export default function Membership() {
     };
 
     const convertDate = (e) => {
-        e.map((entrada) => {
-            entrada.FECHA_INICIO = moment(new Date(entrada.FECHA_INICIO)).format('LL')
-            entrada.FECHA_FIN = moment(new Date(entrada.FECHA_FIN)).format('LL')
-        })
+        e.forEach((entrada) => {
+            entrada.FECHA_INICIO = moment(new Date(entrada.FECHA_INICIO)).format('LL');
+            entrada.FECHA_FIN = moment(new Date(entrada.FECHA_FIN)).format('LL');
+
+        }
+        )
     };
 
     useEffect(() => {
@@ -177,9 +179,9 @@ export default function Membership() {
     };
     const exportPDF = () => {
         const data = dataRef.current.map((membresia) =>
-            ([membresia.ID_MEMBRESIA, membresia.NOMBRE_CLIENTE, membresia.APELLIDO_CLIENTE, membresia.FECHA_INICIO, membresia.FECHA_FIN,
-                membresia.TIPO_PAGO, membresia.MONTO, membresia.DETALLE, membresia.ESTADO]));
-        exportToPdf(dataHeader, data, "Reporte de Membresia"+moment().format("DD/MM/YYYY"));
+        ([membresia.ID_MEMBRESIA, membresia.NOMBRE_CLIENTE, membresia.APELLIDO_CLIENTE, membresia.FECHA_INICIO, membresia.FECHA_FIN,
+        membresia.TIPO_PAGO, membresia.MONTO, membresia.DETALLE, membresia.ESTADO]));
+        exportToPdf(dataHeader, data, "Reporte de Membresia" + moment().format("DD/MM/YYYY"));
     };
     return (
 
@@ -193,7 +195,7 @@ export default function Membership() {
                         <DownloadButton onClick={exportPDF} text="PDF" />
                         <ExportToCsv headers={dataHeaderCSV} data={dataRef.current} fileName={"membresia_powerfit_" + moment().format("DD/MM/YYYY") + ".csv"} />
                     </div>
-                    <SingleCustomInput onChange={handleSearch} errorMsg="Ingrese la palabra a buscar" placeholder="Buscar" name="input" className="search__"/>
+                    <SingleCustomInput onChange={handleSearch} errorMsg="Ingrese la palabra a buscar" placeholder="Buscar" name="input" className="search__" />
                 </div>
                 <Table
                     columns={columns}

@@ -24,7 +24,7 @@ export default function Membership() {
     const dataRef = useRef();
     dataRef.current = data;
 
-    const { register, formState: { errors }, handleSubmit, reset } = useForm();
+    const { register, handleSubmit, reset } = useForm();
     const [elementSee, setElementSee] = useState([]);
     const [element, setElement] = useState([
         {
@@ -70,9 +70,9 @@ export default function Membership() {
     };
 
     const convertDate = (e) => {
-        e.map((entrada) => {
+        e.map((entrada) => (
             entrada.FECHA = moment(new Date(entrada.FECHA)).format('LL')
-        })
+        ))
     };
 
     useEffect(() => {
