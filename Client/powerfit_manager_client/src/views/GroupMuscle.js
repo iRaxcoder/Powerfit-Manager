@@ -73,10 +73,6 @@ export default function GrupoMuscular() {
     setIsOpenDelete(!isOpenDelete);
   };
 
-  const handleChange = (e) => {
-    setElement({ NOMBRE_GRUPO_MUSCULAR: e.muscule_group_name })
-  };
-
   const handleInsert = (e) => {
     commonDB.insert({ header: "grupo_muscular", size: "1", object: e }).then(response => {
       setModalMsg(prevState => ({
@@ -163,7 +159,7 @@ export default function GrupoMuscular() {
       >
         <CustomForm onSubmit={HandleEdit}>
           <CustomInput className=' mt-2' type="hidden" name='muscule_group_id' value={element.ID_MUSCULAR} placeholder='Id grupo muscular'></CustomInput>
-          <CustomInput className=' mt-2' name='muscule_group_name' onChange={handleChange} value={element.NOMBRE_GRUPO_MUSCULAR} placeholder='Nombre grupo muscular'></CustomInput>
+          <CustomInput className=' mt-2' name='muscule_group_name' onChange={(e) => setElement(prevState => ({ ...prevState, NOMBRE_GRUPO_MUSCULAR: e.target.value }))} value={element.NOMBRE_GRUPO_MUSCULAR} placeholder='Nombre grupo muscular'></CustomInput>
           <AddButton text="Guardar cambios" type="submit" />
           <CancelButton fun={() => setIsOpenEdit(!isOpenEdit)} />
         </CustomForm>
