@@ -762,4 +762,9 @@ WHERE ID_RUTINA = p_id;
 SELECT 1 AS msg;
 END$$
 
+CREATE TRIGGER `tg_rebajar_producto` AFTER INSERT ON `tb_venta_producto`
+BEGIN
+ FOR EACH ROW UPDATE tb_producto p set p.STOCK=p.STOCK-new.CANTIDAD WHERE p.ID_PRODUCTO=new.ID_PRODUCTO
+END$$
+
 DELIMITER ;

@@ -23,10 +23,11 @@ app.use(session({
       secure: false,
     }
 }));
-
+var productionOrigin='http://localhost:3000';
+// productionOrigin='http://powerfitmanager.client.local';
 const cors = require('cors');
 const corsOptions = {
-    origin:'http://localhost:3000', 
+    origin:productionOrigin, 
     credentials:true,            //access-control-allow-credentials:true
     optionSuccessStatus:200
 }
