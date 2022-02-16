@@ -28,6 +28,7 @@ export default function Routine() {
   const [selectedClients, setSelectedClients] = useState([]);
   const [selectedExercise, setSelectedExercise] = useState([]);
   const [selectedGroupMuscle, setSelectedGroupMuscle] = useState([]);
+  const [selectedGroupMuscleRoutine, setSelectedGroupMuscleRoutine] = useState("");
   const [routineClient, setRoutineClient] = useState({ id: undefined, name: '' });
   const { register, handleSubmit } = useForm();
   const [selectedDay, setSelectedDay] = useState(1);
@@ -36,7 +37,7 @@ export default function Routine() {
   const [daysExercises, setDaysExercises] = useState({ 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [] });
   const [daysExercisesRoutine, setDaysExercisesRoutine] = useState({ 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [] });
   const [daysDominantGroup, setDaysDominantGroup] = useState({ 1: "", 2: "", 3: "", 4: "", 5: "", 6: "", 7: "" });
-  const [exerciseDetails, setExerciseDetails] = useState("sin detalles");
+  const [exerciseDetails, setExerciseDetails] = useState("");
   const [isOpenConfirmRoutine, setIsOpenConfirmRoutine] = useState(false);
   const [isOpenConfirmClearRoutine, setIsOpenConfirmClearRoutine] = useState(false);
   const [generalExerciseList, setGeneralExerciseList] = useState({ counter: 0, list: [] });
@@ -203,6 +204,11 @@ export default function Routine() {
           counter: counter + 1,
           list: generalDayExercises
         });
+        setSelectedExercise([]);
+        commonDB.getSearch({ header: "ejercicio_grupo", find: selectedGroupMuscleRoutine}).then(response => {
+          setSelectedExercise(response);
+        });
+        setExerciseDetails("");
       } else {
         setModalMsg(prevState => ({
           ...prevState,
@@ -219,6 +225,7 @@ export default function Routine() {
 
   const onSelectMuscleGroup = (e) => {
     if (e.target.value !== -1) {
+      setSelectedGroupMuscleRoutine(e.target.value);
       commonDB.getSearch({ header: "ejercicio_grupo", find: e.target.value }).then(response => {
         setSelectedExercise(response);
       })
@@ -410,7 +417,7 @@ export default function Routine() {
                 </div>
                 <div className="row">
                   <div className="col col-md-3">
-                    <textarea className="mt-2" onChange={onChangeExerciseDetails} placeholder="detalles (peso,ejecucion,repeticiones)" rows="3"></textarea>
+                    <textarea className="mt-2" value={exerciseDetails} onChange={onChangeExerciseDetails} placeholder="detalles (peso,ejecucion,repeticiones)" rows="3"></textarea>
                   </div>
                   <div className="col d-flex">
                     <AddButton onClick={addExercise} text="Agregar ejercicio" />

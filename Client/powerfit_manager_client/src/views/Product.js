@@ -168,11 +168,11 @@ export default function Product(){
                 >
               <CustomForm onSubmit={HandleEdit}>
                 <CustomInput type="hidden" value={productEdited.id} className='form-control mt-2' name='product_id_edit'/> 
-                <CustomInput errorMsg="Nombre requerido" onChange={(e)=>setProductEdited(prevState =>({...prevState,name:e.target.value}))} value={productEdited.name} className='form-control mt-2' name='name_edit' placeholder='Nombre'></CustomInput>
-                <CustomInput type="number" errorMsg="cantidad requerida" onChange={(e)=>setProductEdited(prevState =>({...prevState,stock:e.target.value}))} value={productEdited.stock} className='form-control mt-2' name='stock_editt' placeholder='cantidad'></CustomInput>
-                <CustomInput type="number" errorMsg="precio requerido" onChange={(e)=>setProductEdited(prevState =>({...prevState,price:e.target.value}))} value={productEdited.price} className='form-control mt-2' name='price_edit' placeholder='precio'></CustomInput>
-                <CustomInput type="date" errorMsg="fecha ingreso requerida" onChange={(e)=>setProductEdited(prevState =>({...prevState,lastModified:e.target.value}))}value={moment(productEdited.lastModified).format('YYYY-MM-DD')} className='form-control mt-2' name='date_edit' placeholder='Teléfono'></CustomInput>
-                <CustomInput errorMsg="detalle requerido"onChange={(e)=>setProductEdited(prevState =>({...prevState,details:e.target.value}))} value={productEdited.details} className='form-control mt-2' name='details_edit' placeholder='detalles'></CustomInput>
+                <CustomInput errorMsg="Nombre requerido" onChange={(e)=>setProductEdited(prevState =>({...prevState,name:e.target.value}))} value={productEdited.name} className='mt-2' name='name_edit' placeholder='Nombre'></CustomInput>
+                <CustomInput type="number" errorMsg="cantidad requerida" onChange={(e)=>setProductEdited(prevState =>({...prevState,stock:e.target.value}))} value={productEdited.stock} className='mt-2' name='stock_editt' placeholder='cantidad'></CustomInput>
+                <CustomInput type="number" errorMsg="precio requerido" onChange={(e)=>setProductEdited(prevState =>({...prevState,price:e.target.value}))} value={productEdited.price} className='mt-2' name='price_edit' placeholder='precio'></CustomInput>
+                <CustomInput type="date" errorMsg="fecha ingreso requerida" onChange={(e)=>setProductEdited(prevState =>({...prevState,lastModified:e.target.value}))}value={moment(productEdited.lastModified).format('YYYY-MM-DD')} className='mt-2' name='date_edit' placeholder='Teléfono'></CustomInput>
+                <CustomInput errorMsg="detalle requerido"onChange={(e)=>setProductEdited(prevState =>({...prevState,details:e.target.value}))} value={productEdited.details} className='mt-2' name='details_edit' placeholder='detalles'></CustomInput>
                 <AddButton type="submit" text="Guardar cambios"/>
                 <CancelButton fun={()=>setIsOpenEdit(false)}/>
               </CustomForm>
