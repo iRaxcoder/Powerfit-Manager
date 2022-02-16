@@ -219,7 +219,7 @@ FROM tb_cliente c
 WHERE c.IS_DELETED=0
 ORDER BY (c.ID_CLIENTE) DESC$$
 
-CREATE PROCEDURE `sp_select_ejercicio` () 
+CREATE PROCEDURE `sp_select_ejercicio` ()
 BEGIN
 SELECT 
     e.ID_EJERCICIO, 
@@ -232,11 +232,11 @@ SELECT
                 	ORDER BY e.ID_EJERCICIO DESC;
 END$$
 
-CREATE PROCEDURE `sp_select_grupo_muscular` () 
+CREATE PROCEDURE `sp_select_grupo_muscular` ()
 SELECT ID_MUSCULAR,NOMBRE_GRUPO_MUSCULAR
 FROM `tb_grupo_muscular` WHERE IS_DELETED = 0$$
 
-CREATE PROCEDURE `sp_select_medicion_cliente` () 
+CREATE PROCEDURE `sp_select_medicion_cliente` ()
 BEGIN
 SELECT mc.ID_MEDICION, mc.ID_DATOS,
 mc.ID_CIRCUNFERENCIA, c.NOMBRE_CLIENTE, 
@@ -319,9 +319,10 @@ SELECT a.ID_ASISTENCIA, c.NOMBRE_CLIENTE, c.APELLIDOS AS APELLIDO_CLIENTE, a.FEC
 FROM `tb_asistencia` a
 JOIN `tb_cliente` c 
 	on a.ID_CLIENTE = c.ID_CLIENTE
-WHERE (c.NOMBRE_CLIENTE=p_buscar OR c.APELLIDOS=p_buscar OR a.FECHA=p_buscar OR  C.NOMBRE_CLIENTE LIKE concat(p_buscar,'%')
+WHERE (c.NOMBRE_CLIENTE=p_buscar OR c.APELLIDOS=p_buscar OR DATE_FORMAT(a.FECHA, '%d/%m/%Y')=p_buscar OR 
+C.NOMBRE_CLIENTE LIKE concat(p_buscar,'%')
 OR c.APELLIDOS LIKE concat(p_buscar,'%') OR  
-a.FECHA LIKE concat('%',p_buscar,'%'));
+DATE_FORMAT(a.FECHA, '%d/%m/%Y') LIKE concat('%',p_buscar,'%'));
 
 END$$
 
@@ -359,7 +360,7 @@ WHERE (c.IS_DELETED=0 AND c.IS_DELETED=0) AND(c.NOMBRE_CLIENTE=p_buscar OR c.APE
 
 END$$
 
-CREATE PROCEDURE `sp_select_search_ejercicio` (IN `p_buscar` VARCHAR(100)) 
+CREATE PROCEDURE `sp_select_search_ejercicio` (IN `p_buscar` VARCHAR(100))
 BEGIN
 	SELECT E.NOMBRE_EJERCICIO,E.ID_EJERCICIO,G.NOMBRE_GRUPO_MUSCULAR 
 FROM tb_ejercicio E 
@@ -441,10 +442,11 @@ JOIN tb_cliente c
 	ON mc.ID_CLIENTE = c.ID_CLIENTE
 WHERE mc.ID_MEDICION = p_buscar OR mc.ID_DATOS = p_buscar OR
 mc.ID_CIRCUNFERENCIA = p_buscar OR c.NOMBRE_CLIENTE = p_buscar OR
-c.APELLIDOS = p_buscar OR mc.FECHA = p_buscar OR
+c.APELLIDOS = p_buscar OR 
+DATE_FORMAT(mc.FECHA, '%d/%m/%Y') = p_buscar OR
 c.NOMBRE_CLIENTE LIKE concat(p_buscar,'%') OR 
 c.APELLIDOS LIKE concat(p_buscar,'%') OR 
-mc.FECHA LIKE concat('%',p_buscar,'%');
+DATE_FORMAT(mc.FECHA, '%d/%m/%Y') LIKE concat('%',p_busca,'%');
 
 
 END$$
@@ -457,12 +459,12 @@ m.DETALLE, (SELECT IF(m.FECHA_FIN>=CURDATE(),"ACTIVO","SUSPENDIDO") )  AS ESTADO
 FROM tb_membresia m
 JOIN tb_cliente c 
 	on m.ID_CLIENTE = c.ID_CLIENTE
-WHERE (c.NOMBRE_CLIENTE=p_buscar OR c.APELLIDOS=p_buscar OR m.FECHA_INICIO=p_buscar OR m.FECHA_FIN=p_buscar OR 
+WHERE (c.NOMBRE_CLIENTE=p_buscar OR c.APELLIDOS=p_buscar OR DATE_FORMAT(m.FECHA_INICIO, '%d/%m/%Y')=p_buscar OR DATE_FORMAT(m.FECHA_FIN,'%d/%m/%Y')=p_buscar OR 
 m.TIPO_PAGO=p_buscar OR m.MONTO=p_buscar OR 
 m.DETALLE=p_buscar OR  C.NOMBRE_CLIENTE LIKE concat(p_buscar,'%')
 OR c.APELLIDOS LIKE concat(p_buscar,'%') OR  
-m.FECHA_INICIO LIKE concat('%',p_buscar,'%') OR 
-m.FECHA_FIN LIKE concat('%',p_buscar,'%') OR 
+DATE_FORMAT(m.FECHA_INICIO, '%d/%m/%Y') LIKE concat('%',p_buscar,'%') OR 
+DATE_FORMAT(m.FECHA_FIN, '%d/%m/%Y') LIKE concat('%',p_buscar,'%') OR 
 m.TIPO_PAGO LIKE concat(p_buscar,'%') OR
 m.MONTO LIKE concat(p_buscar,'%') OR   
 m.DETALLE LIKE concat(p_buscar,'%') OR 
@@ -486,7 +488,7 @@ CREATE PROCEDURE `sp_select_search_producto` (IN `p_buscar` VARCHAR(100))
 BEGIN
 	SELECT p.ID_PRODUCTO,p.NOMBRE,p.STOCK,p.PRECIO_UNITARIO,p.ULT_INGRESO,P.DETALLES 
 FROM tb_producto p
-WHERE (p.IS_DELETED=0) AND(p.NOMBRE=p_buscar OR p.STOCK=p_buscar OR p.PRECIO_UNITARIO=p_buscar OR p.DETALLES LIKE concat('%',p_buscar,'%') OR p.ULT_INGRESO LIKE concat('%',p_buscar,'%') OR p.NOMBRE LIKE concat('%',p_buscar,'%'));
+WHERE (p.IS_DELETED=0) AND(p.NOMBRE=p_buscar OR p.STOCK=p_buscar OR p.PRECIO_UNITARIO=p_buscar OR DATE_FORMAT(p.ULT_INGRESO,'%d/%m/%Y')=p_buscar OR p.DETALLES LIKE concat('%',p_buscar,'%') OR DATE_FORMAT(p.ULT_INGRESO,'%d/%m/%Y') LIKE concat('%',p_buscar,'%') OR p.NOMBRE LIKE concat('%',p_buscar,'%'));
 
 END$$
 
@@ -496,7 +498,7 @@ SET lc_time_names = 'Es_ES';
 
 SELECT DISTINCT r.ID_RUTINA,concat(c.NOMBRE_CLIENTE, ' ', c.APELLIDOS) as NOMBRE_CLIENTE,r.FECHA from tb_rutina r
 JOIN tb_cliente c on c.ID_CLIENTE=r.ID_CLIENTE
-where r.ID_RUTINA=p_find OR c.NOMBRE_CLIENTE=p_find OR c.NOMBRE_CLIENTE like concat('%',p_find,'%') OR r.FECHA=p_find OR r.FECHA LIKE concat('%',p_find,'%') OR MONTHNAME(r.FECHA)=p_find or MONTHNAME(r.FECHA) LIKE concat('%',p_find,'%');
+where r.ID_RUTINA=p_find OR c.NOMBRE_CLIENTE=p_find OR c.NOMBRE_CLIENTE like concat('%',p_find,'%') OR DATE_FORMAT(r.FECHA,'%d/%m/%Y')=p_find OR  DATE_FORMAT(r.FECHA,'%d/%m/%Y') LIKE concat('%',p_find,'%') OR MONTHNAME(r.FECHA)=p_find or MONTHNAME(r.FECHA) LIKE concat('%',p_find,'%');
 
 
 
@@ -588,7 +590,8 @@ JOIN tb_venta_producto vp
 on vp.ID_VENTA = v.ID_VENTA
 JOIN tb_cliente c
 on c.ID_CLIENTE=v.ID_CLIENTE
-WHERE v.ID_VENTA=p_buscar OR v.ID_CLIENTE=p_buscar OR v.TOTAL=p_buscar OR v.FECHA=p_buscar OR concat(c.NOMBRE_CLIENTE,' ',c.APELLIDOS)=p_buscar OR concat(c.NOMBRE_CLIENTE,' ',c.APELLIDOS) LIKE concat(p_buscar,'%') OR v.ID_VENTA like concat(p_buscar,'%') OR v.ID_CLIENTE like concat (p_buscar,'%') OR v.TOTAL like concat (p_buscar,'%') OR V.TOTAL like concat(p_buscar,'%');
+WHERE v.ID_VENTA=p_buscar OR v.ID_CLIENTE=p_buscar OR v.TOTAL=p_buscar OR DATE_FORMAT(v.FECHA,'%d/%m/%Y')=p_buscar OR
+DATE_FORMAT(v.FECHA,'%d/%m/%Y') LIKE concat ('%',p_buscar,'%') OR concat(c.NOMBRE_CLIENTE,' ',c.APELLIDOS)=p_buscar OR concat(c.NOMBRE_CLIENTE,' ',c.APELLIDOS) LIKE concat(p_buscar,'%') OR v.ID_VENTA like concat(p_buscar,'%') OR v.ID_CLIENTE like concat (p_buscar,'%') OR v.TOTAL like concat (p_buscar,'%') OR V.TOTAL like concat(p_buscar,'%');
 
 END$$
 
@@ -762,9 +765,6 @@ WHERE ID_RUTINA = p_id;
 SELECT 1 AS msg;
 END$$
 
-CREATE TRIGGER `tg_rebajar_producto` AFTER INSERT ON `tb_venta_producto`
-BEGIN
- FOR EACH ROW UPDATE tb_producto p set p.STOCK=p.STOCK-new.CANTIDAD WHERE p.ID_PRODUCTO=new.ID_PRODUCTO
-END$$
-
 DELIMITER ;
+
+-- --------------------------------------------------------
