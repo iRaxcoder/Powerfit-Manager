@@ -164,12 +164,12 @@ export default function Client(){
                 >
               <CustomForm onSubmit={HandleEdit}>
                 <CustomInput type="hidden" value={clientEdited.id} className='form-control mt-2' name='client_id_edit'/>
-                <CustomInput errorMsg="Nombre requerido" onChange={(e)=>setClientEdited(prevState =>({...prevState,name:e.target.value}))} value={clientEdited.name} className='form-control mt-2' name='client_name_edit' placeholder='Nombre'></CustomInput>
-                <CustomInput errorMsg="Apellidos requeridos" onChange={(e)=>setClientEdited(prevState =>({...prevState,lastName:e.target.value}))} value={clientEdited.lastName} className='form-control mt-2' name='last_name_editt' placeholder='Apellidos'></CustomInput>
-                <CustomInput errorMsg="Edad requerida" onChange={(e)=>setClientEdited(prevState =>({...prevState,age:e.target.value}))} value={clientEdited.age} className='form-control mt-2' name='age_name_edit' placeholder='Edad'></CustomInput>
-                <CustomInput errorMsg="Teléfono requerido" onChange={(e)=>setClientEdited(prevState =>({...prevState,number:e.target.value}))}value={clientEdited.number} className='form-control mt-2' name='number_edit' placeholder='Teléfono'></CustomInput>
-                <CustomInput errorMsg="Correo requerido"onChange={(e)=>setClientEdited(prevState =>({...prevState,email:e.target.value}))} value={clientEdited.email} className='form-control mt-2' name='email_edit' placeholder='Email'></CustomInput>
-                <CustomInput errorMsg="Este campo es requerido"onChange={(e)=>setClientEdited(prevState =>({...prevState,illness:e.target.value}))} value={clientEdited.illness} className='form-control mt-2' name='illness_edit' placeholder='Enfermedad'></CustomInput>
+                <CustomInput errorMsg="Nombre requerido" onChange={(e)=>setClientEdited(prevState =>({...prevState,name:e.target.value}))} value={clientEdited.name} className='mt-2' name='client_name_edit' placeholder='Nombre'></CustomInput>
+                <CustomInput errorMsg="Apellidos requeridos" onChange={(e)=>setClientEdited(prevState =>({...prevState,lastName:e.target.value}))} value={clientEdited.lastName} className='mt-2' name='last_name_editt' placeholder='Apellidos'></CustomInput>
+                <CustomInput errorMsg="Edad requerida" onChange={(e)=>setClientEdited(prevState =>({...prevState,age:e.target.value}))} value={clientEdited.age} className='mt-2' name='age_name_edit' placeholder='Edad'></CustomInput>
+                <CustomInput errorMsg="Teléfono requerido" onChange={(e)=>setClientEdited(prevState =>({...prevState,number:e.target.value}))}value={clientEdited.number} className='mt-2' name='number_edit' placeholder='Teléfono'></CustomInput>
+                <CustomInput errorMsg="Correo requerido"onChange={(e)=>setClientEdited(prevState =>({...prevState,email:e.target.value}))} value={clientEdited.email} className='mt-2' name='email_edit' placeholder='Email'></CustomInput>
+                <CustomInput errorMsg="Este campo es requerido"onChange={(e)=>setClientEdited(prevState =>({...prevState,illness:e.target.value}))} value={clientEdited.illness} className='mt-2' name='illness_edit' placeholder='Enfermedad'></CustomInput>
                 <AddButton text="Guardar cambios"/> 
                 <CancelButton fun={()=>setIsOpenEdit(false)}/>
               </CustomForm>
