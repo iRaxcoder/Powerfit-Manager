@@ -78,7 +78,7 @@ export default function Home() {
 
     return (
         <div className="home-body">
-            <h1>Bienvenido a powerfit manager</h1>
+            <h1>Bienvenido a Powerfit Manager</h1>
             <div className="container mt-4">
 
                 <div className="col mt-5">
