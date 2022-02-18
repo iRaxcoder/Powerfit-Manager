@@ -31,7 +31,7 @@ CREATE TABLE `tb_asistencia` (
   PRIMARY KEY (`ID_ASISTENCIA`),
   KEY `fk_id_cliente_asistencia` (`ID_CLIENTE`),
   CONSTRAINT `fk_id_cliente_asistencia` FOREIGN KEY (`ID_CLIENTE`) REFERENCES `tb_cliente` (`ID_CLIENTE`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,6 +40,7 @@ CREATE TABLE `tb_asistencia` (
 
 LOCK TABLES `tb_asistencia` WRITE;
 /*!40000 ALTER TABLE `tb_asistencia` DISABLE KEYS */;
+INSERT INTO `tb_asistencia` VALUES (1,2,'2022-02-18 00:00:00'),(3,2,'2022-02-23 10:28:00'),(4,2,'2022-02-18 10:23:00');
 /*!40000 ALTER TABLE `tb_asistencia` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -59,10 +60,10 @@ CREATE TABLE `tb_circunferencia_cliente` (
   `CADERA` varchar(32) DEFAULT NULL,
   `MUSLO_DERECHO` varchar(32) DEFAULT NULL,
   `MUSLO_IZQUIERDO` varchar(32) DEFAULT NULL,
-  `PIERNA_DERECHO` varchar(32) DEFAULT NULL,
+  `PIERNA_DERECHA` varchar(32) DEFAULT NULL,
   `PIERNA_IZQUIERDA` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`ID_CIRCUNFERENCIA`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,6 +72,7 @@ CREATE TABLE `tb_circunferencia_cliente` (
 
 LOCK TABLES `tb_circunferencia_cliente` WRITE;
 /*!40000 ALTER TABLE `tb_circunferencia_cliente` DISABLE KEYS */;
+INSERT INTO `tb_circunferencia_cliente` VALUES (2,'','','','','','','','','');
 /*!40000 ALTER TABLE `tb_circunferencia_cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,7 +93,7 @@ CREATE TABLE `tb_cliente` (
   `ENFERMEDAD` varchar(300) DEFAULT NULL,
   `IS_DELETED` bit(1) DEFAULT b'0',
   PRIMARY KEY (`ID_CLIENTE`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -100,6 +102,7 @@ CREATE TABLE `tb_cliente` (
 
 LOCK TABLES `tb_cliente` WRITE;
 /*!40000 ALTER TABLE `tb_cliente` DISABLE KEYS */;
+INSERT INTO `tb_cliente` VALUES (1,'Randall','Mora Sánchez',21,'1232345657','rft3@gmail.com','no',_binary ''),(2,'Aracely','Sáenz',25,'123','aras@ucr.ac.cr','no',_binary '\0');
 /*!40000 ALTER TABLE `tb_cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -123,7 +126,7 @@ CREATE TABLE `tb_datos_cliente` (
   `MASA_OSEA` varchar(32) DEFAULT NULL,
   `GRASA_VISCERAL` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`ID_DATOS`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -132,6 +135,7 @@ CREATE TABLE `tb_datos_cliente` (
 
 LOCK TABLES `tb_datos_cliente` WRITE;
 /*!40000 ALTER TABLE `tb_datos_cliente` DISABLE KEYS */;
+INSERT INTO `tb_datos_cliente` VALUES (3,'75','','','','','','','','','');
 /*!40000 ALTER TABLE `tb_datos_cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -150,7 +154,7 @@ CREATE TABLE `tb_ejercicio` (
   PRIMARY KEY (`ID_EJERCICIO`),
   KEY `fk_id_grupo_ejercicio` (`ID_GRUPO_MUSCULAR`),
   CONSTRAINT `fk_id_grupo_ejercicio` FOREIGN KEY (`ID_GRUPO_MUSCULAR`) REFERENCES `tb_grupo_muscular` (`ID_MUSCULAR`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -159,6 +163,7 @@ CREATE TABLE `tb_ejercicio` (
 
 LOCK TABLES `tb_ejercicio` WRITE;
 /*!40000 ALTER TABLE `tb_ejercicio` DISABLE KEYS */;
+INSERT INTO `tb_ejercicio` VALUES (1,'Sentadilla con barra',1,_binary ''),(2,'Hip Thrust',1,_binary '\0'),(3,'Press de banca inclinado',2,_binary '\0'),(4,'Press de banca declinado',2,_binary '\0'),(5,'Press militar con mancuerna',3,_binary ''),(6,'Encogimiento con barra',3,_binary ''),(7,'Peso muerto',1,_binary '\0'),(8,'Press militar',4,_binary '\0');
 /*!40000 ALTER TABLE `tb_ejercicio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -174,7 +179,7 @@ CREATE TABLE `tb_grupo_muscular` (
   `NOMBRE_GRUPO_MUSCULAR` varchar(100) NOT NULL,
   `IS_DELETED` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`ID_MUSCULAR`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -183,6 +188,7 @@ CREATE TABLE `tb_grupo_muscular` (
 
 LOCK TABLES `tb_grupo_muscular` WRITE;
 /*!40000 ALTER TABLE `tb_grupo_muscular` DISABLE KEYS */;
+INSERT INTO `tb_grupo_muscular` VALUES (1,'Glúteo',_binary '\0'),(2,'Pecho',_binary '\0'),(3,'Deltoide',_binary ''),(4,'Hombro',_binary '\0');
 /*!40000 ALTER TABLE `tb_grupo_muscular` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -206,7 +212,7 @@ CREATE TABLE `tb_medicion_cliente` (
   CONSTRAINT `fk_id_medicion_circunferencia` FOREIGN KEY (`ID_CIRCUNFERENCIA`) REFERENCES `tb_circunferencia_cliente` (`ID_CIRCUNFERENCIA`),
   CONSTRAINT `fk_id_medicion_cliente` FOREIGN KEY (`ID_CLIENTE`) REFERENCES `tb_cliente` (`ID_CLIENTE`),
   CONSTRAINT `fk_id_medicion_datos` FOREIGN KEY (`ID_DATOS`) REFERENCES `tb_datos_cliente` (`ID_DATOS`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -215,6 +221,7 @@ CREATE TABLE `tb_medicion_cliente` (
 
 LOCK TABLES `tb_medicion_cliente` WRITE;
 /*!40000 ALTER TABLE `tb_medicion_cliente` DISABLE KEYS */;
+INSERT INTO `tb_medicion_cliente` VALUES (2,3,2,2,'2022-02-16 00:00:00');
 /*!40000 ALTER TABLE `tb_medicion_cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -236,7 +243,7 @@ CREATE TABLE `tb_membresia` (
   PRIMARY KEY (`ID_MEMBRESIA`),
   KEY `fk_id_cliente_pago` (`ID_CLIENTE`),
   CONSTRAINT `fk_id_cliente_pago` FOREIGN KEY (`ID_CLIENTE`) REFERENCES `tb_cliente` (`ID_CLIENTE`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -245,6 +252,7 @@ CREATE TABLE `tb_membresia` (
 
 LOCK TABLES `tb_membresia` WRITE;
 /*!40000 ALTER TABLE `tb_membresia` DISABLE KEYS */;
+INSERT INTO `tb_membresia` VALUES (1,1,'2022-02-09','2022-02-23','tarjeta',12000,'detalles');
 /*!40000 ALTER TABLE `tb_membresia` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -264,7 +272,7 @@ CREATE TABLE `tb_producto` (
   `DETALLES` varchar(300) DEFAULT NULL,
   `IS_DELETED` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`ID_PRODUCTO`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -273,6 +281,7 @@ CREATE TABLE `tb_producto` (
 
 LOCK TABLES `tb_producto` WRITE;
 /*!40000 ALTER TABLE `tb_producto` DISABLE KEYS */;
+INSERT INTO `tb_producto` VALUES (1,'Monster Energy XXX',5,12500,'2022-02-16','nueva monster',_binary '\0'),(2,'Whey Protein2',20,45000,'2022-02-16','detalles',_binary '\0');
 /*!40000 ALTER TABLE `tb_producto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -293,7 +302,7 @@ CREATE TABLE `tb_rutina` (
   `PORCENTAJE` varchar(32) DEFAULT NULL,
   `PAUSA` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`ID_RUTINA`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -302,6 +311,7 @@ CREATE TABLE `tb_rutina` (
 
 LOCK TABLES `tb_rutina` WRITE;
 /*!40000 ALTER TABLE `tb_rutina` DISABLE KEYS */;
+INSERT INTO `tb_rutina` VALUES (3,2,'2022-02-16 18:59:05','','','','',''),(4,2,'2022-02-18 10:29:48','Intermedio','','','',''),(5,2,'2022-02-18 10:34:35','int','','','',''),(6,2,'2022-02-18 10:59:47','intermedio','','','',''),(7,2,'2022-02-18 11:00:36','intermedio','','','',''),(10,2,'2022-02-18 11:24:11','int','','aumerntar','','');
 /*!40000 ALTER TABLE `tb_rutina` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -319,7 +329,7 @@ CREATE TABLE `tb_rutina_ejercicio` (
   `DIA` int NOT NULL,
   KEY `fk_id_rutina` (`ID_RUTINA`),
   CONSTRAINT `fk_id_rutina` FOREIGN KEY (`ID_RUTINA`) REFERENCES `tb_rutina` (`ID_RUTINA`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -328,6 +338,7 @@ CREATE TABLE `tb_rutina_ejercicio` (
 
 LOCK TABLES `tb_rutina_ejercicio` WRITE;
 /*!40000 ALTER TABLE `tb_rutina_ejercicio` DISABLE KEYS */;
+INSERT INTO `tb_rutina_ejercicio` VALUES (3,2,'sin detalles',1),(4,7,'',1),(4,2,'',1),(4,3,'12x4 reps',2),(4,3,'12x4reps',2),(5,2,'',1),(5,2,'',1),(6,2,'',1),(7,3,'',2),(10,8,'',1),(10,2,'',3),(10,3,'',2),(10,4,'',2);
 /*!40000 ALTER TABLE `tb_rutina_ejercicio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -343,7 +354,7 @@ CREATE TABLE `tb_usuario` (
   `NOMBRE_USUARIO` varchar(32) NOT NULL,
   `CONTRASENNA` varchar(32) NOT NULL,
   PRIMARY KEY (`ID_USUARIO`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -352,6 +363,7 @@ CREATE TABLE `tb_usuario` (
 
 LOCK TABLES `tb_usuario` WRITE;
 /*!40000 ALTER TABLE `tb_usuario` DISABLE KEYS */;
+INSERT INTO `tb_usuario` VALUES (1,'powerfitmanager','pfm2022');
 /*!40000 ALTER TABLE `tb_usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -370,7 +382,7 @@ CREATE TABLE `tb_venta` (
   PRIMARY KEY (`ID_VENTA`),
   KEY `fk_id_cliente_venta` (`ID_CLIENTE`),
   CONSTRAINT `fk_id_cliente_venta` FOREIGN KEY (`ID_CLIENTE`) REFERENCES `tb_cliente` (`ID_CLIENTE`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -379,6 +391,7 @@ CREATE TABLE `tb_venta` (
 
 LOCK TABLES `tb_venta` WRITE;
 /*!40000 ALTER TABLE `tb_venta` DISABLE KEYS */;
+INSERT INTO `tb_venta` VALUES (1,2,160000,'2022-02-16'),(2,2,62500,'2022-02-18');
 /*!40000 ALTER TABLE `tb_venta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -407,8 +420,24 @@ CREATE TABLE `tb_venta_producto` (
 
 LOCK TABLES `tb_venta_producto` WRITE;
 /*!40000 ALTER TABLE `tb_venta_producto` DISABLE KEYS */;
+INSERT INTO `tb_venta_producto` VALUES (1,1,2,25000),(1,2,3,135000),(2,1,5,62500);
 /*!40000 ALTER TABLE `tb_venta_producto` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `tg_rebajar_producto` AFTER INSERT ON `tb_venta_producto` FOR EACH ROW UPDATE tb_producto p set p.STOCK=p.STOCK-new.CANTIDAD WHERE p.ID_PRODUCTO=new.ID_PRODUCTO */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Dumping routines for database 'powerfit-manager'
@@ -1178,9 +1207,10 @@ SELECT a.ID_ASISTENCIA, c.NOMBRE_CLIENTE, c.APELLIDOS AS APELLIDO_CLIENTE, a.FEC
 FROM `tb_asistencia` a
 JOIN `tb_cliente` c 
 	on a.ID_CLIENTE = c.ID_CLIENTE
-WHERE (c.NOMBRE_CLIENTE=p_buscar OR c.APELLIDOS=p_buscar OR a.FECHA=p_buscar OR  C.NOMBRE_CLIENTE LIKE concat(p_buscar,'%')
+WHERE (c.NOMBRE_CLIENTE=p_buscar OR c.APELLIDOS=p_buscar OR DATE_FORMAT(a.FECHA, '%d/%m/%Y')=p_buscar OR 
+C.NOMBRE_CLIENTE LIKE concat(p_buscar,'%')
 OR c.APELLIDOS LIKE concat(p_buscar,'%') OR  
-a.FECHA LIKE concat('%',p_buscar,'%'));
+DATE_FORMAT(a.FECHA, '%d/%m/%Y') LIKE concat('%',p_buscar,'%'));
 
 END ;;
 DELIMITER ;
@@ -1412,10 +1442,11 @@ JOIN tb_cliente c
 	ON mc.ID_CLIENTE = c.ID_CLIENTE
 WHERE mc.ID_MEDICION = p_buscar OR mc.ID_DATOS = p_buscar OR
 mc.ID_CIRCUNFERENCIA = p_buscar OR c.NOMBRE_CLIENTE = p_buscar OR
-c.APELLIDOS = p_buscar OR mc.FECHA = p_buscar OR
+c.APELLIDOS = p_buscar OR 
+DATE_FORMAT(mc.FECHA, '%d/%m/%Y') = p_buscar OR
 c.NOMBRE_CLIENTE LIKE concat(p_buscar,'%') OR 
 c.APELLIDOS LIKE concat(p_buscar,'%') OR 
-mc.FECHA LIKE concat('%',p_buscar,'%');
+DATE_FORMAT(mc.FECHA, '%d/%m/%Y') LIKE concat('%',p_busca,'%');
 
 
 END ;;
@@ -1442,12 +1473,12 @@ m.DETALLE, (SELECT IF(m.FECHA_FIN>=CURDATE(),"ACTIVO","SUSPENDIDO") )  AS ESTADO
 FROM tb_membresia m
 JOIN tb_cliente c 
 	on m.ID_CLIENTE = c.ID_CLIENTE
-WHERE (c.NOMBRE_CLIENTE=p_buscar OR c.APELLIDOS=p_buscar OR m.FECHA_INICIO=p_buscar OR m.FECHA_FIN=p_buscar OR 
+WHERE (c.NOMBRE_CLIENTE=p_buscar OR c.APELLIDOS=p_buscar OR DATE_FORMAT(m.FECHA_INICIO, '%d/%m/%Y')=p_buscar OR DATE_FORMAT(m.FECHA_FIN,'%d/%m/%Y')=p_buscar OR 
 m.TIPO_PAGO=p_buscar OR m.MONTO=p_buscar OR 
 m.DETALLE=p_buscar OR  C.NOMBRE_CLIENTE LIKE concat(p_buscar,'%')
 OR c.APELLIDOS LIKE concat(p_buscar,'%') OR  
-m.FECHA_INICIO LIKE concat('%',p_buscar,'%') OR 
-m.FECHA_FIN LIKE concat('%',p_buscar,'%') OR 
+DATE_FORMAT(m.FECHA_INICIO, '%d/%m/%Y') LIKE concat('%',p_buscar,'%') OR 
+DATE_FORMAT(m.FECHA_FIN, '%d/%m/%Y') LIKE concat('%',p_buscar,'%') OR 
 m.TIPO_PAGO LIKE concat(p_buscar,'%') OR
 m.MONTO LIKE concat(p_buscar,'%') OR   
 m.DETALLE LIKE concat(p_buscar,'%') OR 
@@ -1499,7 +1530,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_select_search_producto`(IN `p_bu
 BEGIN
 	SELECT p.ID_PRODUCTO,p.NOMBRE,p.STOCK,p.PRECIO_UNITARIO,p.ULT_INGRESO,P.DETALLES 
 FROM tb_producto p
-WHERE (p.IS_DELETED=0) AND(p.NOMBRE=p_buscar OR p.STOCK=p_buscar OR p.PRECIO_UNITARIO=p_buscar OR p.DETALLES LIKE concat('%',p_buscar,'%') OR p.ULT_INGRESO LIKE concat('%',p_buscar,'%') OR p.NOMBRE LIKE concat('%',p_buscar,'%'));
+WHERE (p.IS_DELETED=0) AND(p.NOMBRE=p_buscar OR p.STOCK=p_buscar OR p.PRECIO_UNITARIO=p_buscar OR DATE_FORMAT(p.ULT_INGRESO,'%d/%m/%Y')=p_buscar OR p.DETALLES LIKE concat('%',p_buscar,'%') OR DATE_FORMAT(p.ULT_INGRESO,'%d/%m/%Y') LIKE concat('%',p_buscar,'%') OR p.NOMBRE LIKE concat('%',p_buscar,'%'));
 
 END ;;
 DELIMITER ;
@@ -1523,7 +1554,7 @@ SET lc_time_names = 'Es_ES';
 
 SELECT DISTINCT r.ID_RUTINA,concat(c.NOMBRE_CLIENTE, ' ', c.APELLIDOS) as NOMBRE_CLIENTE,r.FECHA from tb_rutina r
 JOIN tb_cliente c on c.ID_CLIENTE=r.ID_CLIENTE
-where r.ID_RUTINA=p_find OR c.NOMBRE_CLIENTE=p_find OR c.NOMBRE_CLIENTE like concat('%',p_find,'%') OR r.FECHA=p_find OR r.FECHA LIKE concat('%',p_find,'%') OR MONTHNAME(r.FECHA)=p_find or MONTHNAME(r.FECHA) LIKE concat('%',p_find,'%');
+where r.ID_RUTINA=p_find OR c.NOMBRE_CLIENTE=p_find OR c.NOMBRE_CLIENTE like concat('%',p_find,'%') OR DATE_FORMAT(r.FECHA,'%d/%m/%Y')=p_find OR  DATE_FORMAT(r.FECHA,'%d/%m/%Y') LIKE concat('%',p_find,'%') OR MONTHNAME(r.FECHA)=p_find or MONTHNAME(r.FECHA) LIKE concat('%',p_find,'%');
 
 
 
@@ -1713,7 +1744,8 @@ JOIN tb_venta_producto vp
 on vp.ID_VENTA = v.ID_VENTA
 JOIN tb_cliente c
 on c.ID_CLIENTE=v.ID_CLIENTE
-WHERE v.ID_VENTA=p_buscar OR v.ID_CLIENTE=p_buscar OR v.TOTAL=p_buscar OR v.FECHA=p_buscar OR concat(c.NOMBRE_CLIENTE,' ',c.APELLIDOS)=p_buscar OR concat(c.NOMBRE_CLIENTE,' ',c.APELLIDOS) LIKE concat(p_buscar,'%') OR v.ID_VENTA like concat(p_buscar,'%') OR v.ID_CLIENTE like concat (p_buscar,'%') OR v.TOTAL like concat (p_buscar,'%') OR V.TOTAL like concat(p_buscar,'%');
+WHERE v.ID_VENTA=p_buscar OR v.ID_CLIENTE=p_buscar OR v.TOTAL=p_buscar OR DATE_FORMAT(v.FECHA,'%d/%m/%Y')=p_buscar OR
+DATE_FORMAT(v.FECHA,'%d/%m/%Y') LIKE concat ('%',p_buscar,'%') OR concat(c.NOMBRE_CLIENTE,' ',c.APELLIDOS)=p_buscar OR concat(c.NOMBRE_CLIENTE,' ',c.APELLIDOS) LIKE concat(p_buscar,'%') OR v.ID_VENTA like concat(p_buscar,'%') OR v.ID_CLIENTE like concat (p_buscar,'%') OR v.TOTAL like concat (p_buscar,'%') OR V.TOTAL like concat(p_buscar,'%');
 
 END ;;
 DELIMITER ;
@@ -2084,4 +2116,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-15 11:28:49
+-- Dump completed on 2022-02-18 11:28:58
