@@ -238,7 +238,8 @@ export default function Routine() {
 
   const onDeleteDayExercise = (day, index) => {
     const dayExercise = daysExercises[day + ""];
-    const newGeneralExerciseList = generalExerciseList.list.filter((_, i) => i !== dayExercise[i].generalId);
+    console.log(dayExercise);
+    const newGeneralExerciseList = generalExerciseList.list.filter((_, i) => i !== dayExercise[index].generalId);
     const newExerciseList = dayExercise.filter((_, i) => i !== index);
     setDaysExercises({
       ...daysExercises,
