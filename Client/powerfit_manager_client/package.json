@@ -1,7 +1,7 @@
 {
   "name": "powerfit_manager_client",
   "version": "0.1.0",
-  "homepage": "http://powerfitmanager.client.local",
+  "homepage": "http://localhost/powerfitmanagerclient/",
   "private": true,
   "dependencies": {
     "@hookform/error-message": "^2.0.0",
