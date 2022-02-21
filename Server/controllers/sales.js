@@ -24,7 +24,7 @@ const getSpParamSize = {
 }
 
 module.exports.set = function (app, connection) {
-    app.post("/sales/insert", (req, res) => {
+    app.post(process.env.BASE_URL+"/sales/insert", (req, res) => {
         data = req.body.data;
         connection.beginTransaction(async (err) => {
             if (err) {
@@ -67,7 +67,7 @@ module.exports.set = function (app, connection) {
             });
         })
     })
-    app.post("/sales/get-sale-info", (req, res) => {
+    app.post(process.env.BASE_URL+"/sales/get-sale-info", (req, res) => {
         data = req.body.data;
         connection.query('CALL sp_select_venta_info' +getSpParamSize["1"], data["find"], (err, rows, fields) => {
             if (!err) {
@@ -79,7 +79,7 @@ module.exports.set = function (app, connection) {
         })
     });
 
-    app.post('/sales/get-stats', (req, res) =>{
+    app.post(process.env.BASE_URL+'/sales/get-stats', (req, res) =>{
         var data=req.body.data;
         var salesStats={};
         connection.query('CALL sp_select_search_estadisticas_ventas' +getSpParamSize["1"], data["year"], (err, rows, fields) => {

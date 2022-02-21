@@ -19,7 +19,7 @@ const getSpParamSize = {
 
 module.exports.set = function (app, connection) {
 
-    app.post("/medidas/insert", (req, res) => {
+    app.post(process.env.BASE_URL+"/medidas/insert", (req, res) => {
         data = req.body.data;
         connection.beginTransaction(async (err) => {
             if (err) {
@@ -72,7 +72,7 @@ module.exports.set = function (app, connection) {
 
         })
     })
-    app.post("/medidas/info", (req, res) => {
+    app.post(process.env.BASE_URL+"/medidas/info", (req, res) => {
         data = req.body.data;
         connection.query('CALL sp_select_medida_cliente_completo' + getSpParamSize["1"], data["find"], (err, rows, fields) => {
             if (!err) {
@@ -84,7 +84,7 @@ module.exports.set = function (app, connection) {
         })
     })
 
-    app.put("/medidas/put", (req, res) => {
+    app.put(process.env.BASE_URL+"/medidas/put", (req, res) => {
         data = req.body.data;
         connection.beginTransaction(async (err) => {
             if (err) {
@@ -121,7 +121,7 @@ module.exports.set = function (app, connection) {
         })
     })
 
-    app.put("/medidas/delete", (req, res) => {
+    app.put(process.env.BASE_URL+"/medidas/delete", (req, res) => {
         data = req.body.data;
         query = 'CALL sp_delete_medidas'+ getSpParamSize[data["size"]];
         connection.query(query, Object.values(data["object"]), (err, rows, fields) => {

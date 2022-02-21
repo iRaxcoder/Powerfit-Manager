@@ -24,7 +24,7 @@ app.use(session({
     }
 }));
 var productionOrigin='http://localhost:3000';
-// productionOrigin='http://powerfitmanager.client.local';
+// productionOrigin='http://localhost/powerfitmanagerclient';
 const cors = require('cors');
 const corsOptions = {
     origin:productionOrigin, 
