@@ -16,7 +16,7 @@ const getSpParamSize = {
 }
 
 module.exports.set = function(app,connection){
-    app.post("/routine/insert", (req, res) => {
+    app.post(process.env.BASE_URL+"/routine/insert", (req, res) => {
         data = req.body.data;
         connection.beginTransaction(async (err) => {
             if (err) {
@@ -59,7 +59,7 @@ module.exports.set = function(app,connection){
             });
         })
     });
-    app.post("/routine/get-search", (req, res) => {
+    app.post(process.env.BASE_URL+"/routine/get-search", (req, res) => {
         data = req.body.data;
         connection.query('CALL sp_select_search_rutina_fecha'+getSpParamSize["2"], [data["find"],data["filter"]], (err, rows, fields) => {
             if (!err) {

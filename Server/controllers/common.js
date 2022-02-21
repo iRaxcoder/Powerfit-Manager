@@ -18,7 +18,7 @@ const getSpParamSize = {
 }
 
 module.exports.set = function (app, connection) {
-    app.post("/module/get", (req, res) => {
+    app.post(process.env.BASE_URL+"/module/get", (req, res) => {
         data = req.body.data;
         connection.query('CALL sp_select_' + data["header"] + '()', (err, rows, fields) => {
             if (!err) {
@@ -29,7 +29,7 @@ module.exports.set = function (app, connection) {
             }
         })
     })
-    app.post("/module/get-search", (req, res) => {
+    app.post(process.env.BASE_URL+"/module/get-search", (req, res) => {
         data = req.body.data;
         connection.query('CALL sp_select_search_' + data["header"]+getSpParamSize["1"], data["find"], (err, rows, fields) => {
             if (!err) {
@@ -40,7 +40,7 @@ module.exports.set = function (app, connection) {
             }
         })
     })
-    app.post("/module/insert", (req, res) => {
+    app.post(process.env.BASE_URL+"/module/insert", (req, res) => {
         data = req.body.data;
         query = 'CALL sp_insert_' + data["header"] + getSpParamSize[data["size"]];
         connection.query(query, Object.values(data["object"]), (err, rows, fields) => {
@@ -56,7 +56,7 @@ module.exports.set = function (app, connection) {
             }
         })
     })
-    app.put("/module/put", (req, res) => {
+    app.put(process.env.BASE_URL+"/module/put", (req, res) => {
         data = req.body.data;
         query = 'CALL sp_update_' + data["header"] + getSpParamSize[data["size"]];
         connection.query(query, Object.values(data["object"]), (err, rows, fields) => {
@@ -74,7 +74,7 @@ module.exports.set = function (app, connection) {
             }
         })
     })
-    app.put("/module/delete", (req, res) => {
+    app.put(process.env.BASE_URL+"/module/delete", (req, res) => {
         data = req.body.data;
         query = 'CALL sp_delete_' + data["header"] + getSpParamSize["1"];
         connection.query(query, Object.values(data["object"]), (err, rows, fields) => {

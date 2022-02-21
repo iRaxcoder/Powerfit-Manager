@@ -1,5 +1,5 @@
 module.exports.set = function(app,connection){
-    app.post('/aut/iniciar-sesion', function(request, response) {
+    app.post(process.env.BASE_URL+'/aut/iniciar-sesion', function(request, response) {
         var username = request.body.username;
         var password = request.body.password;
         if (username && password) {
@@ -20,7 +20,7 @@ module.exports.set = function(app,connection){
         }
     });
 
-    app.get('/aut/cerrar-sesion', function (req, res) {
+    app.get(process.env.BASE_URL+'/aut/cerrar-sesion', function (req, res) {
         if (req.session.loggedin===true) {
             console.log("sesion cerrada");
             req.session.destroy(function() {
@@ -32,7 +32,7 @@ module.exports.set = function(app,connection){
         }
     });
 
-    app.get('/aut/validar', function (req, res) {
+    app.get(process.env.BASE_URL+'/aut/validar', function (req, res) {
         if(req.session.loggedin){
             res.status(200).send("Se encuentra dentro del sistema")
         }else{
