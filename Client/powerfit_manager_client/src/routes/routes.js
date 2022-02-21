@@ -13,7 +13,7 @@ import Routine from '../views/Routine.js'
 
 const homeView = {
     element: <Sidebar><Home/></Sidebar>,
-    path: '/inicio'
+    path: '/inicio/'
 }
 export const LoginView = {
     element: <Login/>,
@@ -21,45 +21,45 @@ export const LoginView = {
 }
 const groupMuscleView = {
     element: <Sidebar><GroupMuscle/></Sidebar>,
-    path: '/grupos-musculares'
+    path: '/grupos-musculares/'
 }
 const ExerciseView = {
     element: <Sidebar><Exercise/></Sidebar>,
-    path: '/ejercicios'
+    path: '/ejercicios/'
 }
 const ClientView = {
     element: <Sidebar><Client/></Sidebar>,
-    path: '/clientes'
+    path: '/clientes/'
 }
 
 const membershipView = {
     element: <Sidebar><Membership/></Sidebar>,
-    path: '/membresia'
+    path: '/membresia/'
 }
 
 const productView = {
     element: <Sidebar><Product/></Sidebar>,
-    path: '/inventario'
+    path: '/inventario/'
 }
 
 const assistanceView = {
     element: <Sidebar><Assistance/></Sidebar>,
-    path: '/asistencia'
+    path: '/asistencia/'
 }
 
 const salesView = {
     element: <Sidebar><Sales/></Sidebar>,
-    path: '/ventas'
+    path: '/ventas/'
 }
 
 const measuresView = {
     element: <Sidebar><Measures/></Sidebar>,
-    path: '/medidas'
+    path: '/medidas/'
 }
 
 const routineView = {
     element: <Sidebar><Routine/></Sidebar>,
-    path: '/rutinas'
+    path: '/rutinas/'
 }
 
 const viewList= [homeView,groupMuscleView, ExerciseView, ClientView,membershipView,productView,assistanceView,salesView,measuresView,routineView];

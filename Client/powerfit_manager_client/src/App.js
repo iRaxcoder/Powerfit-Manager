@@ -18,7 +18,7 @@ function App() {
     <div className="App">
       <Router>
             <Routes>
-              <Route path='/'
+              <Route path='/powerfitmanagerclient'
               element={LoginView.element}/>
                 {routes.map(route=>(
                     <Route
