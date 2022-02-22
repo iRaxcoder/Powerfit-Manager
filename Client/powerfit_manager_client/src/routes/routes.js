@@ -17,7 +17,7 @@ const homeView = {
 }
 export const LoginView = {
     element: <Login/>,
-    path: '/'
+    path: '/login/'
 }
 const groupMuscleView = {
     element: <Sidebar><GroupMuscle/></Sidebar>,
@@ -62,6 +62,6 @@ const routineView = {
     path: '/rutinas/'
 }
 
-const viewList= [homeView,groupMuscleView, ExerciseView, ClientView,membershipView,productView,assistanceView,salesView,measuresView,routineView];
+const viewList= [LoginView,homeView,groupMuscleView, ExerciseView, ClientView,membershipView,productView,assistanceView,salesView,measuresView,routineView];
 
 export default viewList;

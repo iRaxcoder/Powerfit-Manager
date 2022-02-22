@@ -90,10 +90,10 @@ export default function Sidebar ({children}){
                         </ul>
                         
                     </div>
-                    <Link onClick={exit} to="/" className='nav__link'>
+                    <Link onClick={exit} to="/login" className='nav__link'>
                         <i class='bx bx-log-out nav__icon' aria-hidden="true"></i>
                         <span className='nav__text'>Salir</span>    
-                        </Link>
+                    </Link>
                 </nav>
             </div>
             <main>{children}</main>
